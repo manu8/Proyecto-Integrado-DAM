@@ -1,0 +1,41 @@
+{% block content %}
+  <div class="custom-row first-row">
+    <div class="small-12 large-12 columns">
+      <h3 class="text-center">Pulsa sobre el tipo de filtro que deseas aplicar:</h3>
+      <dl class="accordion" data-accordion>
+        <dd class="accordion-navigation">
+          <a href="#all">Todos</a>
+          <div id="all" class="content">
+            {% block all_list %}
+              <p class="text-center"><span class="round label">Cargando listado...</span></p>
+            {% endblock %}                   
+          </div>
+        </dd>
+        <dd class="accordion-navigation">
+          <a href="#category">Por categoría</a>
+          <div id="category" class="content">
+            {% block category_list %}
+              <p class="text-center"><span class="round label">Cargando listado...</span></p>
+            {% endblock %}
+          </div>
+        </dd>
+        <dd class="accordion-navigation">
+          <a href="#estudies">Por estudios</a>
+          <div id="estudies" class="content">
+            {% block estudies_list %}
+              <p class="text-center"><span class="round label">Cargando listado...</span></p>
+            {% endblock %}
+          </div>
+        </dd>
+        <dd class="accordion-navigation">
+          <a href="#custom">Búsqueda avanzada</a>
+          <div id="custom" class="content">
+            {% block custom_list %}
+              <p class="text-center"><span class="round label">Cargando listado...</span></p>
+            {% endblock %}
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+{% endblock %}
