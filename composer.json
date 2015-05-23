@@ -20,7 +20,10 @@
         "symfony/translation": "~2.3",
         "symfony/twig-bridge": "~2.3",
         "symfony/validator": "~2.3",
-        "marcojanssen/silex-routing-service-provider": "~1.3.0"
+        "marcojanssen/silex-routing-service-provider": "~1.3.0",
+        "doctrine/dbal": "~2.5",
+        "symfony/doctrine-bridge": "2.*",
+        "dflydev/doctrine-orm-service-provider": "~1.0"
     },
     "autoload": {
         "psr-0": { "": "src/" }
