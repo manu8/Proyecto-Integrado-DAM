@@ -15,7 +15,8 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
 
-//Función generadora de rutas para assets en plantillas Twig
+//Integración de vistas con Twig
+$app->register(new TwigServiceProvider());
 $app['twig'] = $app->share($app->extend('twig', function($twig) {
     $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) {
         return sprintf('../web/assets/%s', $asset);
