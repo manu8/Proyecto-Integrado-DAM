@@ -32,7 +32,7 @@ $app->register(new DoctrineServiceProvider(), array(
     'db.options' => array(
         'dbname' => 'curriculumsdb',
         'password' => '',
-        'charset' => 'UTF-8'
+        'charset' => 'utf8'
     ),
 ));
 $app->register(new DoctrineOrmServiceProvider, array(
@@ -41,7 +41,8 @@ $app->register(new DoctrineOrmServiceProvider, array(
             array(
                 "type" => "annotation",
                 "namespace" => "Entities",
-                "path" => __DIR__."/src/Entities",
+                "path" => __DIR__."/entities",
+                "use_simple_annotation_reader" => false,
             ),
         ),
     ),
