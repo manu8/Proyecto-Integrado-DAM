@@ -19,13 +19,6 @@ $app->register(new ServiceControllerServiceProvider());
 
 //Integración de vistas con Twig
 $app->register(new TwigServiceProvider());
-$app['twig'] = $app->share($app->extend('twig', function($twig) {
-    $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) {
-        return sprintf('../web/assets/%s', $asset);
-    }));
-
-    return $twig;
-}));
 
 //Integración de la BD
 $app->register(new DoctrineServiceProvider(), array(
@@ -46,6 +39,32 @@ $app->register(new DoctrineOrmServiceProvider, array(
             ),
         ),
     ),
+));
+
+//Implementación de seguridad
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => array(
+        'dev' => array(
+            'pattern' => '^/(_(profiler|wdt)|css|images|js)/',
+            'security' => false
+        ),
+        'site' => array(
+            'pattern' => '^/',
+            'form' => array(
+                'login_path' => 'login',
+                'check_path' => 'login_check'
+            ),
+            'users' => $app->share(function() use ($app) {
+                return new \Providers\UserProvider($app);
+            }),
+            'logout' => array('logout_path' => 'logout'),
+        ),
+    ),
+    'security.encoders' => array('Entities\User'=> array(
+        'algorithm' => 'sha1',
+        'iterations' => 4,
+        'encode_as_base64' => false
+    ))
 ));
 
 return $app;
