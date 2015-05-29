@@ -73,7 +73,7 @@ class Alumno {
      */
     private $Empresas;
 
-    public function __contruct() {
+    public function __construct() {
         $this->Estudios_Titulos = new ArrayCollection();
         $this->Conocimientos_Habilidades = new ArrayCollection();
         $this->Empresas = new ArrayCollection();

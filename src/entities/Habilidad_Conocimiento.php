@@ -37,7 +37,7 @@ class Habilidad_Conocimiento {
      */
     private $Categorias;
 
-    public function __contruct() {
+    public function __construct() {
         $this->Alumnos = new ArrayCollection();
         $this->Categorias = new ArrayCollection();
     }

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="categoria_actividad")
  */
 class Categoria_Actividad {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

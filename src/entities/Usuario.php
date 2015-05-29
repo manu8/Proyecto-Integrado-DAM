@@ -9,8 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="usuario")
  */
 class Usuario {
+
     /**
      * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $Id;
+
+    /**
      * @ORM\Column(length=30)
      */
     private $Email;
@@ -24,6 +31,20 @@ class Usuario {
      * @ORM\Column(type="boolean")
      */
     private $Activo;
+
+    public function __construct($email, $passwd) {
+        $this->Email = $email;
+        $this->Password = $passwd;
+        $this->Activo = false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->Id;
+    }
 
     /**
      * @return mixed
