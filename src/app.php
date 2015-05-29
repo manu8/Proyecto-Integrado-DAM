@@ -7,6 +7,7 @@ use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
+use Silex\Provider\SecurityServiceProvider;
 
 
 /**** INICIALIZACIÓN Y CONFIGURACIÓN DE LA APLICACIÓN ****/
@@ -42,25 +43,25 @@ $app->register(new DoctrineOrmServiceProvider, array(
 ));
 
 //Implementación de seguridad
-$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+$app->register(new SecurityServiceProvider(), array(
     'security.firewalls' => array(
         'dev' => array(
             'pattern' => '^/(_(profiler|wdt)|css|images|js)/',
             'security' => false
         ),
-        'site' => array(
-            'pattern' => '^/',
+        'secured' => array(
+            'pattern' => '^/admin/',
             'form' => array(
-                'login_path' => 'login',
-                'check_path' => 'login_check'
+                'login_path' => '/login',
+                'check_path' => '/admin/login_check'
             ),
             'users' => $app->share(function() use ($app) {
-                return new \Providers\UserProvider($app);
+                return new Lib\Providers\UserProvider($app);
             }),
-            'logout' => array('logout_path' => 'logout'),
-        ),
+            'logout' => array('logout_path' => '/admin/logout'),
+        )
     ),
-    'security.encoders' => array('Entities\User'=> array(
+    'security.encoders' => array('Entities\Usuario' => array(
         'algorithm' => 'sha1',
         'iterations' => 4,
         'encode_as_base64' => false

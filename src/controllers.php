@@ -8,11 +8,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
+$GLOBALS['DOMAIN'] = '@ieslasfuentezuelas.com';
+
 $app->get('/', function () use ($app) {
-    return $app['twig']->render('index.html.twig', array());
+    return $app['twig']->render('index.html.twig', array(
+        'domain' => $GLOBALS['DOMAIN']
+    ));
 })
-->bind('homepage')
-;
+->bind('home');
+
+//Users login routes
+$app->get('/login', function(Request $request) use ($app) {
+    return $app['twig']->render('index.html.twig', array(
+        'domain' => $GLOBALS['DOMAIN'],
+        'error'         => $app['security.last_error']($request),
+        'last_email' => $app['session']->get('security.last_username'),
+    ));
+});
+
+$app->post('/alumnos/lists', function (Request $request) use ($app) {
+    return $app['twig']->render('filters-content.html.twig', array(
+        'domain' => $GLOBALS['DOMAIN']
+    ));
+})
+->bind('alumnos_lists');
 
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {

@@ -3,7 +3,7 @@
 //Configuración de Twig
 $app['twig'] = $app->share($app->extend('twig', function($twig) {
     $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) {
-        return sprintf('../web/assets/%s', $asset);
+        return sprintf('../assets/%s', $asset);
     }));
 
     return $twig;

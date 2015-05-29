@@ -1,6 +1,6 @@
 <?php
 
-namespace providers;
+namespace Lib\Providers;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,7 +15,14 @@ class UserProvider implements UserProviderInterface {
         $this->app = $app;
     }
 
-    public function loadUserByUsername($email){
+    public function createUser($user) {
+        $em = $this->app['orm.em'];
+        $em->persist($user);
+        $em->flush();
+        $this->loadUserByUsername($user->getEmail());
+    }
+
+    public function loadUserByUsername($email) {
         $em = $this->app["orm.em"];
         if($em instanceof \Doctrine\ORM\EntityManager){
             if(!$user = $em->getRepository("Entities\\Usuario")->findOneBy(array("Email"=>$email))){
