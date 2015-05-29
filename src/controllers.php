@@ -19,14 +19,20 @@ $app->get('/', function () use ($app) {
 
 //Users login routes
 $app->get('/login', function(Request $request) use ($app) {
+    $user = null;
+    $token = $app['security']->getToken();
+    if($token != null){
+        $user = $token->getUser();
+    }
     return $app['twig']->render('index.html.twig', array(
         'domain' => $GLOBALS['DOMAIN'],
-        'error'         => $app['security.last_error']($request),
+        'user' => $user,
+        'error' => $app['security.last_error']($request),
         'last_email' => $app['session']->get('security.last_username'),
     ));
 });
 
-$app->post('/alumnos/lists', function (Request $request) use ($app) {
+$app->get('/alumnos/lists', function (Request $request) use ($app) {
     return $app['twig']->render('filters-content.html.twig', array(
         'domain' => $GLOBALS['DOMAIN']
     ));

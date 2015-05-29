@@ -7,6 +7,7 @@ use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 
 
@@ -43,6 +44,7 @@ $app->register(new DoctrineOrmServiceProvider, array(
 ));
 
 //Implementación de seguridad
+$app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new SecurityServiceProvider(), array(
     'security.firewalls' => array(
         'dev' => array(

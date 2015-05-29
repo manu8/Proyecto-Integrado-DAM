@@ -41,8 +41,8 @@
             </section>
             <section class="top-bar-section shown-for-large-up hide-for-medium-down">
               <ul class="right">
-                {% if user is defined %}
-                  <li><a href="{{ path('logout') }}" class="sucess button expand">Logout</a></li>
+                {% if user is not null %}
+                  <li><a href="{{ path('admin_logout') }}" class="sucess button expand">Logout</a></li>
                 {% else %}
                   <li class="has-form">
                     <form action="{{ path('admin_login_check') }}" method="post">
@@ -52,10 +52,10 @@
                             {% if last_email is defined %}
                               value="{{ last_email }}"
                             {% endif %}
-                          >
+                          required>
                         </div>
                         <div class="large-5 column">
-                          <input type="password" placeholder="Contraseña" name="_Contraseña">
+                          <input type="password" placeholder="Contraseña" name="_Contraseña" required>
                         </div>
                         <div class="large-2 column">
                           <button type="submit" class="success button expand">Login</button>
@@ -108,6 +108,17 @@
           </ul>
         </aside>        
         <section class="main-section">
+          {% if user is null %}
+            <div class="row">
+              <div class="small-12 column">
+                <br>
+                <div data-alert class="alert-box alert round text-center">
+                  ¡El usuario no existe!
+                  <a href="#" class="close">&times;</a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
           {% block content %}{% endblock %}
           <div class="custom-row">
             <div class="small-12 large-12 columns">
