@@ -11,13 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Usuario {
 
     /**
-     * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $Id;
 
     /**
+     * @ORM\Id
      * @ORM\Column(length=30)
      */
     private $Email;

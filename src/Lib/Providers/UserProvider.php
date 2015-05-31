@@ -19,7 +19,19 @@ class UserProvider implements UserProviderInterface {
         $em = $this->app['orm.em'];
         $em->persist($user);
         $em->flush();
-        $this->loadUserByUsername($user->getEmail());
+    }
+
+    public function activateUser($id) {
+        $em = $this->app["orm.em"];
+        if($em instanceof \Doctrine\ORM\EntityManager){
+            if(!$user = $em->getRepository("Entities\\Usuario")->findOneBy(array("Id"=>$id))){
+                throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $id));
+            } else {
+                $user->setActivo(true);
+                $em->persist($user);
+                $em->flush();
+            }
+        }
     }
 
     public function loadUserByUsername($email) {
