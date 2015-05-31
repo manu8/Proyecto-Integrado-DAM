@@ -9,6 +9,7 @@ use Silex\Provider\DoctrineServiceProvider;
 use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
 
 
 /**** INICIALIZACIÓN Y CONFIGURACIÓN DE LA APLICACIÓN ****/
@@ -54,7 +55,7 @@ $app->register(new SecurityServiceProvider(), array(
         'secured' => array(
             'pattern' => '^/admin/',
             'form' => array(
-                'login_path' => '/login',
+                'login_path' => '/user/login',
                 'check_path' => '/admin/login_check'
             ),
             'users' => $app->share(function() use ($app) {
@@ -69,5 +70,8 @@ $app->register(new SecurityServiceProvider(), array(
         'encode_as_base64' => false
     ))
 ));
+
+//Implementación del servidor de correo para verificación de usuario
+$app->register(new SwiftmailerServiceProvider());
 
 return $app;
