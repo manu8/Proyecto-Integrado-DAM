@@ -41,21 +41,18 @@
             </section>
             <section class="top-bar-section shown-for-large-up hide-for-medium-down">
               <ul class="right">
-                {% if user is not null %}
-                  <li><a href="{{ path('admin_logout') }}" class="sucess button expand">Logout</a></li>
+                {% if user is defined and user is not null %}
+                  <li><a href="{{ path('admin_logout') }}" class="button expand">Logout</a></li>
+                  <li><a class="button expand warning" href="{{ path('user_edit') }}"><i class="fi-widget medium-icon"></i></a></li>
                 {% else %}
                   <li class="has-form">
                     <form action="{{ path('admin_login_check') }}" method="post">
                       <div class="row collapse">
                         <div class="large-5 column">
-                          <input type="email" placeholder="Email" name="_Email"
-                            {% if last_email is defined %}
-                              value="{{ last_email }}"
-                            {% endif %}
-                          required>
+                          <input type="email" placeholder="Email" name="_username" required>
                         </div>
                         <div class="large-5 column">
-                          <input type="password" placeholder="Contraseña" name="_Contraseña" required>
+                          <input type="password" placeholder="Contraseña" name="password" required>
                         </div>
                         <div class="large-2 column">
                           <button type="submit" class="success button expand">Login</button>
@@ -63,8 +60,8 @@
                       </div>
                     </form>
                   </li>
+                  <li><a href="{{ path('new_user') }}" class="button expand" data-reveal-id="registerModal">Registro</a></li>
                 {% endif %}
-                <li><a href="#" class="button expand" data-reveal-id="registerModal">Registro</a></li>
               </ul>
             </section>
             <section class="right-small show-for-medium-down">
@@ -73,18 +70,19 @@
           </nav>
           <ul class="breadcrumbs">
             {% block breadcrumbs %}
-              <li><a href="{{ url('home') }}"><i class="fi-home small-icon current"></i></a></li>
+              <li><i class="fi-home small-icon current"></i></li>
             {% endblock %}
           </ul>
         </header>
         <aside class="right-off-canvas-menu">
           <ul class="off-canvas-list">
             {% if user is defined %}
-                <li><a href="{{ path('admin_logout') }}">Logout</a></li>
+              <li><a class="button radius" href="{{ path('admin_logout') }}">Logout</a></li>
+              <li><a class="button radius warning" href="{{ path('user_edit') }}"><i class="fi-widget medium-icon"></i></a></li>
             {% else %}
-                <li><a href="#" class="button radius success" data-reveal-id="loginModal">Login</a></li>
+              <li><a href="#" class="button radius success" data-reveal-id="loginModal">Login</a></li>
+              <li><a href="#" class="button radius" data-reveal-id="registerModal">Registro</a></li>
             {% endif %}
-            <li><a href="#" class="button radius" data-reveal-id="registerModal">Registro</a></li>
           </ul>
         </aside>
         <aside class="left-off-canvas-menu">
@@ -108,17 +106,6 @@
           </ul>
         </aside>        
         <section class="main-section">
-          {% if user is null %}
-            <div class="row">
-              <div class="small-12 column">
-                <br>
-                <div data-alert class="alert-box alert round text-center">
-                  ¡El usuario no existe!
-                  <a href="#" class="close">&times;</a>
-                </div>
-              </div>
-            </div>
-          {% endif %}
           {% block content %}{% endblock %}
           <div class="custom-row">
             <div class="small-12 large-12 columns">
@@ -133,15 +120,13 @@
       <div class="small-8 small-centered large-8 large-centered columns">
         <h2 id="modalTitle" class="text-center">Nuevo usuario</h2>
         <p class="lead text-center">Rellena el siguiente formulario para inscribirte como usuario</p>
-        <form action="#" method="post" data-abide>
+        <form action="{{ path('new_user') }}" method="post" data-abide>
           <div class="row collapse">
             <div class="small-2 large-2 columns">
               <span class="prefix"><i class="fi-mail medium-icon"></i></span>
             </div>
             <div class="input-wrapper small-4 large-4 columns">
-              <input type="text" placeholder="Email" name="_Email"
-                {% if last_email is defined %} value="{{ last_email }}" {% endif %}
-                pattern="alpha_numeric" required>
+              <input type="text" placeholder="Email" name="email" pattern="alpha_numeric" required>
               <small class="error">Debes indicar un email válido</small>
             </div>
             <div class="small-6 large-6 columns">
@@ -153,7 +138,7 @@
               <span class="prefix"><i class="fi-lock medium-icon"></i></span>
             </div>
             <div class="small-10 large-10 columns">
-              <input id="password" type="password" placeholder="Contraseña" name="_Contraseña" pattern="alpha_numeric" required>
+              <input id="password" type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
               <small class="error">Debes indicar una contraseña</small>
             </div>
           </div>
@@ -178,26 +163,23 @@
           <fieldset>
             <legend>Login</legend>
             <div class="row collapse">
-              {% if error is defined %}
-                {{ error }}
-              {% endif %}
               <div class="small-2 large-2 columns">
                 <span class="prefix"><i class="fi-torso medium-icon"></i></span>
               </div>
-              <div class="input-wrapper small-10 large-10 columns">
-                <input type="text" placeholder="Email" name="_Email"
-                {% if last_email is defined %}
-                       value="{{ last_email }}" required>
-                {% endif %}
-                <small class="error">Debes indicar un usuario</small>
-              </div>              
+              <div class="input-wrapper small-4 large-4 columns">
+                <input type="text" placeholder="Email" name="_username" required>
+                <small class="error">Debes indicar un email</small>
+              </div>
+              <div class="small-6 large-6 columns">
+                <span class="postfix">{{ domain }}</span>
+              </div>
             </div>       
             <div class="row collapse">
               <div class="small-2 large-2 columns">
                 <span class="prefix"><i class="fi-lock medium-icon"></i></span>
               </div>
               <div class="small-12 large-12 columns">
-                <input type="password" placeholder="Contraseña" name="_Contraseña" pattern="alpha_numeric" required>
+                <input type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
                 <small class="error">Debes indicar una contraseña</small>
               </div>
             </div>

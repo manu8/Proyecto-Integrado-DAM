@@ -1,5 +1,10 @@
 {% extends 'layout.html.twig' %}
 
+{% block breadcrumbs %}
+  <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+  <li><i class="fi-list-thumbnails small-icon current"></i></li>
+{% endblock %}
+
 {% block content %}
   <div class="custom-row first-row">
     <div class="small-12 large-12 columns">
