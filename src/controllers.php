@@ -6,9 +6,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Lib\Providers\UserProvider;
+
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 $GLOBALS['DOMAIN'] = '@ieslasfuentezuelas.com';
+$GLOBALS['MESSAGE'] = 'Pulsa sobre el enlace para activar su usuario.\n\n';
 
 $app->get('/', function () use ($app) {
     return $app['twig']->render('index.html.twig', array(
@@ -17,20 +20,55 @@ $app->get('/', function () use ($app) {
 })
 ->bind('home');
 
-//Users login routes
-$app->get('/login', function(Request $request) use ($app) {
+//Users routes
+$app->get('/user/login', function(Request $request) use ($app) {
     $user = null;
     $token = $app['security']->getToken();
     if($token != null){
         $user = $token->getUser();
     }
-    return $app['twig']->render('index.html.twig', array(
+    return $app['twig']->render('login-form.html.twig', array(
+        'form_type' => 'login',
         'domain' => $GLOBALS['DOMAIN'],
         'user' => $user,
         'error' => $app['security.last_error']($request),
-        'last_email' => $app['session']->get('security.last_username'),
+        'last_email' => $app['session']->get('_security.last_username'),
     ));
 });
+
+$app->get('/user/{id}/activate', function($id) use ($app) {
+    $UserProvider = new UserProvider($app);
+    $UserProvider->activateUser($id);
+
+    return $app['twig']->render('forms.html.twig', array(
+        'form_type' => 'login',
+        'activate_user' => true
+    ));
+})
+->bind('activate_user');
+
+$app->put('/user/new', function(Request $request) use ($app) {
+    $UserProvider = new UserProvider($app);
+    $email = $request->request->get('email') . $GLOBALS['DOMAIN'];
+    $password = $request->request->get('password');
+    $UserProvider->createUser(new Entities\Usuario($email, $password));
+
+    $message = \Swift_Message::newInstance()
+        ->setSubject('User Validation')
+        ->setFrom(array('noreply' . $GLOBALS['DOMAIN']))
+        ->setTo(array($email))
+        ->setBody($GLOBALS['MESSAGE'] .
+            $app['url_generator']->generate('activate_user', array(
+                'id' => $UserProvider->loadUserByUsername($email)->getId()
+            ))
+        );
+    $app['mailer']->send($message);
+
+    return $app['twig']->render('forms.html.twig', array(
+        'new_user' => true
+    ));
+})
+->bind('new_user');
 
 $app->get('/alumnos/lists', function (Request $request) use ($app) {
     return $app['twig']->render('filters-content.html.twig', array(
