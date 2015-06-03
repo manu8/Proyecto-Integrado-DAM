@@ -24,7 +24,8 @@
         "doctrine/dbal": "~2.5",
         "symfony/doctrine-bridge": "2.*",
         "dflydev/doctrine-orm-service-provider": "~1.0",
-        "swiftmailer/swiftmailer": "5.*"
+        "swiftmailer/swiftmailer": "5.*",
+        "kilte/silex-pagination": "dev-master"
     },
     "autoload": {
         "psr-0": { "": "src/" }
