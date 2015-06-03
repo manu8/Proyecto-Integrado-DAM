@@ -3,16 +3,17 @@
 namespace Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="usuario")
  */
-class Usuario {
+class Usuario implements UserInterface {
 
     /**
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $Id;
 
@@ -20,10 +21,10 @@ class Usuario {
      * @ORM\Id
      * @ORM\Column(length=30)
      */
-    private $Email;
+    private $Username;
 
     /**
-     * @ORM\Column(length=20)
+     * @ORM\Column
      */
     private $Password;
 
@@ -32,10 +33,16 @@ class Usuario {
      */
     private $Activo;
 
-    public function __construct($email, $passwd) {
-        $this->Email = $email;
+    private $salt;
+
+    private $rol = 'ROLE_USER';
+
+    public function __construct($username, $passwd) {
+        $this->Id = uniqid(mt_rand(), true);
+        $this->Username = $username;
         $this->Password = $passwd;
         $this->Activo = false;
+        $this->salt = base_convert(sha1($this->Id), 16, 36);
     }
 
     /**
@@ -49,17 +56,17 @@ class Usuario {
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getUsername()
     {
-        return $this->Email;
+        return $this->Username;
     }
 
     /**
-     * @param mixed $Email
+     * @param mixed $Username
      */
-    public function setEmail($Email)
+    public function setUsername($username)
     {
-        $this->Email = $Email;
+        $this->Username = $username;
     }
 
     /**
@@ -93,4 +100,31 @@ class Usuario {
     {
         $this->Activo = $Activo;
     }
+
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->rol;
+    }
+
+    /**
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->getRol() === $role;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    public function eraseCredentials() {}
 }
