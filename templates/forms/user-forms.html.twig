@@ -5,7 +5,7 @@
     <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
     {% if form_type == 'login' %}
       <li><i class="fi-lock small-icon current"></i></li>
-    {% else if form_type == 'user' %}
+    {% elseif form_type == 'user' %}
       <li><i class="fi-torso-business small-icon current"></i></li>
     {% endif %}
   {% endif %}
@@ -45,6 +45,15 @@
           ¡Usuario activado!
           <br>
           Ya puedes acceder con tus credenciales.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif update_user is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡Usuario modificado!
           <a href="#" class="close">&times;</a>
         </div>
       </div>
@@ -93,9 +102,17 @@
         </div>
       </div>
     {% elseif form_type == 'user' %}
+      <div class="custom-row first-row">
+        <div class="small-6 small-centered column">
+          <div data-alert class="alert-box alert round text-center">
+            ¡OJO! Ten en cuenta que si modificas el email se volverá a requerir que actives el usuario.
+            <a href="#" class="close">&times;</a>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="small-12 column">
-          <form action="{{ path('user_update') }}" method="post" data-abide>
+          <form action="{{ path('update_user', {'user' : user}) }}" method="post" data-abide>
             <fieldset>
               <legend>Datos de usuario</legend>
               <div class="row collapse">
@@ -107,8 +124,8 @@
                 </div>
                 <div class="input-wrapper small-4 large-4 columns">
                   <input type="text" placeholder="Email" name="username" pattern="alpha_numeric"
-                      {% if username is defined %}
-                        value="{{ username }}"
+                      {% if user is defined %}
+                        value="{{ user.username }}"
                       {% endif %}
                   required>
                   <small class="error">Debes indicar un usuario válido</small>
@@ -139,7 +156,7 @@
                 <button type="submit" class="button expand round warning"><i class="small-icon fi-unlock"></i>Modificar</button>
               </div>
               <div class="small-3 small-centered column">
-                <a href="{{ path(last_route) }}" class="button expand round alert">Cancelar</a>
+                <a href="{{ url(last_view) }}" class="button expand round alert">Cancelar</a>
               </div>
             </fieldset>
           </form>

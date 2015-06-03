@@ -1,0 +1,411 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+	<li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+	<li><i class="fi-torso small-icon current"></i></li>
+{% endblock %}
+
+{% block content %}
+	{% if new_student is defined %}
+	    <div class="custom-row first-row">
+	      <div class="small-6 small-centered column">
+	        <div data-alert class="sucess-box alert round text-center">
+	          ¡Alumno creado!
+	          <a href="#" class="close">&times;</a>
+	        </div>
+	      </div>
+	    </div>
+  	{% endif %}
+  	<div class="row">
+  		<div class="small-12 column">
+			<form
+				{% if form_type == 'new' %} 
+					action="{{ path('student_create') }}" 
+				{% elseif form_tipe == 'edit' %}
+					action="{{ path('student_edit') }}"
+				{% endif %}
+				method="post" data-abide>
+  				<fieldset>
+    				<legend>Datos del Alumno</legend>
+			    	<div class="row collapse">
+					    <div class="small-2 column">
+					    	<span class="prefix"><i class="fi-credit-card medium icon"></i></span>
+					    </div>
+					    <div class="small-10 column">
+					      	<input type="text" placeholder="NIF" pattern="alpha_numeric" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.NIF }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un NIF válido</small>
+					    </div>
+					</div>
+					<div class="row collapse">
+					    <div class="small-2 column">
+					    	<span class="prefix">Nombre</span>
+					    </div>
+					    <div class="small-10 medium-6 large-6 columns">
+					      	<input type="text" placeholder="Nombre" pattern="alpha" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.Nombre }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un nombre válido</small>
+					    </div>
+					    <div class="large-2 column show-for-medium-up">
+					    	<span class="prefix">Apellidos</span>
+					    </div>
+					    <div class="medium-6 large-6 columns show-for-medium-up">
+					      	<input type="text" placeholder="Apellidos" pattern="alpha" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.Apellidos }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar unos apellidos válidos</small>
+					    </div>
+					</div>
+					<div class="row collapse show-for-small-only">
+					    <div class="small-2 column">
+					    	<span class="prefix">Apellidos</span>
+					    </div>
+					    <div class="small-10 column">
+					      	<input type="text" placeholder="Apellidos" pattern="alpha" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.Apellidos }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar unos apellidos válidos</small>
+					    </div>
+					</div>
+					<div class="row collapse">
+					    <div class="small-2 column">
+					    	<span class="prefix"><i class="fi-map medium icon"></i></span>
+					    </div>
+					    <div class="small-10 medium-6 large-6 columns">
+					      	<input type="text" placeholder="Dirección" pattern="alpha_numeric" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.Direccion }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar una dirección válida</small>
+					    </div>
+					    <div class="large-2 column show-for-medium-up">
+					    	<span class="prefix">CP</span>
+					    </div>
+					    <div class="medium-6 large-6 columns show-for-medium-up">
+					      	<input type="text" placeholder="CP" pattern="number" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.CP }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un código postal válido</small>
+					    </div>
+					</div>
+					<div class="row collapse show-for-small-only">
+					    <div class="small-2 column">
+					    	<span class="prefix">CP</span>
+					    </div>
+					    <div class="small-10 column">
+					      	<input type="text" placeholder="CP" pattern="number" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.CP }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un código postal válido</small>
+					    </div>					    
+					</div>
+					<div class="row collapse">
+					    <div class="small-2 column">
+					    	<span class="prefix"><i class="fi-mobile medium icon"></i></span>
+					    </div>
+					    <div class="small-10 column">
+					      	<input type="text" placeholder="Teléfono" pattern="number" 
+					      	{% if student is defined and student is not null %}
+					      		{{ student.Telefono }}
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un número de teléfono válido</small>
+					    </div>
+					    <div class="large-2 column show-for-medium-up">
+					    	<span class="prefix"><i class="fi-mail medium icon"></i></span>
+					    </div>
+					    <div class="medium-6 large-6 columns show-for-medium-up">
+					      	<input type="text" placeholder="Email" pattern="email" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.Email }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un email válido</small>
+					    </div>
+					</div>
+					<div class="row collapse">
+					    <div class="small-2 column">
+					    	<span class="prefix"><i class="fi-mail medium icon"></i></span>
+					    </div>
+					    <div class="small-10 column">
+					      	<input type="text" placeholder="Email" pattern="email" 
+					      	{% if student is defined and student is not null %}
+					      		value="{{ student.Email }}"
+					      	{% endif %}
+					      	required/>
+					      	<small class="error">Debe indicar un email válido</small>
+					    </div>
+					</div>
+					<div class="row">
+						<h3>Estudios y Títulos</h3>
+						<table>
+							<thead>
+								<tr>
+							    	<th>Denominación</th>
+							      	<th>Acciones</th>
+							    </tr>
+							</thead>
+							<tbody>
+								{% if student is defined and student is not null %}
+									{% for study in student.Estudios_Titulos %}
+					      				<tr>
+					      					<td>{{ study.Denominacion }}</td>
+					      					<td>
+					      						{% if is_granted('ROLE_USER') %}
+					      							<ul class="button-group round even-2">
+					      								<li><a class="button warning" href="{{ path('study_edit') }}"><i class="fi-page-edit"></i></a></li>
+					      								<li><a class="button alert" href="{{ path('remove_student_study') }}"><i class="fi-x"></i></a></li>
+					      							</ul>
+					      						{% endif %}
+					      					</td>
+					      				</tr>
+					      			{% else %}
+					      				<p class="text-center"><span class="warning round label">No existen estudios asociados</span></p>
+					      			{% endfor %}
+					      		{% endif %}
+							</tbody>
+						</table>
+						{% if is_granted('ROLE_USER') %}
+							<a href="#" class="sucess radius button" data-reveal-id="studyModal"><i class="fi-plus"></i>&nbsp;Añadir estudio</a>
+						{% endif %}
+					</div>
+					<div class="row">
+						<h3>Conocimientos y Habilidades</h3>
+						<table>
+							<thead>
+								<tr>
+							    	<th>Denominación</th>
+							      	<th>Descripción</th>
+							      	<th>Acciones</th>
+							    </tr>
+							</thead>
+							<tbody>
+								{% if student is defined and student is not null %}
+									{% for knowledge in student.Conocimiento_Habilidades %}
+					      				<tr>
+					      					<td>{{ knowledge.Denominacion }}</td>
+					      					<td>{{ knowledge.Descripcion }}</td>
+					      					<td>
+					      						{% if is_granted('ROLE_USER') %}
+					      							<ul class="button-group round even-2">
+					      								<li><a class="button warning" href="{{ path('knowledge_edit') }}"><i class="fi-page-edit"></i></a></li>
+					      								<li><a class="button alert" href="{{ path('remove_user_knowledge') }}"><i class="fi-x"></i></a></li>
+					      							</ul>
+					      						{% endif %}
+					      					</td>
+					      				</tr>
+					      			{% else %}
+					      				<p class="text-center"><span class="warning round label">No existen conocimientos asociados</span></p>
+					      			{% endfor %}
+					      		{% endif %}
+							</tbody>
+						</table>
+						{% if is_granted('ROLE_USER') %}
+							<a href="#" class="sucess radius button" data-reveal-id="knowledgeModal"><i class="fi-plus"></i>&nbsp;Añadir conocimiento</a>
+						{% endif %}
+					</div>
+					<div class="row">
+						<h3>Empresas</h3>
+						<table>
+							<thead>
+								<tr>
+							    	<th>Denominación</th>
+							      	<th>Dirección</th>
+							      	<th>Tlf.</th>
+							      	<th>Email</th>
+							      	<th>Acciones</th>
+							    </tr>
+							</thead>
+							<tbody>
+								{% if student is defined and student is not null %}
+									{% for company in student.Empresas %}
+					      				<tr>
+					      					<td>{{ company.Denominacion }}</td>
+					      					<td>{{ company.Direccion }}&nbsp;-&nbsp;{{ company.CP }}</td>
+					      					<td>{{ company.Telefono }}</td>
+					      					<td>{{ company.Email }}</td>
+					      					<td>
+					      						{% if is_granted('ROLE_USER') %}
+					      							<ul class="button-group round even-2">
+					      								<li><a class="button warning" href="{{ path('company_edit') }}"><i class="fi-page-edit"></i></a></li>
+					      								<li><a class="button alert" href="{{ path('remove_user_company') }}"><i class="fi-x"></i></a></li>
+					      							</ul>
+					      						{% endif %}
+					      					</td>
+					      				</tr>
+					      			{% else %}
+					      				<p class="text-center"><span class="warning round label">No existen empresas asociados</span></p>
+					      			{% endfor %}
+					      		{% endif %}
+							</tbody>
+						</table>
+						{% if is_granted('ROLE_USER') %}
+							<a href="#" class="sucess radius button" data-reveal-id="companyModal"><i class="fi-plus"></i>&nbsp;Añadir empresa</a>
+						{% endif %}
+					</div>
+					{% if is_granted('ROLE_USER') %}						
+						<div class="small-3 small-centered column">
+							{% if form_type == 'new' %}
+                				<button type="submit" class="button expand round sucess"><i class="small-icon fi-plus"></i>Crear alumno</button>
+                			{% elseif form_type == 'edit' %}
+                				<button type="submit" class="button expand round sucess"><i class="small-icon fi-pencil"></i>Modificar alumno</button>
+                			{% endif %}
+              			</div>
+              			{% if form_type == 'new' %}
+	              			<div class="small-3 small-centered column">
+	                			<button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
+	              			</div>
+	              		{% endif %}          			
+              		{% endif %}
+              		<div class="small-3 small-centered column">
+              			<a href="{{ path('student_list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
+              		</div>
+  				</fieldset>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+{% block modals %}
+	{{ parent() }}
+	<div id="studyModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <div class="small-8 small-centered large-centered columns">
+        <h2 id="modalTitle" class="text-center">Añadir estudio</h2>
+        <p class="lead text-center">Selecciona el estudio o estudios que quieres asociar al alumno</p>
+        <div class="pagination-centered">
+	        <table>
+				<tbody>
+					{% for study in studies %}
+						<tr>
+							<td>{{ company.Denominacion }}</td>
+							<td><a class="button success" href="{{ path('add_user_study') }}"><i class="fi-check"></i></a></td>
+						</tr>
+						{% else %}
+							<div class="text-center">
+								<span class="alert round label">¡No se ha creado ningún estudio!</span>
+								<a href="{{ path('study_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear estudio</a>
+              </div>
+						{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+			{% if pages is defined %}
+				<ul class="pagination">
+	    			{% for number, position in pages %}
+    					{% if position == 'first' %}
+      						<li class="arrow"><a href="/{{ number }}">&laquo;</a></li>
+    					{% elseif position == 'less' or position == 'more' %}
+					      <li class="unavailable"><a href="">&hellip;</a></li>
+					    {% elseif position == 'previous' or position == 'next' %}
+					      <li><a href="/{{ number }}">{{ number }}</a></li>
+					    {% elseif position == 'current' %}
+					      <li class="current"><a href="">{{ number }}</a></li>
+					    {% elseif position == 'last' %}
+					      <li class="arrow"><a href="/{{ number }}">&raquo;</a></li>
+					    {% endif %}
+				    {% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+      </div>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+    <div id="knowledgeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <div class="small-8 small-centered large-centered columns">
+        <h2 id="modalTitle" class="text-center">Añadir conocimiento</h2>
+        <p class="lead text-center">Selecciona el conocimiento(s)/habilidad(es) que quieres asociar al alumno</p>
+        <div class="pagination-centered">
+	        <table>
+				<tbody>
+					{% for knowledges in knowledges %}
+						<tr>
+							<td>{{ kanowledge.Denominacion }}</td>
+							<td><a class="button success" href="{{ path('add_user_knowledge') }}"><i class="fi-check"></i></a></td>
+						</tr>
+						{% else %}
+							<div class="text-center">
+								<span class="alert round label">¡No se ha creado ningún conocimiento!</span>
+								<a href="{{ path('knowledge_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear conocimiento/habilidad</a>
+              </div>
+						{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+			{% if pages is defined %}
+				<ul class="pagination">
+	    			{% for number, position in pages %}
+    					{% if position == 'first' %}
+      						<li class="arrow"><a href="/{{ number }}">&laquo;</a></li>
+    					{% elseif position == 'less' or position == 'more' %}
+					      <li class="unavailable"><a href="">&hellip;</a></li>
+					    {% elseif position == 'previous' or position == 'next' %}
+					      <li><a href="/{{ number }}">{{ number }}</a></li>
+					    {% elseif position == 'current' %}
+					      <li class="current"><a href="">{{ number }}</a></li>
+					    {% elseif position == 'last' %}
+					      <li class="arrow"><a href="/{{ number }}">&raquo;</a></li>
+					    {% endif %}
+				    {% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+      </div>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+    <div id="companyModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <div class="small-8 small-centered large-centered columns">
+        <h2 id="modalTitle" class="text-center">Añadir empresa</h2>
+        <p class="lead text-center">Selecciona la empresa o empresas que quieres asociar al alumno</p>
+        <div class="pagination-centered">
+	        <table>
+				<tbody>
+					{% for company in companies %}
+						<tr>
+							<td>{{ company.Denominacion }}</td>
+							<td><a class="button success" href="{{ path('add_user_company') }}"><i class="fi-check"></i></a></td>
+						</tr>
+						{% else %}
+							<div class="text-center">
+								<span class="alert round label">¡No se ha registrado ninguna empresa!</span>
+								<a href="{{ path('company_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear empresa</a>
+              </div>
+						{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+			{% if pages is defined %}
+				<ul class="pagination">
+	    			{% for number, position in pages %}
+    					{% if position == 'first' %}
+      						<li class="arrow"><a href="/{{ number }}">&laquo;</a></li>
+    					{% elseif position == 'less' or position == 'more' %}
+					      <li class="unavailable"><a href="">&hellip;</a></li>
+					    {% elseif position == 'previous' or position == 'next' %}
+					      <li><a href="/{{ number }}">{{ number }}</a></li>
+					    {% elseif position == 'current' %}
+					      <li class="current"><a href="">{{ number }}</a></li>
+					    {% elseif position == 'last' %}
+					      <li class="arrow"><a href="/{{ number }}">&raquo;</a></li>
+					    {% endif %}
+				    {% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+      </div>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+{% endblock %}
