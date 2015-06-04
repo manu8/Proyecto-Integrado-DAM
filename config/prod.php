@@ -21,15 +21,16 @@ $app['security.firewalls'] = array(
         'security' => false
     ),
     'secured' => array(
-        'pattern' => '^/admin/',
+        'pattern' => '^/',
         'form' => array(
-            'login_path' => '/user/login',
-            'check_path' => '/admin/login_check'
+            'login_path' => '/login',
+            'check_path' => '/login_check'
         ),
         'users' => $app->share(function() use ($app) {
             return new UserProvider($app);
         }),
-        'logout' => array('logout_path' => '/admin/logout')
+        'logout' => array('logout_path' => '/logout'),
+        'anonymous' => true
     )
 );
 $app['security_encoder.digest'] = $app->share(function () {
