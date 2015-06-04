@@ -1,0 +1,75 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+  <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+  <li><i class="fi-lock small-icon current"></i></li>
+  {% if form_type is defined %}
+{% endblock %}
+
+{% block content %}
+  {% if user is defined and user is null %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          {% if error == 'Bad credentials.' %}
+            ¡El usuario no existe! Por favor revisa tus credenciales.
+          {% else %}
+            Algo ha salido mal... Por favor vuelve a intentarlo.
+          {% endif %}
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif activate_user is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡Usuario activado!
+          <br>
+          Ya puedes acceder con tus credenciales.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="small-12 column">
+      <form action="{{ path('admin_login_check') }}" method="post" data-abide>
+        <fieldset>
+          <legend>Login</legend>
+          <div class="row collapse">
+            {% if error is defined %}
+              <p class="text-center"><span class="alert label">{{ error }}</span></p>
+            {% endif %}
+            <div class="small-2 large-2 columns">
+              <span class="prefix"><i class="fi-torso medium-icon"></i></span>
+            </div>
+            <div class="input-wrapper small-4 large-4 columns">
+              <input type="text" placeholder="Email" name="_username" pattern="alpha_numeric"
+                  {% if last_email is defined %}
+                    value="{{ last_username }}"
+                  {% endif %}
+                     required>
+              <small class="error">Debes indicar un usuario válido</small>
+            </div>
+            <div class="small-6 large-6 columns">
+              <span class="postfix">{{ domain }}</span>
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 large-2 columns">
+              <span class="prefix"><i class="fi-lock medium-icon"></i></span>
+            </div>
+            <div class="input-wrapper small-10 large-10 columns">
+              <input type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
+              <small class="error">Debes indicar una contraseña</small>
+            </div>
+          </div>
+          <div class="small-3 small-centered column">
+            <button type="submit" class="button expand round success"><i class="small-icon fi-unlock"></i>Login</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+{% endblock %}
