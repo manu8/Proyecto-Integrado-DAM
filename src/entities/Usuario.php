@@ -2,34 +2,33 @@
 
 namespace Entities;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="usuario")
+ * @Entity
+ * @Table(name="usuario")
  */
 class Usuario implements UserInterface {
 
     /**
-     * @ORM\Column(type="integer")
+     * @Column(type="integer")
      */
     private $Id;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(length=30)
+     * @Id
+     * @Column(length=30)
      */
     private $Username;
 
     /**
-     * @ORM\Column
+     * @Column
      */
     private $Password;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @Column(type="boolean")
      */
     private $Activo;
 
@@ -46,7 +45,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @return mixed
+     * @return integer Id del usuario
      */
     public function getId()
     {
@@ -54,7 +53,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @return mixed
+     * @return string Nombre de usuario
      */
     public function getUsername()
     {
@@ -62,7 +61,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @param mixed $Username
+     * @param string $Username Nombre de usuario
      */
     public function setUsername($username)
     {
@@ -70,7 +69,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @return mixed
+     * @return string Contraseña del usuario
      */
     public function getPassword()
     {
@@ -78,7 +77,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @param mixed $Password
+     * @param string $Password Contraseña del usuario
      */
     public function setPassword($Password)
     {
@@ -86,7 +85,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @return mixed
+     * @return boolean Usuario activo
      */
     public function getActivo()
     {
@@ -94,7 +93,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @param mixed $Activo
+     * @param boolean $Activo Usuario activo
      */
     public function setActivo($Activo)
     {
@@ -102,7 +101,7 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @return array
+     * @return array Roles del usuario
      */
     public function getRoles()
     {
@@ -110,8 +109,8 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @param string $role
-     * @return bool
+     * @param string $role Rol del usuario
+     * @return bool True si posee el rol false si no
      */
     public function hasRole($role)
     {
@@ -119,12 +118,15 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * @return mixed
+     * @return string Codificador de la contraseña
      */
     public function getSalt()
     {
         return $this->salt;
     }
 
+    /**
+     * Elimina las credenciales del usuario
+     */
     public function eraseCredentials() {}
 }

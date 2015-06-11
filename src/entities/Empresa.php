@@ -2,57 +2,63 @@
 
 namespace Entities;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="empresa")
+ * @Entity
+ * @Table(name="empresa")
  */
 class Empresa {
+
     /**
-     * @ORM\Id
-     * @ORM\Column(length=9)
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
+     */
+    private $Id;
+
+    /**
+     * @Column(length=9)
      */
     private $CIF;
 
     /**
-     * @ORM\Column(length=20)
+     * @Column(length=20)
      */
     private $Denominacion;
 
     /**
-     * @ORM\Column(length=50, nullable=true)
+     * @Column(length=50, nullable=true)
      */
     private $Direccion;
 
     /**
-     * @ORM\Column(length=10)
+     * @Column(length=10)
      */
     private $Telefono;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Column(type="integer", nullable=true)
      */
     private $CP;
 
     /**
-     * @ORM\Column(length=30)
+     * @Column(length=30)
      */
     private $Email;
 
     /**
-     * @ORM\Column(length=100, nullable=true)
+     * @Column(length=100, nullable=true)
      */
     private $Contacto;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Alumno", mappedBy="Empresas", cascade={"all"})
+     * @ManyToMany(targetEntity="Alumno", mappedBy="Empresas", cascade={"all"})
      */
     private $Alumnos;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Categoria_Actividad", mappedBy="Empresas", cascade={"all"})
+     * @ManyToMany(targetEntity="Categoria_Actividad", mappedBy="Empresas", cascade={"all"})
      */
     private $Actividades;
 
@@ -62,7 +68,15 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return integer Id de la empresa
+     */
+    public function getId()
+    {
+        return $this->Id;
+    }
+
+    /**
+     * @return string CIF de la empresa
      */
     public function getCIF()
     {
@@ -70,7 +84,7 @@ class Empresa {
     }
 
     /**
-     * @param mixed $CIF
+     * @param string $CIF CIF de la empresa
      */
     public function setCIF($CIF)
     {
@@ -78,7 +92,7 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return string Nombre de la empresa
      */
     public function getDenominacion()
     {
@@ -86,7 +100,7 @@ class Empresa {
     }
 
     /**
-     * @param mixed $Denominacion
+     * @param string $Denominacion Nombre de la empresa
      */
     public function setDenominacion($Denominacion)
     {
@@ -94,7 +108,7 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return string Dirección de la empresa
      */
     public function getDireccion()
     {
@@ -102,7 +116,7 @@ class Empresa {
     }
 
     /**
-     * @param mixed $Direccion
+     * @param string $Direccion Dirección de la empresa
      */
     public function setDireccion($Direccion)
     {
@@ -110,7 +124,7 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return string Teléfono de la empresa
      */
     public function getTelefono()
     {
@@ -118,7 +132,7 @@ class Empresa {
     }
 
     /**
-     * @param mixed $Telefono
+     * @param string $Telefono Teléfono de la empresa
      */
     public function setTelefono($Telefono)
     {
@@ -126,7 +140,7 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return integer Código Postal de la dirección de la empresa
      */
     public function getCP()
     {
@@ -134,7 +148,7 @@ class Empresa {
     }
 
     /**
-     * @param mixed $CP
+     * @param integer $CP Código Postal de la dirección de la empresa
      */
     public function setCP($CP)
     {
@@ -142,7 +156,7 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return string Email de la empresa
      */
     public function getEmail()
     {
@@ -150,7 +164,7 @@ class Empresa {
     }
 
     /**
-     * @param mixed $Email
+     * @param string $Email Email de la empresa
      */
     public function setEmail($Email)
     {
@@ -158,7 +172,7 @@ class Empresa {
     }
 
     /**
-     * @return mixed
+     * @return string Nombre completo de la persona de contacto en la empresa
      */
     public function getContacto()
     {
@@ -166,10 +180,62 @@ class Empresa {
     }
 
     /**
-     * @param mixed $Contacto
+     * @param string $Contacto Nombre completo de la persona de contacto en la empresa
      */
     public function setContacto($Contacto)
     {
         $this->Contacto = $Contacto;
+    }
+
+    /**
+     * @return array Alumnos que han trabajado en la empresa
+     */
+    public function getAlumnos()
+    {
+        return $this->Alumnos;
+    }
+
+    /**
+     * @param Alumno $student Alumno a añadir
+     */
+    public function addStudent(Alumno $student)
+    {
+        $students = $this->Alumnos;
+        if(!$students->contains($student)) $students->add($student);
+    }
+
+    /**
+     * @param Alumno $student Alumno a eliminar
+     */
+    public function removeStudent(Alumno $student)
+    {
+        $students = $this->Alumnos;
+        if($students->contains($student)) $students->removeElement($student);
+    }
+
+    /**
+     * @return array Actividades (Categorías) a las que pertenece la empresa
+     */
+    public function getActividades()
+    {
+        return $this->Actividades;
+    }
+
+    /**
+     * @param CategoriaActividad $activity Categoría a añadir
+     */
+    public function addActivity(CategoriaActividad $activity)
+    {
+        $activities = $this->Actividades;
+        if(!$activities->contains($activity)) $activities->add($activity);
+    }
+
+    /**
+     * @param CategoriaActividad $activity Categoría a eliminar
+     */
+    public function removeActivity(CategoriaActividad $activity)
+    {
+        $activities = $this->Actividades;
+        if($activities->contains($activity)) $activities->removeElement($activity);
     }
 }

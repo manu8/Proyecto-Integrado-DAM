@@ -2,85 +2,105 @@
 
 namespace Entities;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="alumno")
+ * @Entity
+ * @Table(name="alumno")
  */
 class Alumno {
+
     /**
-     * @ORM\Id
-     * @ORM\Column(length=9)
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
+     */
+    private $Id;
+
+    /**
+     * @Column(length=9)
      */
     private $NIF;
 
     /**
-     * @ORM\Column(length=20)
+     * @Column(length=20)
      */
     private $Nombre;
 
     /**
-     * @ORM\Column(length=40)
+     * @Column(length=40)
      */
     private $Apellidos;
 
     /**
-     * @ORM\Column(length=50, nullable=true)
+     * @Column(length=50, nullable=true)
      */
     private $Direccion;
 
     /**
-     * @ORM\Column(length=10)
+     * @Column(length=10)
      */
     private $Telefono;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Column(type="integer", nullable=true)
      */
     private $CP;
 
     /**
-     * @ORM\Column(length=30)
+     * @Column(length=30)
      */
     private $Email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Estudio_Titulo", inversedBy="Alumnos", cascade={"all"})
-     * @ORM\JoinTable(name="alumnos_estudios",
-     *      joinColumns={@ORM\JoinColumn(name="alumno_nif", referencedColumnName="NIF")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="estudio_id", referencedColumnName="Id", nullable=false)}
+     * @ManyToMany(targetEntity="EstudioTitulo", inversedBy="Alumnos", cascade={"all"})
+     * @JoinTable(name="alumnos_estudios",
+     *      joinColumns={@JoinColumn(name="alumno_id", referencedColumnName="Id")},
+     *      inverseJoinColumns={@JoinColumn(name="estudio_id", referencedColumnName="Id", nullable=false)}
      * )
      */
-    private $Estudios_Titulos;
+    private $EstudiosTitulos;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Habilidad_Conocimiento", inversedBy="Alumnos", cascade={"all"})
-     * @ORM\JoinTable(name="alumnos_conocimientos",
-     *      joinColumns={@ORM\JoinColumn(name="alumno_nif", referencedColumnName="NIF", nullable=false)},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="conocimiento_id", referencedColumnName="Id")}
+     * @ManyToMany(targetEntity="HabilidadConocimiento", inversedBy="Alumnos", cascade={"all"})
+     * @JoinTable(name="alumnos_conocimientos",
+     *      joinColumns={@JoinColumn(name="alumno_id", referencedColumnName="Id", nullable=false)},
+     *      inverseJoinColumns={@JoinColumn(name="conocimiento_id", referencedColumnName="Id")}
      * )
      */
-    private $Conocimientos_Habilidades;
+    private $ConocimientosHabilidades;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Empresa", inversedBy="Alumnos", cascade={"all"})
-     * @ORM\JoinTable(name="alumnos_empresas",
-     *      joinColumns={@ORM\JoinColumn(name="alumno_nif", referencedColumnName="NIF")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="empresa_cif", referencedColumnName="CIF", nullable=false)}
+     * @ManyToMany(targetEntity="Empresa", inversedBy="Alumnos", cascade={"all"})
+     * @JoinTable(name="alumnos_empresas",
+     *      joinColumns={@JoinColumn(name="alumno_id", referencedColumnName="Id")},
+     *      inverseJoinColumns={@JoinColumn(name="empresa_id", referencedColumnName="Id", nullable=false)}
      * )
      */
     private $Empresas;
 
-    public function __construct() {
-        $this->Estudios_Titulos = new ArrayCollection();
-        $this->Conocimientos_Habilidades = new ArrayCollection();
+    public function __construct($nif, $name, $surnames, $address, $cp, $email) {
+        $this->NIF = $nif;
+        $this->Nombre = $name;
+        $this->Apellidos = $surnames;
+        $this->Direccion = $address;
+        $this->CP = $cp;
+        $this->Email = $email;
+        $this->EstudiosTitulos = new ArrayCollection();
+        $this->ConocimientosHabilidades = new ArrayCollection();
         $this->Empresas = new ArrayCollection();
     }
 
     /**
-     * @return mixed
+     * @return integer Id del alumno
+     */
+    public function getId()
+    {
+        return $this->Id;
+    }
+
+    /**
+     * @return string NIF del alumno
      */
     public function getNIF()
     {
@@ -88,7 +108,7 @@ class Alumno {
     }
 
     /**
-     * @param mixed $NIF
+     * @param string $NIF NIF del alumno
      */
     public function setNIF($NIF)
     {
@@ -96,7 +116,7 @@ class Alumno {
     }
 
     /**
-     * @return mixed
+     * @return string Nombre del alumno
      */
     public function getNombre()
     {
@@ -104,7 +124,7 @@ class Alumno {
     }
 
     /**
-     * @param mixed $Nombre
+     * @param string $Nombre Nombre del alumno
      */
     public function setNombre($Nombre)
     {
@@ -112,7 +132,7 @@ class Alumno {
     }
 
     /**
-     * @return mixed
+     * @return string Apellidos del alumno
      */
     public function getApellidos()
     {
@@ -120,7 +140,7 @@ class Alumno {
     }
 
     /**
-     * @param mixed $Apellidos
+     * @param string $Apellidos Apellidos del alumno
      */
     public function setApellidos($Apellidos)
     {
@@ -128,7 +148,7 @@ class Alumno {
     }
 
     /**
-     * @return mixed
+     * @return string Dirección de residencia del alumno
      */
     public function getDireccion()
     {
@@ -136,7 +156,7 @@ class Alumno {
     }
 
     /**
-     * @param mixed $Direccion
+     * @param string $Direccion Dirección de residencia del alumno
      */
     public function setDireccion($Direccion)
     {
@@ -144,7 +164,7 @@ class Alumno {
     }
 
     /**
-     * @return mixed
+     * @return string Teléfono del alumno
      */
     public function getTelefono()
     {
@@ -152,7 +172,7 @@ class Alumno {
     }
 
     /**
-     * @param mixed $Telefono
+     * @param string $Telefono Teléfono del alumno
      */
     public function setTelefono($Telefono)
     {
@@ -160,7 +180,7 @@ class Alumno {
     }
 
     /**
-     * @return mixed
+     * @return integer Código Postal de la residencia del alumno
      */
     public function getCP()
     {
@@ -168,7 +188,7 @@ class Alumno {
     }
 
     /**
-     * @param mixed $CP
+     * @param mixed $CP Código Postal de la residencia del alumno
      */
     public function setCP($CP)
     {
@@ -176,7 +196,7 @@ class Alumno {
     }
 
     /**
-     * @return mixed
+     * @return string Email del alumno
      */
     public function getEmail()
     {
@@ -184,10 +204,88 @@ class Alumno {
     }
 
     /**
-     * @param mixed $Email
+     * @param string $Email Email del alumno
      */
     public function setEmail($Email)
     {
         $this->Email = $Email;
+    }
+
+    /**
+     * @return array Estudios cursados del alumno
+     */
+    public function getEstudiosTitulos()
+    {
+        return $this->EstudiosTitulos;
+    }
+
+    /**
+     * @param EstudioTitulo $study Estudio a añadir
+     */
+    public function addStudy(EstudioTitulo $study)
+    {
+        $studies = $this->EstudiosTitulos;
+        if(!$studies->contains($study)) $studies->add($study);
+    }
+
+    /**
+     * @param EstudioTitulo $study Estudio a eliminar
+     */
+    public function removeStudy(EstudioTitulo $study)
+    {
+        $studies = $this->EstudiosTitulos;
+        if($studies->contains($study)) $studies->removeElement($study);
+    }
+
+    /**
+     * @return array Conocimientos o habilidades adicionales del alumno
+     */
+    public function getConocimientosHabilidades()
+    {
+        return $this->ConocimientosHabilidades;
+    }
+
+    /**
+     * @param HabilidadConocimiento $knowledge Conocimiento a añadir
+     */
+    public function addKnowledge(HabilidadConocimiento $knowledge)
+    {
+        $knowledgeList = $this->ConocimientosHabilidades;
+        if(!$knowledgeList->contains($knowledge)) $knowledgeList->add($knowledge);
+    }
+
+    /**
+     * @param HabilidadConocimiento $knowledge Conocimiento a eliminar
+     */
+    public function removeKnowledge(HabilidadConocimiento $knowledge)
+    {
+        $knowledgeList = $this->ConocimientosHabilidades;
+        if($knowledgeList->contains($knowledge)) $knowledgeList->removeElement($knowledge);
+    }
+
+    /**
+     * @return array Empresas en las que ha realizado algún trabajo el alumno
+     */
+    public function getEmpresas()
+    {
+        return $this->Empresas;
+    }
+
+    /**
+     * @param Empresa $company Empresa a añadir
+     */
+    public function addCompany(Empresa $company)
+    {
+        $companies = $this->Empresas;
+        if(!$companies->contains($company)) $companies->add($company);
+    }
+
+    /**
+     * @param Empresa $company Empresa a eliminar
+     */
+    public function removeCompany(Empresa $company)
+    {
+        $companies = $this->Empresas;
+        if($companies->contains($company)) $companies->removeElement($company);
     }
 }
