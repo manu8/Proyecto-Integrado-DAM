@@ -7,7 +7,7 @@ use MJanssen\Provider\RoutingServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\WebProfilerServiceProvider;
 
-// include the prod configuration
+// include the production configuration
 require __DIR__.'/prod.php';
 
 // enable the debug mode

@@ -2,11 +2,17 @@
 
 use Lib\Providers\UserProvider;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+use \Doctrine\Common\Annotations\AnnotationRegistry;
+
+//Constantes de la aplicación
+$GLOBALS['SERVER_NAME'] = 'pidam.local';
+$GLOBALS['DOMAIN'] = '@ieslasfuentezuelas.com';
+$GLOBALS['ACTIVATION_MESSAGE'] = 'Pulsa sobre el enlace para activar su usuario.\n\n';
 
 //Configuración de Twig
 $app['twig'] = $app->share($app->extend('twig', function($twig) {
     $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) {
-        return sprintf('../assets/%s', $asset);
+        return sprintf('http://'.$GLOBALS['SERVER_NAME'].'/assets/%s', $asset);
     }));
 
     return $twig;
