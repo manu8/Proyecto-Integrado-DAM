@@ -40,8 +40,7 @@ $app->register(new DoctrineOrmServiceProvider, array(
             array(
                 'type' => 'annotation',
                 'namespace' => 'Entities',
-                'path' => __DIR__.'/entities',
-                'use_simple_annotation_reader' => false
+                'path' => __DIR__.'/entities'
             ),
         ),
     ),
