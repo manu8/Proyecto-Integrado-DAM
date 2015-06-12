@@ -33,7 +33,7 @@ class Alumno {
     private $Apellidos;
 
     /**
-     * @Column(length=50, nullable=true)
+     * @Column(length=100, nullable=true)
      */
     private $Direccion;
 
@@ -79,12 +79,13 @@ class Alumno {
      */
     private $Empresas;
 
-    public function __construct($nif, $name, $surnames, $address, $cp, $email) {
+    public function __construct($nif, $name, $surnames, $address, $cp, $tlf, $email) {
         $this->NIF = $nif;
         $this->Nombre = $name;
         $this->Apellidos = $surnames;
         $this->Direccion = $address;
         $this->CP = $cp;
+        $this->Telefono = $tlf;
         $this->Email = $email;
         $this->EstudiosTitulos = new ArrayCollection();
         $this->ConocimientosHabilidades = new ArrayCollection();
