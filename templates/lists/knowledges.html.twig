@@ -1,0 +1,53 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+  <div class="row">
+    <div class="small-12 small-centered large-centered columns text-center" hidden>
+      <h2>Añadir conocimiento</h2>
+      <p class="lead">Selecciona el conocimiento(s)/habilidad(es) que quieres asociar al alumno</p>
+      <div class="pagination-centered">
+        <table>
+          <tbody>
+          {% for knowledge in knowledges %}
+            <tr>
+              <td>{{ knowledge.Denominacion }}</td>
+              <td>
+                <a class="button success" href="{{ path('add_knowledge', { 'student' : student , 'knowledge' : knowledge }) }}">
+                  <i class="fi-check"></i>
+                </a>
+              </td>
+            </tr>
+          {% else %}
+            <div class="text-center">
+              <span class="alert round label">¡No se ha creado ningún conocimiento!</span>
+              {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('knowledge_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear conocimiento/habilidad</a>
+              {% endif %}
+            </div>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% if pages is not null %}
+          <ul class="pagination">
+            {% for number, position in pages %}
+              {% if position == 'first' %}
+                <li class="arrow"><a href="student/{{ student.Id }}/knowledges/{{ number }}">&laquo;</a></li>
+              {% elseif position == 'less' or position == 'more' %}
+                <li class="unavailable"><a href="">&hellip;</a></li>
+              {% elseif position == 'previous' or position == 'next' %}
+                <li><a href="student/{{ student.Id }}/knowledges/{{ number }}">{{ number }}</a></li>
+              {% elseif position == 'current_page' %}
+                <li class="current"><a href="">{{ number }}</a></li>
+              {% elseif position == 'last' %}
+                <li class="arrow"><a href="student/{{ student.Id }}/knowledges/{{ number }}">&raquo;</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      {% if add_knowledges is defined %}
+        <a id="addKnowledges" class="success round button"><i class="fi-plus"></i>&nbsp;Añadir conocimientos</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

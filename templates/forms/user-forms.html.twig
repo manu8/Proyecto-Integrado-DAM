@@ -2,14 +2,14 @@
 
 {% block breadcrumbs %}
   <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
-  <li><i class="fi-torso-business small-icon current"></i></li>
+  <li class="current"><i class="fi-torso-business small-icon"></i></li>
 {% endblock %}
 
 {% block content %}
   {% if new_user is defined %}
     <div class="custom-row first-row">
       <div class="small-6 small-centered column">
-        <div data-alert class="alert-box info round text-center">
+        <div data-alert class="alert-box success round text-center">
           ¡El usuario ha sido creado!
           <br>
           Se te ha enviado un correo a la dirección proporcionada con el enlace para activar el usuario creado.
