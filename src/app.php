@@ -10,6 +10,7 @@ use Dflydev\Silex\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
+use Kilte\Silex\Pagination\PaginationServiceProvider;
 
 
 /**** INICIALIZACIÓN Y CONFIGURACIÓN DE LA APLICACIÓN ****/
@@ -20,8 +21,9 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
 
-//Integración de vistas con Twig
+//Integración de vistas con Twig y paginación
 $app->register(new TwigServiceProvider());
+$app->register(new PaginationServiceProvider(), array('pagination.per_page' => 10));
 
 //Integración de la BD
 $app->register(new DoctrineServiceProvider(), array(
