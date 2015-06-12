@@ -20,8 +20,7 @@ class UserProvider implements UserProviderInterface {
         $user = null;
         $em = $this->app["orm.em"];
         if($em instanceof \Doctrine\ORM\EntityManager){
-            if(!$user = $em->getRepository('Entities\Usuario')->findOneBy(array("Username"=>$username))){
-                var_dump($user);
+            if(!$user = $em->getRepository('Usuario')->find($username)){
                 throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
             }
         }
@@ -69,14 +68,16 @@ class UserProvider implements UserProviderInterface {
         return $this->app['security']->isGranted('IS_AUTHENTICATED_FULLY');
     }
 
-    function getCurrentUser() {
+    function getCurrentUser()
+    {
         if($this->isLoggedIn()){
             return $token = $this->app['security']->getToken()->getUser();
         }
         return null;
     }
 
-    public function createUser(UserInterface $user) {
+    public function createUser(UserInterface $user)
+    {
         $em = $this->app['orm.em'];
         $this->setUserPassword($user);
         $em->persist($user);
@@ -87,7 +88,7 @@ class UserProvider implements UserProviderInterface {
     {
         $em = $this->app["orm.em"];
         if($em instanceof \Doctrine\ORM\EntityManager){
-            if(!$user = $em->getRepository("Entities\\Usuario")->findOneBy(array("Id"=>$id))){
+            if(!$user = $em->getRepository("Usuario")->findOneBy(array("Id"=>$id))){
                 throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $id));
             } else {
                 $user->setActivo(true);
