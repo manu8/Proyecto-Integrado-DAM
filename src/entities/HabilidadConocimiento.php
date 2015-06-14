@@ -27,12 +27,12 @@ class HabilidadConocimiento {
     private $Descripcion;
 
     /**
-     * @ManyToMany(targetEntity="Alumno", mappedBy="Conocimientos_Habilidades", cascade={"all"})
+     * @ManyToMany(targetEntity="Alumno", mappedBy="ConocimientosHabilidades", cascade={"persist"})
      */
     private $Alumnos;
 
     /**
-     * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="Habilidades_Conocimientos", cascade={"all"})
+     * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="HabilidadesConocimientos", cascade={"persist"})
      */
     private $Categorias;
 

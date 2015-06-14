@@ -53,12 +53,12 @@ class Empresa {
     private $Contacto;
 
     /**
-     * @ManyToMany(targetEntity="Alumno", mappedBy="Empresas", cascade={"all"})
+     * @ManyToMany(targetEntity="Alumno", mappedBy="Empresas", cascade={"persist"})
      */
     private $Alumnos;
 
     /**
-     * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="Empresas", cascade={"all"})
+     * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="Empresas", cascade={"persist"})
      */
     private $Actividades;
 

@@ -53,7 +53,7 @@ class Alumno {
     private $Email;
 
     /**
-     * @ManyToMany(targetEntity="EstudioTitulo", inversedBy="Alumnos", cascade={"all"})
+     * @ManyToMany(targetEntity="EstudioTitulo", inversedBy="Alumnos", cascade={"persist"})
      * @JoinTable(name="alumnos_estudios",
      *      joinColumns={@JoinColumn(name="alumno_id", referencedColumnName="Id")},
      *      inverseJoinColumns={@JoinColumn(name="estudio_id", referencedColumnName="Id", nullable=false)}
@@ -62,7 +62,7 @@ class Alumno {
     private $EstudiosTitulos;
 
     /**
-     * @ManyToMany(targetEntity="HabilidadConocimiento", inversedBy="Alumnos", cascade={"all"})
+     * @ManyToMany(targetEntity="HabilidadConocimiento", inversedBy="Alumnos", cascade={"persist"})
      * @JoinTable(name="alumnos_conocimientos",
      *      joinColumns={@JoinColumn(name="alumno_id", referencedColumnName="Id", nullable=false)},
      *      inverseJoinColumns={@JoinColumn(name="conocimiento_id", referencedColumnName="Id")}
@@ -71,7 +71,7 @@ class Alumno {
     private $ConocimientosHabilidades;
 
     /**
-     * @ManyToMany(targetEntity="Empresa", inversedBy="Alumnos", cascade={"all"})
+     * @ManyToMany(targetEntity="Empresa", inversedBy="Alumnos", cascade={"persist"})
      * @JoinTable(name="alumnos_empresas",
      *      joinColumns={@JoinColumn(name="alumno_id", referencedColumnName="Id")},
      *      inverseJoinColumns={@JoinColumn(name="empresa_id", referencedColumnName="Id", nullable=false)}
