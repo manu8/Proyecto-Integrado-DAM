@@ -1,0 +1,30 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+  <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+  <li class="current">
+    <i class="fi-plus small-icon"></i>
+    <i class="fi-book-bookmark small-icon"></i>
+  </li>
+{% endblock %}
+
+{% block content %}
+  {% if student_studies_list is defined %}
+    <h2>Añadir estudio</h2>
+    <p class="lead">Selecciona el estudio o estudios que quieres asociar al alumno</p>
+    {% include 'lists/studies.html.twig' %}
+  {% elseif student_knowledges_list is defined %}
+    <h2>Añadir conocimiento</h2>
+    <p class="lead">Selecciona el conocimiento(s)/habilidad(es) que quieres asociar al alumno</p>
+    {% include 'lists/knowledges.html.twig' %}
+  {% else %}
+    <h2>Añadir empresa</h2>
+    <p class="lead">Selecciona la empresa o empresas que quieres asociar al alumno</p>
+    {% include 'lists/companies.html.twig' %}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/students.js') }}"></script>
+{% endblock %}

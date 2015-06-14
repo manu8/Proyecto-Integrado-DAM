@@ -1,53 +1,149 @@
-{% extends 'layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="small-12 small-centered large-centered columns text-center" hidden>
-      <h2>Añadir conocimiento</h2>
-      <p class="lead">Selecciona el conocimiento(s)/habilidad(es) que quieres asociar al alumno</p>
-      <div class="pagination-centered">
-        <table>
-          <tbody>
-          {% for knowledge in knowledges %}
-            <tr>
-              <td>{{ knowledge.Denominacion }}</td>
-              <td>
-                <a class="button success" href="{{ path('add_knowledge', { 'student' : student , 'knowledge' : knowledge }) }}">
-                  <i class="fi-check"></i>
-                </a>
-              </td>
-            </tr>
-          {% else %}
-            <div class="text-center">
-              <span class="alert round label">¡No se ha creado ningún conocimiento!</span>
-              {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('knowledge_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear conocimiento/habilidad</a>
-              {% endif %}
-            </div>
-          {% endfor %}
-          </tbody>
-        </table>
-        {% if pages is not null %}
-          <ul class="pagination">
-            {% for number, position in pages %}
-              {% if position == 'first' %}
-                <li class="arrow"><a href="student/{{ student.Id }}/knowledges/{{ number }}">&laquo;</a></li>
-              {% elseif position == 'less' or position == 'more' %}
-                <li class="unavailable"><a href="">&hellip;</a></li>
-              {% elseif position == 'previous' or position == 'next' %}
-                <li><a href="student/{{ student.Id }}/knowledges/{{ number }}">{{ number }}</a></li>
-              {% elseif position == 'current_page' %}
-                <li class="current"><a href="">{{ number }}</a></li>
-              {% elseif position == 'last' %}
-                <li class="arrow"><a href="student/{{ student.Id }}/knowledges/{{ number }}">&raquo;</a></li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        {% endif %}
+<div class="row">
+  <div id="error" class="custom-row first-row" hidden>
+    <div class="small-6 small-centered column">
+      <div data-alert class="alert-box info round text-center">
+        ¡La acción no se ha realizado correctamente! Inténtalo de nuevo.
+        <a href="#" class="close">&times;</a>
       </div>
-      {% if add_knowledges is defined %}
-        <a id="addKnowledges" class="success round button"><i class="fi-plus"></i>&nbsp;Añadir conocimientos</a>
-      {% endif %}
     </div>
   </div>
-{% endblock %}
+  <div id="knowledgeAdded" class="custom-row first-row" hidden>
+    <div class="small-6 small-centered column">
+      <div data-alert class="alert-box success round text-center">
+        ¡Conocimiento añadido!
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+  </div>
+  <div id="knowledgeRemoved" class="custom-row first-row" hidden>
+    <div class="small-6 small-centered column">
+      <div data-alert class="alert-box alert round text-center">
+        ¡Conocimiento eliminado!
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+  </div>
+  <div class="small-12 small-centered text-center column">
+    <a id="categorySearch" href="#" class="large button">Búsqueda por categoría</a>
+    <form id="categorySelect"
+        {% if student is defined and student is not null %}
+          action="{{ path('category_search') }}"
+        {% else %}
+          action="{{ path('knowledges_category_list') }}"
+        {% endif %}
+          method="post" hidden>
+      {% if student is defined and student is not null %}
+        <input type="hidden" name="student" value="{{ student.Id }}" />
+        <input type="hidden" name="searchType" value="knowledges" />
+      {% endif %}
+      {% if categories is defined and categories is not empty %}
+        <div class="small-6 small-centered column">
+          <label>Selecciona una categoría
+            <select name="category">
+              {% for category in categories %}
+                <option value="{{ category.Id }}">{{ category.Denominacion }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+        <div class="small-2 small-centered columns">
+          <button type="submit" class="button postfix">Buscar</button>
+        </div>
+      {% else %}
+        <span class="alert round label">¡No se ha creado ninguna categoría!</span>
+        {% if is_granted('ROLE_USER') %}
+          <a href="{{ path('category_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría</a>
+        {% endif %}
+      {% endif %}
+    </form>
+    <div class="pagination-centered">
+      <table class="list">
+        <tbody>
+        {% for knowledge in knowledges %}
+          <tr>
+            <td>{{ knowledge.Denominacion }}</td>
+            <td>
+              {% if student is defined and student is not null %}
+                <a class="knowledge-add-link success small button" href="{{ path('add_knowledge', { 'id' : student.Id , 'knowledge_id' : knowledge.Id }) }}">
+                  <i class="fi-check small-icon"></i>
+                </a>
+              {% else %}
+                <a href="{{ path('knowledge_edit', { 'id' : knowledge.Id }) }}" class="warning radius small button">
+                  <i class="fi-page-edit small-icon"></i>
+                </a>
+              {% endif %}
+              {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('knowledge_remove', { 'id' : knowledge.Id }) }}" class="remove-knowledge-link alert radius small button">
+                  <i class="fi-trash small-icon"></i>
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <div>
+            <span class="alert round label">¡No se ha creado ningún conocimiento!</span>
+            {% if is_granted('ROLE_USER') %}
+              <a href="{{ path('knowledge_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear conocimiento/habilidad</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% if pages is not null %}
+        <ul class="pagination">
+          {% for number, position in pages %}
+            {% if position == 'first' %}
+              <li class="arrow">
+                <a
+                  {% if student_knowledges_list is defined %}
+                    href="{{ path('add_knowledges', { 'id' : student.Id, 'page' : number }) }}"
+                  {% elseif student_categorized_knowledges_list is defined %}
+                    href="{{ path('add_categorized_knowledges', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                  {% elseif knowledges_list is defined %}
+                    href="{{ path('knowledges_list', { 'id' : student.Id, 'page' : number }) }}"
+                  {% else %}
+                    href="{{ path('knowledges_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                  {% endif %}
+                >&laquo;</a></li>
+            {% elseif position == 'less' or position == 'more' %}
+              <li class="unavailable"><a href="">&hellip;</a></li>
+            {% elseif position == 'previous' or position == 'next' %}
+              <li>
+                <a
+                  {% if student_knowledges_list is defined %}
+                    href="{{ path('add_knowledges', { 'id' : student.Id, 'page' : number }) }}"
+                  {% elseif student_categorized_knowledges_list is defined %}
+                    href="{{ path('add_categorized_knowledges', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                  {% elseif knowledges_list is defined %}
+                    href="{{ path('knowledges_list', { 'id' : student.Id, 'page' : number }) }}"
+                  {% else %}
+                    href="{{ path('knowledges_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                  {% endif %}
+                >{{ number }}</a>
+              </li>
+            {% elseif position == 'current' %}
+              <li class="current"><a href="">{{ number }}</a></li>
+            {% elseif position == 'last' %}
+              <li class="arrow">
+                <a
+                  {% if student_knowledges_list is defined %}
+                    href="{{ path('add_knowledges', { 'id' : student.Id, 'page' : number }) }}"
+                  {% elseif student_categorized_knowledges_list is defined %}
+                    href="{{ path('add_categorized_knowledges', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                  {% elseif knowledges_list is defined %}
+                    href="{{ path('knowledges_list', { 'id' : student.Id, 'page' : number }) }}"
+                  {% else %}
+                    href="{{ path('knowledges_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                  {% endif %}
+                >&raquo;</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    {% if student is defined and student is not null %}
+      <a href="{{ path('student_edit', { 'id' : student.Id }) }}" class="round button">Volver</a>
+    {% endif %}
+  </div>
+</div>

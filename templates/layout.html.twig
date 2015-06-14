@@ -15,7 +15,7 @@
           <nav class="top-bar tab-bar" data-topbar role="navigation">
             <ul class="title-area">
               <li class="name">
-                <h1><a href="#">PIDAM</a></h1>
+                <h1><a href="{{ path('home') }}">PIDAM</a></h1>
               </li>
             </ul>
             <section class="top-bar-section">
@@ -70,7 +70,7 @@
           </nav>
           <ul class="breadcrumbs">
             {% block breadcrumbs %}
-              <li><i class="fi-home small-icon current"></i></li>
+              <li class="current"><i class="fi-home small-icon"></i></li>
             {% endblock %}
           </ul>
         </header>
@@ -108,7 +108,7 @@
         <section class="main-section">
           {% block content %}{% endblock %}
           <div class="custom-row">
-            <div class="small-12 large-12 columns">
+            <div class="footer small-12 large-12 columns">
               <p><strong>Manuel Berrio Martín &copy; 2015</strong> -- CFGS Desarrollo de Aplicaciones Multiplataforma</p>
             </div>
           </div>
@@ -116,19 +116,59 @@
         <a class="exit-off-canvas"></a>
       </div>      
     </div>
-    {% block modals %}
-      <div id="registerModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-        <div class="small-8 small-centered large-8 large-centered columns">
-          <h2 id="modalTitle" class="text-center">Nuevo usuario</h2>
-          <p class="lead text-center">Rellena el siguiente formulario para inscribirte como usuario</p>
-          <form action="{{ path('user_edit') }}" method="post" data-abide>
+    <div id="registerModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <div class="small-8 small-centered large-8 large-centered columns">
+        <h2 id="modalTitle" class="text-center">Nuevo usuario</h2>
+        <p class="lead text-center">Rellena el siguiente formulario para inscribirte como usuario</p>
+        <form action="{{ path('user_edit') }}" method="post" data-abide>
+          <div class="row collapse">
+            <div class="small-2 large-2 columns">
+              <span class="prefix"><i class="fi-mail medium-icon"></i></span>
+            </div>
+            <div class="input-wrapper small-4 large-4 columns">
+              <input type="text" placeholder="Email" name="username" pattern="alpha_numeric" required>
+              <small class="error">Debes indicar un email válido</small>
+            </div>
+            <div class="small-6 large-6 columns">
+              <span class="postfix">{{ domain }}</span>
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 large-2 columns">
+              <span class="prefix"><i class="fi-lock medium-icon"></i></span>
+            </div>
+            <div class="small-10 large-10 columns">
+              <input id="password" type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
+              <small class="error">Debes indicar una contraseña</small>
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 large-2 columns">
+              <span class="prefix"><i class="fi-alert medium-icon"></i></span>
+            </div>
+            <div class="small-10 large-10 columns">
+              <input type="password" placeholder="Repita su contraseña" pattern="alpha_numeric" data-equalto="password">
+              <small class="error">Las contraseñas no coinciden</small>
+            </div>
+          </div>
+          <button type="submit" class="button round success"><i class="small-icon fi-check"></i>Registrarse</button>
+          <button type="reset" class="button round"><i class="small-icon fi-trash"></i>Limpiar</button>
+        </form>
+      </div>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+    <div id="loginModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <div class="small-8 small-centered large-8 large-centered columns">
+        <form action="{{ path('login_check') }}" method="post" data-abide>
+          <fieldset>
+            <legend>Login</legend>
             <div class="row collapse">
               <div class="small-2 large-2 columns">
-                <span class="prefix"><i class="fi-mail medium-icon"></i></span>
+                <span class="prefix"><i class="fi-torso medium-icon"></i></span>
               </div>
               <div class="input-wrapper small-4 large-4 columns">
-                <input type="text" placeholder="Email" name="username" pattern="alpha_numeric" required>
-                <small class="error">Debes indicar un email válido</small>
+                <input type="text" placeholder="Email" name="_username" required>
+                <small class="error">Debes indicar un email</small>
               </div>
               <div class="small-6 large-6 columns">
                 <span class="postfix">{{ domain }}</span>
@@ -138,59 +178,17 @@
               <div class="small-2 large-2 columns">
                 <span class="prefix"><i class="fi-lock medium-icon"></i></span>
               </div>
-              <div class="small-10 large-10 columns">
-                <input id="password" type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
+              <div class="small-12 large-12 columns">
+                <input type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
                 <small class="error">Debes indicar una contraseña</small>
               </div>
             </div>
-            <div class="row collapse">
-              <div class="small-2 large-2 columns">
-                <span class="prefix"><i class="fi-alert medium-icon"></i></span>
-              </div>
-              <div class="small-10 large-10 columns">
-                <input type="password" placeholder="Repita su contraseña" pattern="alpha_numeric" data-equalto="password">
-                <small class="error">Las contraseñas no coinciden</small>
-              </div>
-            </div>
-            <button type="submit" class="button round success"><i class="small-icon fi-check"></i>Registrarse</button>
-            <button type="reset" class="button round"><i class="small-icon fi-trash"></i>Limpiar</button>
-          </form>
-        </div>
-        <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+            <button type="submit" class="button round success"><i class="small-icon fi-unlock"></i>Login</button>
+          </fieldset>
+        </form>
       </div>
-      <div id="loginModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-        <div class="small-8 small-centered large-8 large-centered columns">
-          <form action="{{ path('login_check') }}" method="post" data-abide>
-            <fieldset>
-              <legend>Login</legend>
-              <div class="row collapse">
-                <div class="small-2 large-2 columns">
-                  <span class="prefix"><i class="fi-torso medium-icon"></i></span>
-                </div>
-                <div class="input-wrapper small-4 large-4 columns">
-                  <input type="text" placeholder="Email" name="_username" required>
-                  <small class="error">Debes indicar un email</small>
-                </div>
-                <div class="small-6 large-6 columns">
-                  <span class="postfix">{{ domain }}</span>
-                </div>
-              </div>
-              <div class="row collapse">
-                <div class="small-2 large-2 columns">
-                  <span class="prefix"><i class="fi-lock medium-icon"></i></span>
-                </div>
-                <div class="small-12 large-12 columns">
-                  <input type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
-                  <small class="error">Debes indicar una contraseña</small>
-                </div>
-              </div>
-              <button type="submit" class="button round success"><i class="small-icon fi-unlock"></i>Login</button>
-            </fieldset>
-          </form>
-        </div>
-        <a class="close-reveal-modal" aria-label="Close">&#215;</a>
-      </div>
-    {% endblock %}
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
     {% block scripts %}
       <script src="{{ asset('js/jquery.min.js') }}"></script>
       <script src="{{ asset('js/foundation.min.js') }}"></script>

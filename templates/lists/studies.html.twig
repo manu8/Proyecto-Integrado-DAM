@@ -1,21 +1,83 @@
-{% extends 'layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="small-12 small-centered large-centered text-center columns" hidden>
-      <h2>Añadir estudio</h2>
-      <p class="lead">Selecciona el estudio o estudios que quieres asociar al alumno</p>
+<div class="row">
+  <div class="custom-row first-row">
+    <div id="error" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡La acción no se ha realizado correctamente! Inténtalo de nuevo.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="studyAdded" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Estudio añadido!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="studyRemoved" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          ¡Estudio eliminado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div class="small-12 small-centered large-centered text-center column">
+      <a id="categorySearch" href="#" class="large button">Búsqueda por categoría</a>
+      <form id="categorySelect"
+          {% if student is defined and student is not null %}
+            action="{{ path('category_search') }}"
+          {% else %}
+            action="{{ path('studies_category_list') }}"
+          {% endif %}
+            method="post" hidden>
+        {% if student is defined and student is not null %}
+          <input type="hidden" name="student" value="{{ student.Id }}" />
+          <input type="hidden" name="searchType" value="studies" />
+        {% endif %}
+        {% if categories is defined and categories is not empty %}
+          <div class="small-6 small-centered column">
+            <label>Selecciona una categoría
+              <select name="category">
+                {% for category in categories %}
+                  <option value="{{ category.Id }}">{{ category.Denominacion }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </div>
+          <div class="small-2 small-centered columns">
+            <button type="submit" class="button postfix">Buscar</button>
+          </div>
+        {% else %}
+          <span class="alert round label">¡No se ha creado ninguna categoría!</span>
+          {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('category_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría</a>
+          {% endif %}
+        {% endif %}
+      </form>
       <div class="pagination-centered">
-        <table>
+        <table class="list">
           <tbody>
           {% for study in studies %}
             <tr>
-              <td><input class="studyCheck" type="checkbox"></td>
               <td>{{ study.Denominacion }}</td>
               <td>
-                <a class="button success" href="{{ path('add_study', { 'student' : student, 'study' : study }) }}">
-                  <i class="fi-check"></i>
-                </a>
+                {% if student is defined and student is not null %}
+                  <a class="study-add-link success radius small button" href="{{ url('add_study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
+                {% else %}
+                  <a href="{{ path('study_edit', { 'id' : study.Id }) }}" class="warning radius small button">
+                    <i class="fi-page-edit small-icon"></i>
+                  </a>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
+                  <a href="{{ url('study_remove', { 'id' : study.Id }) }}" class="study-remove-link alert radius small button">
+                    <i class="fi-trash small-icon"></i>
+                  </a>
+                {% endif %}
               </td>
             </tr>
           {% else %}
@@ -32,23 +94,59 @@
           <ul class="pagination">
             {% for number, position in pages %}
               {% if position == 'first' %}
-                <li class="arrow"><a href="student/{{ student.Id }}/studies/{{ number }}">&laquo;</a></li>
+                <li class="arrow">
+                  <a
+                    {% if student_studies_list is defined %}
+                      href="{{ path('add_studies', { 'id' : student.Id, 'page' : number }) }}"
+                    {% elseif student_categorized_studies_list is defined %}
+                      href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    {% elseif studies_list is defined %}
+                      href="{{ path('studies_list', { 'id' : student.Id, 'page' : number }) }}"
+                    {% else %}
+                      href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    {% endif %}
+                  >&laquo;</a>
+                </li>
               {% elseif position == 'less' or position == 'more' %}
                 <li class="unavailable"><a href="">&hellip;</a></li>
               {% elseif position == 'previous' or position == 'next' %}
-                <li><a href="student/{{ student.Id }}/studies/{{ number }}">{{ number }}</a></li>
-              {% elseif position == 'current_page' %}
+                <li>
+                  <a
+                    {% if student_studies_list is defined %}
+                      href="{{ path('add_studies', { 'id' : student.Id, 'page' : number }) }}"
+                    {% elseif student_categorized_studies_list is defined %}
+                      href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    {% elseif studies_list is defined %}
+                      href="{{ path('studies_list', { 'id' : student.Id, 'page' : number }) }}"
+                    {% else %}
+                      href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    {% endif %}
+                  >{{ number }}</a>
+                </li>
+              {% elseif position == 'current' %}
                 <li class="current"><a href="">{{ number }}</a></li>
               {% elseif position == 'last' %}
-                <li class="arrow"><a href="student/{{ student.Id }}/studies/{{ number }}">&raquo;</a></li>
+                <li class="arrow">
+                  <a
+                    {% if student_studies_list is defined %}
+                      href="{{ path('add_studies', { 'id' : student.Id, 'page' : number }) }}"
+                    {% elseif student_categorized_studies_list is defined %}
+                      href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    {% elseif studies_list is defined %}
+                      href="{{ path('studies_list', { 'id' : student.Id, 'page' : number }) }}"
+                    {% else %}
+                      href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    {% endif %}
+                  >&raquo;</a>
+                </li>
               {% endif %}
             {% endfor %}
           </ul>
         {% endif %}
       </div>
-      {% if add_studies is defined %}
-        <a id="addStudies" class="success round button"><i class="fi-plus"></i>&nbsp;Añadir estudios</a>
+      {% if student is defined and student is not null %}
+        <a href="{{ path('student_edit', { 'id' : student.Id }) }}" class="round button">Volver</a>
       {% endif %}
     </div>
   </div>
-{% endblock %}
+</div>

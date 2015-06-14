@@ -1,34 +1,228 @@
-{% block list %}
-	<div class="small-10 small-centered large-10 large-centered text-center columns">
-		<table>
-		  <thead>
-		    <tr>
-		      <th>Nombre</th>
-		      <th>Estudios realizados</th>
-		      <th>Comentarios</th>
-		      <th>Acciones</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <td>Content Goes Here</td>
-		      <td>This is longer content Donec id elit non mi porta gravida at eget metus.</td>
-		      <td>Content Goes Here</td>
-		      <td>Content Goes Here</td>
-		    </tr>
-		    <tr>
-		      <td>Content Goes Here</td>
-		      <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td>
-		      <td>Content Goes Here</td>
-		      <td>Content Goes Here</td>
-		    </tr>
-		    <tr>
-		      <td>Content Goes Here</td>
-		      <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td>
-		      <td>Content Goes Here</td>
-		      <td>Content Goes Here</td>
-		    </tr>
-		  </tbody>
-		</table>                    
-	</div>
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+  <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+  <li class="current">
+    <i class="fi-torso small-icon"></i>
+    <i class="fi-list small-icon"></i>
+  </li>
+{% endblock %}
+
+{% block content %}
+  <div class="custom-row first-row">
+    <div id="error" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡La acción no se ha realizado correctamente! Inténtalo de nuevo.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="studentRemoved" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          ¡Alumno eliminado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div class="small-12 large-12 columns text-center">
+      <h3>Pulsa sobre el tipo de filtro que deseas aplicar:</h3>
+      <ul class="button-group radius even-4">
+        <li><a href="{{ path('students_all_list') }}" class="button">Todos</a></li>
+        <li><a id="knowledgeSearch" href="#" class="button">Por conocimientos</a></li>
+        <li><a id="studySearch" href="#" class="button">Por estudios</a></li>
+        <li><a id="customSearch" href="#" class="button">Búsqueda avanzada</a></li>
+      </ul>
+      <form id="knowledgeSelect" action="{{ path('knowledge_search') }}" method="post" hidden>
+        {% if knowledges is defined and knowledges is not empty %}
+          <div class="small-6 small-centered column">
+            <label>Selecciona una conocimiento
+              <select name="knowledge">
+                {% for knowledge in knowledges %}
+                  <option value="{{ knowledge.Id }}">{{ knowledge.Denominacion }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </div>
+          <div class="small-2 small-centered columns">
+            <button type="submit" class="button postfix">Buscar</button>
+          </div>
+        {% else %}
+          <span class="alert round label">¡No se ha creado ningún conocimiento!</span>
+          {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('knowledge_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear conocimiento</a>
+          {% endif %}
+        {% endif %}
+      </form>
+      <form id="studySelect" action="{{ path('study_search') }}" method="post" hidden>
+        {% if studies is defined and studies is not empty %}
+          <div class="small-6 small-centered column">
+            <label>Selecciona un estudio
+              <select name="study">
+                {% for study in studies %}
+                  <option value="{{ study.Id }}">{{ study.Denominacion }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </div>
+          <div class="small-2 small-centered columns">
+            <button type="submit" class="button postfix">Buscar</button>
+          </div>
+        {% else %}
+          <span class="alert round label">¡No se ha creado ningún estudio!</span>
+          {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('study_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
+          {% endif %}
+        {% endif %}
+      </form>
+      <form id="customSelect" action="{{ path('students_custom_list') }}" method="post" hidden>
+        <div class="small-6 small-centered column">
+          <label>Selecciona un conocimiento
+            <select name="knowledge">
+              {% for knowledge in knowledges %}
+                <option value="{{ knowledge.Id }}">{{ knowledge.Denominacion }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+        <div class="small-6 small-centered column">
+          <label>Selecciona un estudio
+            <select name="study">
+              {% for study in studies %}
+                <option value="{{ study.Id }}">{{ study.Denominacion }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+        <div class="small-6 small-centered column">
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix"><i class="fi-credit-card medium-icon"></i></span>
+            </div>
+            <div class="small-4 column end">
+              <input type="text" placeholder="NIF" name="nif"/>
+            </div>
+          </div>
+        </div>
+        <div class="small-12 small-centered column">
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix">Nombre</span>
+            </div>
+            <div class="small-3 column">
+              <input type="text" placeholder="Nombre" name="nombre"/>
+            </div>
+            <div class="small-2 column">
+              <span class="prefix">Apellidos</span>
+            </div>
+            <div class="small-5 column">
+              <input type="text" placeholder="Apellidos" name="apellidos"/>
+            </div>
+          </div>
+        </div>
+        <div class="small-2 small-centered column">
+          <button type="submit" class="button postfix">Buscar</button>
+        </div>
+      </form>
+      {% if all_list is defined or study_list is defined or knowledge_list is defined or custom_list is defined %}
+        {% if students is defined and students is not empty %}
+          <div class="small-12 small-centered columns">
+            <table class="list">
+              <thead>
+              <tr>
+                <th class="text-center">NIF</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Datos de contacto</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for student in students %}
+                <tr>
+                  <td class="text-center">{{ student.NIF }}</td>
+                  <td class="text-center">{{ student.Apellidos }},&nbsp;{{ student.Nombre }}</td>
+                  <td class="text-center"><strong>Tlf:</strong>&nbsp;{{ student.Telefono }}<br><strong>Email:</strong>&nbsp;{{ student.Email }}</td>
+                  <td>
+                    <a href="{{ path('student_edit', { 'id' : student.Id }) }}" class="warning radius small button">
+                      <i class="fi-page-edit small-icon"></i>
+                    </a>
+                    {% if is_granted('ROLE_USER') %}
+                      <a href="{{ path('student_remove', { 'id' : student.Id }) }}" class="remove-link alert radius small button">
+                        <i class="fi-trash small-icon"></i>
+                      </a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            {% if pages is defined and pages is not null %}
+              <div class="pagination-centered">
+                <ul class="pagination">
+                  {% for number, position in pages %}
+                    {% if position == 'first' %}
+                      <li class="arrow">
+                        <a
+                          {% if all_list is defined %}
+                            href="/students/all/{{ number }}"
+                          {% elseif study_list is defined %}
+                            href="/students/study/{{ study_id }}/{{ number }}"
+                          {% elseif knowledge_list is defined %}
+                            href="/students/knowledge/{{ knowledge_id }}/{{ number }}"
+                          {% endif %}
+                        >&laquo;</a>
+                      </li>
+                    {% elseif position == 'less' or position == 'more' %}
+                      <li class="unavailable"><a href="">&hellip;</a></li>
+                    {% elseif position == 'previous' or position == 'next' %}
+                      <li>
+                        <a
+                          {% if all_list is defined %}
+                            href="/students/all/{{ number }}"
+                          {% elseif study_list is defined %}
+                            href="/students/study/{{ study_id }}/{{ number }}"
+                          {% elseif knowledge_list is defined %}
+                            href="/students/knowledge/{{ knowledge_id }}/{{ number }}"
+                          {% endif %}
+                        >{{ number }}</a>
+                      </li>
+                    {% elseif position == 'current' %}
+                      <li class="current"><a href="">{{ number }}</a></li>
+                    {% elseif position == 'last' %}
+                      <li class="arrow">
+                        <a
+                          {% if all_list is defined %}
+                            href="/students/all/{{ number }}"
+                          {% elseif study_list is defined %}
+                            href="/students/study/{{ study_id }}/{{ number }}"
+                          {% elseif knowledge_list is defined %}
+                            href="/students/knowledge/{{ knowledge_id }}/{{ number }}"
+                          {% endif %}
+                        >&raquo;</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          {% if study_empty_list is defined %}
+            <p><span class="warning round label">No existen alumnos registrados que posean ese estudio</span></p>
+          {% elseif knowledge_empty_list is defined %}
+            <p><span class="warning round label">No existen alumnos registrados que posean ese conocimiento</span></p>
+          {% else %}
+            <p><span class="warning round label">No existen alumnos registrados</span></p>
+          {% endif %}
+          <a href="{{ path('student_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus"></i>&nbsp;Registrar alumno</a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/students.js') }}"></script>
 {% endblock %}
