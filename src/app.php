@@ -23,7 +23,7 @@ $app->register(new ServiceControllerServiceProvider());
 
 //Integración de vistas con Twig y paginación
 $app->register(new TwigServiceProvider());
-$app->register(new PaginationServiceProvider(), array('pagination.per_page' => 10));
+$app->register(new PaginationServiceProvider(), array('pagination.per_page' => 5));
 
 //Integración de la BD
 $app->register(new DoctrineServiceProvider(), array(
@@ -42,6 +42,7 @@ $app->register(new DoctrineOrmServiceProvider, array(
             array(
                 'type' => 'annotation',
                 'namespace' => 'Entities',
+                'alias' => 'Entities',
                 'path' => __DIR__.'/entities'
             ),
         ),
