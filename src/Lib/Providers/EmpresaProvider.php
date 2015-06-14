@@ -24,4 +24,20 @@ class EmpresaProvider {
         }
         return $companies;
     }
+
+    /**
+     * @param $id Id de la empresa a buscar
+     * @return null|object La empresa con el id proporcionado
+     */
+    public function getCompany($id)
+    {
+        $company = null;
+        $em = $this->app['orm.em'];
+        if($em instanceof \Doctrine\ORM\EntityManager){
+            $company = $em->getRepository('Entities\Empresa')->findOneBy(array(
+                'Id' => $id
+            ));
+        }
+        return $company;
+    }
 }

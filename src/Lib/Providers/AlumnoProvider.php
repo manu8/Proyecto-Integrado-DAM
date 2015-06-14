@@ -3,6 +3,7 @@
 namespace Lib\Providers;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Entities\Alumno;
 use Entities\Empresa;
 use Entities\EstudioTitulo;
@@ -23,14 +24,67 @@ class AlumnoProvider {
     /**
      * @return array|null Todos los alumnos registrados
      */
-    public function getAlumnos()
+    public function getAlumnos($offset = null)
     {
         $students = null;
         $em = $this->app["orm.em"];
         if($em instanceof \Doctrine\ORM\EntityManager){
-            $students = $em->getRepository('Alumno')->findAll();
+            if(!is_null($offset)){
+                $query = $em->createQuery('SELECT a FROM Entities:Alumno a');
+                $query->setMaxResults(5);
+                $query->setFirstResult(($offset - 1) * 5);
+                $students = $query->getResult();
+            } else $students = $em->getRepository('Entities\Alumno')->findAll();
         }
         return $students;
+    }
+
+    public function getAlumnosBy(array $criteria, $offset = null)
+    {
+        $studentsFinal = null;
+        $studentsKnowledge = new ArrayCollection();
+        $studentsStudy = new ArrayCollection();
+        $studentsNIF = new ArrayCollection();
+        $studentsName = new ArrayCollection();
+        $studentsSurnames = new ArrayCollection();
+
+        $em = $this->app['orm.em'];
+        foreach($criteria as $key => $value){
+            switch($key){
+                case 'knowledge':
+                    $knowledge = $em->getRepository('Entities\HabilidadConocimiento')->findOneBy(array(
+                        'Id' => $criteria[$key]
+                    ));
+                    $studentsKnowledge = $knowledge->getAlumnos();
+                    break;
+                case 'study':
+                    $study = $em->getRepository('Entities\EstudioTitulo')->findOneBy(array(
+                        'Id' => $criteria[$key]
+                    ));
+                    $studentsStudy = $study->getAlumnos();
+                    break;
+                case 'nif': $studentsNIF = $em->getRepository('Entities\Alumno')->findBy(array(
+                    'NIF' => $criteria[$key]
+                ));
+                    break;
+                case 'name': $studentsName = $em->getRepository('Entities\Alumno')->findBy(array(
+                    'Nombre' => $criteria[$key]
+                ));
+                    break;
+                case 'surnames': $studentsSurnames = $em->getRepository('Entities\Alumno')->findBy(array(
+                    'Apellidos' => $criteria[$key]
+                ));
+            }
+        }
+        $studentsFinal = new ArrayCollection(
+            $studentsKnowledge->toArray() +
+            $studentsStudy->toArray() +
+            $studentsNIF->toArray() +
+            $studentsName->toArray() +
+            $studentsSurnames->toArray()
+        );
+
+        return $studentsFinal;
     }
 
     /**
@@ -42,7 +96,7 @@ class AlumnoProvider {
         $student = null;
         $em = $this->app["orm.em"];
         if($em instanceof \Doctrine\ORM\EntityManager){
-            $student = $em->getRepository('Alumno')->findOneBy($id);
+            $student = $em->getRepository('Entities\Alumno')->findOneBy(array('Id' => $id));
         }
         return $student;
     }
@@ -77,7 +131,7 @@ class AlumnoProvider {
     {
         $em = $this->app['orm.em'];
         $em->remove($student);
-        $em->flush;
+        $em->flush();
     }
 
     /**
