@@ -1,4 +1,4 @@
-<div class="row">
+<div class="custom-row first-row">
   <div id="error" class="custom-row first-row" hidden>
     <div class="small-6 small-centered column">
       <div data-alert class="alert-box info round text-center">
@@ -25,16 +25,13 @@
   </div>
   <div class="small-12 small-centered text-center column">
     <a id="categorySearch" href="#" class="large button">Búsqueda por categoría</a>
-    <form id="categorySelect"
-        {% if student is defined and student is not null %}
-          action="{{ path('category_search') }}"
-        {% else %}
-          action="{{ path('companies_category_list') }}"
-        {% endif %}
-          method="post" hidden>
+    <form id="categorySelect" action="{{ path('category_search') }}" method="post" hidden>
       {% if student is defined and student is not null %}
+        <input type="hidden" name="listType" value="student" />
         <input type="hidden" name="student" value="{{ student.Id }}" />
         <input type="hidden" name="searchType" value="companies" />
+      {% else %}
+        <input type="hidden" name="listType" value="companies" />
       {% endif %}
       {% if categories is defined and categories is not empty %}
         <div class="small-6 small-centered column">
@@ -51,10 +48,51 @@
         </div>
       {% else %}
         <span class="alert round label">¡No se ha creado ninguna categoría!</span>
+        <br><br>
         {% if is_granted('ROLE_USER') %}
           <a href="{{ path('category_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría</a>
         {% endif %}
       {% endif %}
+    </form>
+    <form id="customSelect" action="{{ path('students_custom_list') }}" method="post" hidden>
+      <div class="small-6 small-centered column">
+        <label>Selecciona una categoría
+          <select name="category">
+            {% for category in categories %}
+              <option value="{{ category.Id }}">{{ category.Denominacion }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+      <div class="small-6 small-centered column">
+        <div class="row collapse">
+          <div class="small-2 column">
+            <span class="prefix"><i class="fi-credit-card medium-icon"></i></span>
+          </div>
+          <div class="small-4 column end">
+            <input type="text" placeholder="NIF" name="nif"/>
+          </div>
+        </div>
+      </div>
+      <div class="small-12 small-centered column">
+        <div class="row collapse">
+          <div class="small-2 column">
+            <span class="prefix">Nombre</span>
+          </div>
+          <div class="small-3 column">
+            <input type="text" placeholder="Nombre" name="nombre"/>
+          </div>
+          <div class="small-2 column">
+            <span class="prefix">Apellidos</span>
+          </div>
+          <div class="small-5 column">
+            <input type="text" placeholder="Apellidos" name="apellidos"/>
+          </div>
+        </div>
+      </div>
+      <div class="small-2 small-centered column">
+        <button type="submit" class="button postfix">Buscar</button>
+      </div>
     </form>
     <div class="pagination-centered">
       <table class="list">
@@ -64,15 +102,20 @@
             <td>{{ company.Denominacion }}</td>
             <td>
               {% if student is defined and student is not null %}
-                <a class="company-add-link success radius small button" href="{{ path('add_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
-                  <i class="fi-check small-icon"></i>
-                </a>
-              {% else %}
+                {% if student_categorized_companies_list is defined %}
+                  <a class="categorized-company-add-link success radius small button" href="{{ path('add_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
+                {% else %}
+                  <a class="company-add-link success radius small button" href="{{ path('add_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
+                {% endif %}
+              {% endif %}
+              {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('company_edit', { 'id' : company.Id }) }}" class="warning radius small button">
                   <i class="fi-page-edit small-icon"></i>
                 </a>
-              {% endif %}
-              {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('company_remove', { 'id' : company.Id }) }}" class="remove-company-link alert radius small button">
                   <i class="fi-trash small-icon"></i>
                 </a>
@@ -80,12 +123,16 @@
             </td>
           </tr>
         {% else %}
-          <div>
-            <span class="alert round label">¡No se ha registrado ninguna empresa!</span>
-            {% if is_granted('ROLE_USER') %}
-              <a href="{{ path('company_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear empresa</a>
-            {% endif %}
-          </div>
+          {% if student_categorized_companies_list is defined %}
+            <p><span class="warning round label">No existen empresas que pertenezcan a esa categoría</span></p>
+          {% else %}
+            <div>
+              <span class="alert round label">¡No se ha registrado ninguna empresa!</span>
+              {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('company_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear empresa</a>
+              {% endif %}
+            </div>
+          {% endif %}
         {% endfor %}
         </tbody>
       </table>
@@ -100,9 +147,9 @@
                   {% elseif student_categorized_companies_list is defined %}
                     href="{{ path('add_categorized_companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                   {% elseif companies_list is defined %}
-                    href="{{ path('companies_list', { 'id' : student.Id, 'page' : number }) }}"
+                    href="{{ path('companies_list', { 'page' : number }) }}"
                   {% else %}
-                    href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    href="{{ path('studies_category_list', { 'id' : category_id, 'page' : number }) }}"
                   {% endif %}
                 >&laquo;</a>
               </li>
@@ -116,9 +163,9 @@
                   {% elseif student_categorized_companies_list is defined %}
                     href="{{ path('add_categorized_companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                   {% elseif companies_list is defined %}
-                    href="{{ path('companies_list', { 'id' : student.Id, 'page' : number }) }}"
+                    href="{{ path('companies_list', { 'page' : number }) }}"
                   {% else %}
-                    href="{{ path('companies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    href="{{ path('companies_category_list', { 'id' : category_id, 'page' : number }) }}"
                   {% endif %}
                 >{{ number }}</a>
               </li>
@@ -132,9 +179,9 @@
                   {% elseif student_categorized_companies_list is defined %}
                     href="{{ path('add_categorized_companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                   {% elseif companies_list is defined %}
-                    href="{{ path('companies_list', { 'id' : student.Id, 'page' : number }) }}"
+                    href="{{ path('companies_list', { 'page' : number }) }}"
                   {% else %}
-                    href="{{ path('companies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    href="{{ path('companies_category_list', { 'id' : category_id, 'page' : number }) }}"
                   {% endif %}
                 >&raquo;</a>
               </li>
@@ -144,7 +191,9 @@
       {% endif %}
     </div>
     {% if student is defined and student is not null %}
-      <a href="{{ path('student_edit', { 'id' : student.Id }) }}" class="round button">Volver</a>
+      <a class="round button" href="{{ path('student_edit', { 'id' : student.Id }) }}">Volver</a>
+    {% elseif category_list is defined %}
+      <a class="round button" href="{{ path('companies_list') }}"><i class="fi-list-thumbnails small-icon"></i>Ir al listado</a>
     {% endif %}
   </div>
 </div>

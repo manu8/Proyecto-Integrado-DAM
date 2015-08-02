@@ -23,17 +23,40 @@
                 <li class="has-dropdown">
                   <a href="#">Alumnos</a>
                   <ul class="dropdown">
-                    <li><a href="{{ path('student_lists') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
+                    <li><a href="{{ path('students_list') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
                     <li><a href="{{ path('student_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo alumno</a></li>
                   </ul>
                 </li>
                 <li class="has-dropdown">
                   <a href="#">Empresas</a>
                   <ul class="dropdown">
-                    <li><a href="#"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
-                    <li><a href="#"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
+                    <li><a href="{{ path('companies_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
+                    <li><a href="{{ path('company_edit', { 'id' : 0}) }}"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
                   </ul>
                 </li>
+                {% if is_granted('ROLE_USER') %}
+                  <li class="has-dropdown">
+                    <a href="#">Estudios</a>
+                    <ul class="dropdown">
+                      <li><a href="{{ path('studies_list') }}"><i class="fi-book-bookmark small-icon"></i>Listado de Estudios</a></li>
+                      <li><a href="{{ path('study_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo estudio</a></li>
+                    </ul>
+                  </li>
+                  <li class="has-dropdown">
+                    <a href="#">Conocimientos</a>
+                    <ul class="dropdown">
+                      <li><a href="{{ path('knowledges_list') }}"><i class="fi-bookmark small-icon"></i>Listado de Conocmientos</a></li>
+                      <li><a href="{{ path('knowledge_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir conocimiento</a></li>
+                    </ul>
+                  </li>
+                  <li class="has-dropdown">
+                    <a href="#">Categorías</a>
+                    <ul class="dropdown">
+                      <li><a href="{{ path('categories_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Categorías</a></li>
+                      <li><a href="{{ path('category_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir categoría</a></li>
+                    </ul>
+                  </li>
+                {% endif %}
               </ul>
             </section>
             <section class="left-small show-for-small-only">
@@ -42,17 +65,21 @@
             <section class="top-bar-section shown-for-large-up hide-for-medium-down">
               <ul class="right">
                 {% if user is defined and user is not null %}
-                  <li><a href="{{ path('admin_logout') }}" class="button expand">Logout</a></li>
-                  <li><a class="button expand warning" href="{{ path('edit_user') }}"><i class="fi-widget medium-icon"></i></a></li>
+                  <li><a href="{{ path('logout') }}" class="button expand">Logout</a></li>
+                  <li><a class="button expand warning" href="{{ path('user_edit', { 'id' : user.Id }) }}"><i class="fi-widget"></i></a></li>
                 {% else %}
                   <li class="has-form">
                     <form action="{{ path('login_check') }}" method="post">
                       <div class="row collapse">
                         <div class="large-5 column">
-                          <input type="email" placeholder="Email" name="_username" required>
+                          <input type="text" placeholder="Username" name="_username"
+                            {% if last_username is defined %}
+                              value="{{ last_username }}"
+                            {% endif %}
+                          required>
                         </div>
                         <div class="large-5 column">
-                          <input type="password" placeholder="Contraseña" name="password" required>
+                          <input type="password" placeholder="Contraseña" name="_password" required>
                         </div>
                         <div class="large-2 column">
                           <button type="submit" class="success button expand">Login</button>
@@ -76,9 +103,9 @@
         </header>
         <aside class="right-off-canvas-menu">
           <ul class="off-canvas-list">
-            {% if user is defined %}
-              <li><a class="button radius" href="{{ path('admin_logout') }}">Logout</a></li>
-              <li><a class="button radius warning" href="{{ path('edit_user') }}"><i class="fi-widget medium-icon"></i></a></li>
+            {% if user is defined and user is not null %}
+              <li><a class="button radius" href="{{ path('logout') }}">Logout</a></li>
+              <li><a class="button radius warning" href="{{ path('user_edit', { 'id' : user.Id }) }}"><i class="fi-widget medium-icon"></i></a></li>
             {% else %}
               <li><a href="#" class="button radius success" data-reveal-id="loginModal">Login</a></li>
               <li><a href="#" class="button radius" data-reveal-id="registerModal">Registro</a></li>
@@ -91,7 +118,7 @@
               <a href="#">Alumnos</a>
               <ul class="left-submenu">
                 <li class="back"><a href="#">Volver</a></li>
-                <li><a href="{{ path('student_lists') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
+                <li><a href="{{ path('students_list') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
                 <li><a href="{{ path('student_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo alumno</a></li>
               </ul>
             </li>
@@ -99,10 +126,33 @@
               <a href="#">Empresas</a>
               <ul class="left-submenu">
                 <li class="back"><a href="#">Volver</a></li>
-                <li><a href="#"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
-                <li><a href="#"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
+                <li><a href="{{ path('companies_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
+                <li><a href="{{ path('company_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
               </ul>
             </li>
+            {% if is_granted('ROLE_USER') %}
+              <li class="has-submenu">
+                <a href="#">Estudios</a>
+                <ul class="left-submenu">
+                  <li><a href="{{ path('studies_list') }}"><i class="fi-book-bookmark small-icon"></i>Listado de Estudios</a></li>
+                  <li><a href="{{ path('study_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo estudio</a></li>
+                </ul>
+              </li>
+              <li class="has-submenu">
+                <a href="#">Conocimientos</a>
+                <ul class="left-submenu">
+                  <li><a href="{{ path('knowledges_list') }}"><i class="fi-bookmark small-icon"></i>Listado de Conocmientos</a></li>
+                  <li><a href="{{ path('knowledge_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir conocimiento</a></li>
+                </ul>
+              </li>
+              <li class="has-submenu">
+                <a href="#">Categorías</a>
+                <ul class="left-submenu">
+                  <li><a href="{{ path('categories_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Categorías</a></li>
+                  <li><a href="{{ path('category_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir categoría</a></li>
+                </ul>
+              </li>
+            {% endif %}
           </ul>
         </aside>        
         <section class="main-section">
@@ -120,39 +170,41 @@
       <div class="small-8 small-centered large-8 large-centered columns">
         <h2 id="modalTitle" class="text-center">Nuevo usuario</h2>
         <p class="lead text-center">Rellena el siguiente formulario para inscribirte como usuario</p>
-        <form action="{{ path('user_edit') }}" method="post" data-abide>
-          <div class="row collapse">
-            <div class="small-2 large-2 columns">
-              <span class="prefix"><i class="fi-mail medium-icon"></i></span>
+        <form action="{{ path('user_create') }}" method="post" data-abide>
+          <div class="small-12 column">
+            <div class="row collapse">
+              <div class="show-for-medium-up medium-4 large-2 column">
+                <span class="prefix"><i class="fi-mail medium-icon"></i></span>
+              </div>
+              <div class="input-wrapper small-12 medium-8 large-4 columns">
+                <input type="text" placeholder="Username" name="username" pattern="alpha_numeric" required>
+                <small class="error">Debes indicar un nombre de usuario válido</small>
+              </div>
+              <div class="show-for-large-only large-6 columns">
+                <span class="postfix">{{ domain }}</span>
+              </div>
             </div>
-            <div class="input-wrapper small-4 large-4 columns">
-              <input type="text" placeholder="Email" name="username" pattern="alpha_numeric" required>
-              <small class="error">Debes indicar un email válido</small>
+            <div class="row collapse">
+              <div class="show-for-medium-up medium-4 large-2 columns">
+                <span class="prefix"><i class="fi-lock medium-icon"></i></span>
+              </div>
+              <div class="small-12 medium-8 large-10 columns">
+                <input id="password" type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
+                <small class="error">Debes indicar una contraseña</small>
+              </div>
             </div>
-            <div class="small-6 large-6 columns">
-              <span class="postfix">{{ domain }}</span>
+            <div class="row collapse">
+              <div class="show-for-medium-up medium-4 large-2 columns">
+                <span class="prefix"><i class="fi-alert medium-icon"></i></span>
+              </div>
+              <div class="small-12 medium-8 large-10 columns">
+                <input type="password" placeholder="Repita su contraseña" pattern="alpha_numeric" data-equalto="password">
+                <small class="error">Las contraseñas no coinciden</small>
+              </div>
             </div>
+            <button type="submit" class="success round button"><i class="small-icon fi-check"></i>Registrarse</button>
+            <button type="reset" class="alert round button"><i class="small-icon fi-trash"></i>Limpiar</button>
           </div>
-          <div class="row collapse">
-            <div class="small-2 large-2 columns">
-              <span class="prefix"><i class="fi-lock medium-icon"></i></span>
-            </div>
-            <div class="small-10 large-10 columns">
-              <input id="password" type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
-              <small class="error">Debes indicar una contraseña</small>
-            </div>
-          </div>
-          <div class="row collapse">
-            <div class="small-2 large-2 columns">
-              <span class="prefix"><i class="fi-alert medium-icon"></i></span>
-            </div>
-            <div class="small-10 large-10 columns">
-              <input type="password" placeholder="Repita su contraseña" pattern="alpha_numeric" data-equalto="password">
-              <small class="error">Las contraseñas no coinciden</small>
-            </div>
-          </div>
-          <button type="submit" class="button round success"><i class="small-icon fi-check"></i>Registrarse</button>
-          <button type="reset" class="button round"><i class="small-icon fi-trash"></i>Limpiar</button>
         </form>
       </div>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
@@ -162,28 +214,30 @@
         <form action="{{ path('login_check') }}" method="post" data-abide>
           <fieldset>
             <legend>Login</legend>
-            <div class="row collapse">
-              <div class="small-2 large-2 columns">
-                <span class="prefix"><i class="fi-torso medium-icon"></i></span>
+            <div class="small-12 column">
+              <div class="row collapse">
+                <div class="show-for-medium-up medium-2 large-2 columns">
+                  <span class="prefix"><i class="fi-torso medium-icon"></i></span>
+                </div>
+                <div class="input-wrapper small-12 medium-10 large-4 columns">
+                  <input type="text" placeholder="Email" name="_username" required>
+                  <small class="error">Debes indicar un email</small>
+                </div>
+                <div class="show-for-large-only large-6 columns">
+                  <span class="postfix">{{ domain }}</span>
+                </div>
               </div>
-              <div class="input-wrapper small-4 large-4 columns">
-                <input type="text" placeholder="Email" name="_username" required>
-                <small class="error">Debes indicar un email</small>
+              <div class="row collapse">
+                <div class="show-for-medium-up medium-2 large-2 columns">
+                  <span class="prefix"><i class="fi-lock medium-icon"></i></span>
+                </div>
+                <div class="small-12 medium-10 large-10 columns">
+                  <input type="password" placeholder="Contraseña" name="_password" pattern="alpha_numeric" required>
+                  <small class="error">Debes indicar una contraseña</small>
+                </div>
               </div>
-              <div class="small-6 large-6 columns">
-                <span class="postfix">{{ domain }}</span>
-              </div>
+              <button type="submit" class="button round success"><i class="small-icon fi-unlock"></i>Login</button>
             </div>
-            <div class="row collapse">
-              <div class="small-2 large-2 columns">
-                <span class="prefix"><i class="fi-lock medium-icon"></i></span>
-              </div>
-              <div class="small-12 large-12 columns">
-                <input type="password" placeholder="Contraseña" name="password" pattern="alpha_numeric" required>
-                <small class="error">Debes indicar una contraseña</small>
-              </div>
-            </div>
-            <button type="submit" class="button round success"><i class="small-icon fi-unlock"></i>Login</button>
           </fieldset>
         </form>
       </div>

@@ -26,36 +26,6 @@
       </div>
     </div>
   {% endif %}
-  {% if add_studies is defined %}
-    <div class="custom-row first-row">
-      <div class="small-6 small-centered column">
-        <div data-alert class="alert-box info round text-center">
-          ¡Estudios añadidos!
-          <a href="#" class="close">&times;</a>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-  {% if add_knowledges is defined %}
-    <div class="custom-row first-row">
-      <div class="small-6 small-centered column">
-        <div data-alert class="alert-box info round text-center">
-          ¡Conocimientos añadidos!
-          <a href="#" class="close">&times;</a>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-  {% if add_companies is defined %}
-    <div class="custom-row first-row">
-      <div class="small-6 small-centered column">
-        <div data-alert class="alert-box info round text-center">
-          ¡Empresas añadidas!
-          <a href="#" class="close">&times;</a>
-        </div>
-      </div>
-    </div>
-  {% endif %}
   <div id="error" class="custom-row first-row" hidden>
     <div class="small-6 small-centered column">
       <div data-alert class="alert-box info round text-center">
@@ -70,7 +40,7 @@
           {% if form_type == 'new' %}
             action="{{ path('student_new') }}"
           {% else %}
-            action="{{ path('student_update') }}"
+            action="{{ path('student_update', { 'id' : student.Id }) }}"
           {% endif %}
           method="post" data-abide>
         {% if form_type == 'new' %}
@@ -205,8 +175,8 @@
                 </div>
               </div>
             </div>
-            <h3>Estudios y Títulos</h3>
             {% if student is defined and student is not null %}
+              <h3>Estudios y Títulos</h3>
               {% if student.EstudiosTitulos is empty %}
                 <p class="text-center"><span class="warning round label">No existen estudios asociados</span></p>
               {% else %}
@@ -223,7 +193,7 @@
                         <td>{{ study.Denominacion }}</td>
                         <td>
                           {% if is_granted('ROLE_USER') %}
-                            <a class="warning radius small button" href="{{ path('study_edit') }}"><i class="fi-page-edit"></i></a>
+                            <a class="warning radius small button" href="{{ path('study_edit', { 'id' : study.Id}) }}"><i class="fi-page-edit small-icon"></i></a>
                           {% endif %}
                           <a class="study-remove-link alert radius small button" href="{{ url('remove_study', { 'id' : student.Id, 'study_id' : study.Id}) }}">
                             <i class="fi-x small-icon"></i>
@@ -245,8 +215,8 @@
                 </div>
               </div>
             </div>
-            <h3>Conocimientos y Habilidades</h3>
             {% if student is defined and student is not null %}
+              <h3>Conocimientos y Habilidades</h3>
               {% if student.ConocimientosHabilidades is empty %}
                 <p class="text-center"><span class="warning round label">No existen conocimientos asociados</span></p>
               {% else %}
@@ -263,7 +233,7 @@
                       <td>{{ knowledge.Denominacion }}</td>
                       <td>
                         {% if is_granted('ROLE_USER') %}
-                          <a class="warning radius small button" href="{{ path('knowledge_edit') }}">
+                          <a class="warning radius small button" href="{{ path('knowledge_edit', { 'id' : knowledge.Id}) }}">
                             <i class="fi-page-edit small-icon"></i>
                           </a>
                         {% endif %}
@@ -287,10 +257,10 @@
                 </div>
               </div>
             </div>
-            <h3>Empresas</h3>
             {% if student is defined and student is not null %}
+              <h3>Empresas</h3>
               {% if student.Empresas is empty %}
-                <p class="text-center"><span class="warning round label">No existen empresas asociados</span></p>
+                <p class="text-center"><span class="warning round label">No existen empresas asociadas</span></p>
               {% else %}
                 <table class="centered">
                   <thead>
@@ -306,16 +276,16 @@
                   {% for company in student.Empresas %}
                     <tr>
                       <td>{{ company.Denominacion }}</td>
-                      <td>{{ company.Direccion }}&nbsp;-&nbsp;{{ company.CP }}</td>
+                      <td>{{ company.Direccion }}&nbsp;&nbsp;{{ company.CP }}</td>
                       <td>{{ company.Telefono }}</td>
                       <td>{{ company.Email }}</td>
                       <td>
                         {% if is_granted('ROLE_USER') %}
-                          <a class="warning radius small button" href="{{ path('company_edit') }}">
+                          <a class="warning radius small button" href="{{ path('company_edit', { 'id' : company.Id }) }}">
                             <i class="fi-page-edit small-icon"></i>
                           </a>
                         {% endif %}
-                        <a class="company-remove-link alert radius small button" href="{{ path('remove_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                        <a class="company-remove-link alert radius small button" href="{{ path('remove_student_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
                           <i class="fi-x small-icon"></i>
                         </a>
                       </td>
@@ -339,7 +309,7 @@
           {% endif %}
           <div class="row small-centered">
             <div class="small-12 medium-3 large-3 columns">
-              {% if form_type == 'edit' and is_granted('ROLE_USER') %}
+              {% if form_type == 'edit' %}
                 <button type="submit" class="button expand round warning"><i class="small-icon fi-pencil"></i>Modificar alumno</button>
               {% elseif form_type == 'new' %}
                 <button type="submit" class="button expand round success"><i class="small-icon fi-plus"></i>Registrar alumno</button>
@@ -348,13 +318,14 @@
             <div class="small-12 medium-3 large-3 columns">
               {% if form_type == 'new' %}
                 <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
-              {% else %}
+              {% elseif is_granted('ROLE_USER') %}
                 <a href="{{ path('student_remove', { 'id' : student.Id }) }}" class="student-remove-link alert round expand button ">
-                  <i class="small-icon fi-trash"></i>Borrar</a>
+                  <i class="small-icon fi-trash"></i>Borrar
+                </a>
               {% endif %}
             </div>
             <div class="small-12 medium-3 large-3 columns">
-              <a href="{{ path('student_lists') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Ir al listado</a>
+              <a href="{{ path('students_list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Ir al listado</a>
             </div>
           </div>
         </fieldset>

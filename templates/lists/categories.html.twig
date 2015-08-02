@@ -1,0 +1,135 @@
+<div class="row">
+  <div class="custom-row first-row">
+    <div id="error" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡La acción no se ha realizado correctamente! Inténtalo de nuevo.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="categoryAdded" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Categoría añadida!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="categoryRemoved" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          ¡Categoría eliminada!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="activityAdded" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Actividad añadida!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="activityRemoved" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          ¡Actividad eliminada!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div class="small-12 column">
+      <div class="pagination-centered">
+        <table class="list">
+          <tbody>
+          {% for category in categories %}
+            <tr>
+              <td>{{ category.Denominacion }}</td>
+              <td>
+                {% if company is defined and company is not null %}
+                  <a class="category-add-link success radius small button" href="{{ url('company_add_category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
+                  <a href="{{ path('category_edit', { 'id' : category.Id }) }}" class="warning radius small button">
+                    <i class="fi-page-edit small-icon"></i>
+                  </a>
+                  <a href="{{ url('category_remove', { 'id' : category.Id }) }}" class="category-remove-link alert radius small button">
+                    <i class="fi-trash small-icon"></i>
+                  </a>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <div>
+              <span class="alert round label">¡No se ha creado ninguna categoría o actividad!</span>
+              {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('category_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría o actividad</a>
+              {% endif %}
+            </div>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% if pages is not null %}
+          <ul class="pagination">
+            {% for number, position in pages %}
+              {% if position == 'first' %}
+                <li class="arrow">
+                  <a
+                    {% if company_categories_list is defined %}
+                      href="{{ path('company_add_categories', { 'id' : company.Id, 'page' : number }) }}"
+                    {% elseif study_categories_list is defined %}
+                      href="{{ path('study_add_categories', { 'id' : study.Id, 'page' : number }) }}"
+                    {% else %}
+                      href="{{ path('knowledge_add_categories', { 'id' : knowledge.Id, 'page' : number }) }}"
+                    {% endif %}
+                  >&laquo;</a>
+                </li>
+              {% elseif position == 'less' or position == 'more' %}
+                <li class="unavailable"><a href="">&hellip;</a></li>
+              {% elseif position == 'previous' or position == 'next' %}
+                <li>
+                  <a
+                    {% if company_categories_list is defined %}
+                      href="{{ path('company_add_categories', { 'id' : company.Id, 'page' : number }) }}"
+                    {% elseif study_categories_list is defined %}
+                      href="{{ path('study_add_categories', { 'id' : study.Id, 'page' : number }) }}"
+                    {% else %}
+                      href="{{ path('knowledge_add_categories', { 'id' : knowledge.Id, 'page' : number }) }}"
+                    {% endif %}
+                  >{{ number }}</a>
+                </li>
+              {% elseif position == 'current' %}
+                <li class="current"><a href="">{{ number }}</a></li>
+              {% elseif position == 'last' %}
+                <li class="arrow">
+                  <a
+                    {% if company_categories_list is defined %}
+                      href="{{ path('company_add_categories', { 'id' : company.Id, 'page' : number }) }}"
+                    {% elseif study_categories_list is defined %}
+                      href="{{ path('study_add_categories', { 'id' : study.Id, 'page' : number }) }}"
+                    {% else %}
+                      href="{{ path('knowledge_add_categories', { 'id' : knowledge.Id, 'page' : number }) }}"
+                    {% endif %}
+                  ></a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <a
+          {% if company is defined and company is not null %}
+            href="{{ path('company_edit', { 'id' : company.Id }) }}"
+          {% elseif study is defined and study is not null %}
+            href="{{ path('study_edit', { 'id' : study.Id }) }}"
+          {% else %}
+            href="{{ path('knowledge_edit', { 'id' : knowledge.Id }) }}"
+          {% endif %}
+        class="round button">Volver</a>
+      </div>
+    </div>
+  </div>
+</div>

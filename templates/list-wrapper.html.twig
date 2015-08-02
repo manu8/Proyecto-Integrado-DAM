@@ -1,0 +1,52 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+  {% if students_list is defined or students_custom_list is defined %}
+    <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+    <li class="current">
+      <i class="fi-torso small-icon"></i>
+      <i class="fi-list small-icon"></i>
+    </li>
+  {% elseif studies_list is defined %}
+    <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+    <li class="current">
+      <i class="fi-book-bookmark small-icon"></i>
+      <i class="fi-list small-icon"></i>
+    </li>
+  {% elseif companies_list is defined %}
+    <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+    <li class="current">
+      <i class="fi-torso-business small-icon"></i>
+      <i class="fi-list small-icon"></i>
+    </li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if students_list is defined or students_custom_list is defined %}
+    {% include 'lists/students.html.twig' %}
+  {% elseif studies_list is defined %}
+    {% include 'lists/studies.html.twig' %}
+  {% elseif knowledges_list is defined %}
+    {% include 'lists/knowledges.html.twig' %}
+  {% elseif companies_list is defined %}
+    {% include 'lists/companies.html.twig' %}
+  {% else %}
+    {% include 'lists/categories.html.twig' %}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  {% if students_list is defined or students_custom_list is defined %}
+    <script src="{{ asset('js/students.js') }}"></script>
+  {% elseif studies_list is defined %}
+    <script src="{{ asset('js/studies.js') }}"></script>
+  {% elseif knowledges_list is defined %}
+    <script src="{{ asset('js/knowledges.js') }}"></script>
+  {% elseif companies_list is defined %}
+    <script src="{{ asset('js/companies.js') }}"></script>
+  {% else %}
+    <script src="{{ asset('js/companies.js') }}"></script>
+  {% endif %}
+{% endblock %}

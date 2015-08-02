@@ -1,0 +1,271 @@
+{% extends 'layout.html.twig' %}
+
+
+{% block breadcrumbs %}
+	<li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+	<li class="current"><i class="fi-torso-business small-icon"></i></li>
+{% endblock %}
+
+{% block content %}
+  {% if new_company is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Empresa creado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if update_company is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡Empresa modificada!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+	<div class="row">
+		<div class="small-12 column">
+			<form 
+				{% if form_type == 'new' %} 
+					action="{{ path('company_create') }}"
+				{% elseif form_type == 'edit' %}
+					action="{{ path('company_update', { 'id' : company.Id }) }}"
+				{% endif %}
+			method="post" data-abide>
+        {% if form_type == 'new' %}
+          <input type="hidden" id="_method" name="_method" value="PUT" />
+        {% endif %}
+        <fieldset>
+          <legend>Datos de la Empresa</legend>
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix">CIF</span>
+            </div>
+            <div class="small-10 column">
+              <input type="text" name="cif" placeholder="CIF" pattern="alpha_numeric"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.CIF }}"
+                  {% endif %}
+              required/>
+              <small class="error">Debe indicar un CIF válido</small>
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix">Denominación</span>
+            </div>
+            <div class="small-10 column">
+              <input type="text" name="nombre" placeholder="Denominación"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.Denominacion }}"
+                  {% endif %}
+              required/>
+              <small class="error">Debe indicar un nombre válido</small>
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix"><i class="fi-map medium-icon"></i></span>
+            </div>
+            <div class="small-10 medium-4 large-4 column">
+              <input type="text" name="direccion" placeholder="Dirección" pattern="alpha_numeric"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.Direccion }}"
+                  {% endif %}
+                  />
+            </div>
+            <div class="large-2 column show-for-medium-up">
+              <span class="prefix">CP</span>
+            </div>
+            <div class="medium-4 large-4 columns show-for-medium-up">
+              <input type="text" name="cp" placeholder="CP" pattern="number"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.CP }}"
+                  {% endif %}
+                  />
+            </div>
+          </div>
+          <div class="row collapse show-for-small-only">
+            <div class="small-2 column">
+              <span class="prefix">CP</span>
+            </div>
+            <div class="small-10 column show-for-small-only">
+              <input type="text" name="small_cp" placeholder="CP" pattern="number"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.CP }}"
+                  {% endif %}
+                  />
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix"><i class="fi-telephone medium-icon"></i></span>
+            </div>
+            <div class="small-10 medium-4 large-4 columns">
+              <input type="text" name="telefono" placeholder="Teléfono" pattern="number"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.Telefono }}"
+                  {% endif %}
+                     required/>
+              <small class="error">Debe indicar un número de teléfono válido</small>
+            </div>
+            <div class="large-2 column show-for-medium-up">
+              <span class="prefix"><i class="fi-mail medium-icon"></i></span>
+            </div>
+            <div class="medium-4 large-4 columns show-for-medium-up">
+              <input type="text" placeholder="Email" name="email" pattern="email"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.Email }}"
+                  {% endif %}
+              required/>
+              <small class="error">Debe indicar un email válido</small>
+            </div>
+          </div>
+          <div class="row collapse show-for-small-only">
+            <div class="small-2 column">
+              <span class="prefix"><i class="fi-mail medium-icon"></i></span>
+            </div>
+            <div class="small-10 column show-for-small-only">
+              <input type="text" name="small_email" placeholder="Email" pattern="email"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.Email }}"
+                  {% endif %}
+                     required/>
+              <small class="error">Debe indicar un email válido</small>
+            </div>
+          </div>
+          <div class="row collapse">
+            <div class="small-2 column">
+              <span class="prefix"><i class="fi-torso-business medium-icon"></i></span>
+            </div>
+            <div class="small-10 column">
+              <input type="text" name="contacto" placeholder="Nombre completo del contacto"
+                  {% if company is defined and company is not null %}
+                    value="{{ company.Contacto }}"
+                  {% endif %}
+              />
+            </div>
+          </div>
+          {% if company is defined and company is not null %}
+            <div class="row">
+              <h3>Actividades</h3>
+              {% if company.Actividades is empty %}
+                <p>
+                  <span class="warning round label">No existen actividades asociadas</span><br><br>
+                </p>
+              {% else %}
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <th>Denominación</th>
+                    {% if is_granted('ROLE_USER') %}
+                      <th>Acciones</th>
+                    {% endif %}
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for category in company.Actividades %}
+                    <tr>
+                      <td>{{ category.Denominacion }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="warning button" href="{{ path('category_edit', { 'id' : category.Id }) }}"><i class="fi-page-edit small-icon"></i></a>
+                        {% endif %}
+                        <a class="alert button" href="{{ path('company_remove_category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
+                          <i class="fi-trash small-icon"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
+              {% if not is_granted('ROLE_USER') %}
+                <div class="small-3 small-centered column">
+                  <a class="radius button centered" href="{{ path('company_add_categories', { 'id' : company.Id }) }}">
+                    <i class="fi-plus"></i>&nbsp;Añadir actividad(es)
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if company is defined and company is not null %}
+            <div class="row">
+              <h3>Alumnos</h3>
+              {% if company.Alumnos is empty %}
+                <p><span class="warning round label">No existen alumnos que hayan trabajado en esta empresa</span></p>
+              {% else %}
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <th>NIF</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for student in company.Alumnos %}
+                    <tr>
+                      <td>{{ student.NIF }}</td>
+                      <td>{{ student.Apellidos }},&nbsp;{{ student.Nombre }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="button warning" href="{{ path('student_edit', { 'id' : student.Id }) }}">
+                            <i class="fi-page-edit small-icon"></i>
+                          </a>
+                          <a class="button alert" href="{{ path('remove_student_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                            <i class="fi-trash small-icon"></i>
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if form_type == 'edit' %}
+            <div class="row">
+              {% if is_granted('ROLE_USER') %}
+                <div class="small-12 column">
+                  <ul class="button-group round even-2">
+                    <li><a href="{{ path('company_add_categories', { 'id' : company.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir actividad(es)</a></li>
+                    <li><a href="{{ path('add_students', { 'id' : company.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno(s)</a></li>
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </fieldset>
+        <div class="row small-centered">
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'new' %}
+              <button type="submit" class="success expand round button"><i class="small-icon fi-plus"></i>Crear empresa</button>
+            {% elseif form_type == 'edit' %}
+              <button type="submit" class="warning expand round button"><i class="small-icon fi-pencil"></i>Modificar empresa</button>
+            {% endif %}
+          </div>
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'new' %}
+              <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
+            {% elseif is_granted('ROLE_USER') %}
+              <a href="{{ path('company_remove', { 'id' : company.Id }) }}" class="remove-link alert round expand button">
+                <i class="small-icon fi-trash"></i>Borrar
+              </a>
+            {% endif %}
+          </div>
+        </div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/companies.js') }}"></script>
+{% endblock %}

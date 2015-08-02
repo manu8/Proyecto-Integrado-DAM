@@ -49,10 +49,7 @@ $('a.study-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyAdded').show();
@@ -61,6 +58,31 @@ $('a.study-add-link').click(function(event) {
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
+                link.show();
+            }
+        });
+    }
+});
+
+$('a.categorized-study-add-link').click(function(event) {
+    event.preventDefault();
+    var link = $(this);
+    if(confirm("¿Estás seguro de añadir este estudio?")){
+        $.ajax({
+            type: 'GET',
+            url: link.attr('href'),
+            beforeSend: function() {
+                link.hide();
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
+            },
+            success: function() {
+                $('#studyAdded').show();
+                link.parent().parent().remove();
+            },
+            error: function() {
+                $('#error').show();
+                $('#loadImg').remove();
+                link.show();
             }
         });
     }
@@ -77,10 +99,7 @@ $('a.knowledge-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeAdded').show();
@@ -89,6 +108,31 @@ $('a.knowledge-add-link').click(function(event) {
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
+                link.show();
+            }
+        });
+    }
+});
+
+$('a.categorized-knowledge-add-link').click(function(event) {
+    event.preventDefault();
+    var link = $(this);
+    if(confirm("¿Estás seguro de añadir este conocmiento?")){
+        $.ajax({
+            type: 'GET',
+            url: link.attr('href'),
+            beforeSend: function() {
+                link.hide();
+                link.parent().append('<img id="loadImg" src="../../../../assets/img/load.gif"/>');
+            },
+            success: function() {
+                $('#knowledgeAdded').show();
+                link.parent().parent().remove();
+            },
+            error: function() {
+                $('#error').show();
+                $('#loadImg').remove();
+                link.show();
             }
         });
     }
@@ -105,10 +149,7 @@ $('a.company-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyAdded').show();
@@ -117,6 +158,31 @@ $('a.company-add-link').click(function(event) {
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
+                link.show();
+            }
+        });
+    }
+});
+
+$('a.categorized-company-add-link').click(function(event) {
+    event.preventDefault();
+    var link = $(this);
+    if(confirm("¿Estás seguro de añadir esta empresa?")){
+        $.ajax({
+            type: 'GET',
+            url: link.attr('href'),
+            beforeSend: function() {
+                link.hide();
+                link.parent().append('<img id="loadImg" src="../../../../assets/img/load.gif"/>');
+            },
+            success: function() {
+                $('#companyAdded').show();
+                link.parent().parent().remove();
+            },
+            error: function() {
+                $('#error').show();
+                $('#loadImg').remove();
+                link.show();
             }
         });
     }
@@ -163,10 +229,7 @@ $('a.study-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyRemoved').show();
@@ -175,6 +238,7 @@ $('a.study-remove-link').click(function(event) {
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
+                link.show();
             }
         });
     }
@@ -191,10 +255,7 @@ $('a.knowledge-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeRemoved').show();
@@ -203,6 +264,7 @@ $('a.knowledge-remove-link').click(function(event) {
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
+                link.show();
             }
         });
     }
@@ -219,10 +281,7 @@ $('a.company-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyRemoved').show();
@@ -231,6 +290,7 @@ $('a.company-remove-link').click(function(event) {
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
+                link.show();
             }
         });
     }

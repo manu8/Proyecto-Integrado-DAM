@@ -34,6 +34,7 @@
           method="post" hidden>
       {% if student is defined and student is not null %}
         <input type="hidden" name="student" value="{{ student.Id }}" />
+        <input type="hidden" name="listType" value="student" />
         <input type="hidden" name="searchType" value="knowledges" />
       {% endif %}
       {% if categories is defined and categories is not empty %}
@@ -64,15 +65,20 @@
             <td>{{ knowledge.Denominacion }}</td>
             <td>
               {% if student is defined and student is not null %}
-                <a class="knowledge-add-link success small button" href="{{ path('add_knowledge', { 'id' : student.Id , 'knowledge_id' : knowledge.Id }) }}">
-                  <i class="fi-check small-icon"></i>
-                </a>
-              {% else %}
+                {% if student_categorized_knowledges_list is defined %}
+                  <a class="categorized-knowledge-add-link success radius small button" href="{{ path('add_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
+                {% else %}
+                  <a class="knowledge-add-link success small button" href="{{ path('add_knowledge', { 'id' : student.Id , 'knowledge_id' : knowledge.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
+                {% endif %}
+              {% endif %}
+              {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('knowledge_edit', { 'id' : knowledge.Id }) }}" class="warning radius small button">
                   <i class="fi-page-edit small-icon"></i>
                 </a>
-              {% endif %}
-              {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('knowledge_remove', { 'id' : knowledge.Id }) }}" class="remove-knowledge-link alert radius small button">
                   <i class="fi-trash small-icon"></i>
                 </a>
@@ -80,12 +86,19 @@
             </td>
           </tr>
         {% else %}
-          <div>
-            <span class="alert round label">¡No se ha creado ningún conocimiento!</span>
-            {% if is_granted('ROLE_USER') %}
-              <a href="{{ path('knowledge_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear conocimiento/habilidad</a>
-            {% endif %}
-          </div>
+          {% if student_categorized_knowledges_list is defined %}
+            <div>
+              <span class="warning round label">No existen conocimientos asociados a la categoría indicada</span>
+            </div>
+          {% else %}
+            <div>
+              <span class="alert round label">¡No se ha creado ningún conocimiento!</span>
+              <br><br>
+              {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('knowledge_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear conocimiento/habilidad</a>
+              {% endif %}
+            </div>
+          {% endif %}
         {% endfor %}
         </tbody>
       </table>

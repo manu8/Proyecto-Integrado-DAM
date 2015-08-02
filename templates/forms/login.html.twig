@@ -1,0 +1,106 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+  <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+  <li class="current"><i class="fi-lock small-icon"></i></li>
+{% endblock %}
+
+{% block content %}
+  {% if new_user is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡El usuario ha sido creado!
+          <br>
+          Se te ha enviado un correo a la dirección proporcionada con el enlace para activar el usuario creado.
+          <br>
+          Una vez hecho esto podrás acceder con sus credenciales.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif user is defined and user is null %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          {% if error == 'Bad credentials.' %}
+            ¡El usuario no existe! Por favor revisa tus credenciales.
+          {% else %}
+            Algo ha salido mal... Por favor vuelve a intentarlo.
+          {% endif %}
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif activate_user is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡Usuario activado!
+          <br>
+          Ya puedes acceder con tus credenciales.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif user_not_actived is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box warning round text-center">
+          ¡El usuario no está activado!
+          <br>
+          Revisa tu correo en busca del email de activación.
+          <br>
+          <a href=""
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif email_send is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Email enviado!
+          <br>
+          Revisa tu correo en busca del email de activación.
+          <br>
+          <a href="{{ path('user_send_email') }}"
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="small-12 column">
+      <form action="{{ path('login_check') }}" method="post" data-abide>
+        <fieldset>
+          <legend>Login</legend>
+          <div class="small-12 column">
+            <div class="row collapse">
+              <div class="small-4 medium-2 large-2 columns">
+                <span class="prefix"><i class="fi-torso medium-icon"></i></span>
+              </div>
+              <div class="input-wrapper small-8 medium-4 large-4 columns">
+                <input type="text" placeholder="Email" name="_username" required>
+                <small class="error">Debes indicar un email</small>
+              </div>
+              <div class="show-for-medium-up medium-6 large-6 columns">
+                <span class="postfix">{{ domain }}</span>
+              </div>
+            </div>
+            <div class="row collapse">
+              <div class="small-4 medium-2 large-2 columns">
+                <span class="prefix"><i class="fi-lock medium-icon"></i></span>
+              </div>
+              <div class="small-8 medium-10 large-10 columns">
+                <input type="password" placeholder="Contraseña" name="_password" pattern="alpha_numeric" required>
+                <small class="error">Debes indicar una contraseña</small>
+              </div>
+            </div>
+            <button type="submit" class="button round success"><i class="small-icon fi-unlock"></i>Login</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+{% endblock %}

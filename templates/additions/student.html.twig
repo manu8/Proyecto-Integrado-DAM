@@ -4,7 +4,13 @@
   <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
   <li class="current">
     <i class="fi-plus small-icon"></i>
-    <i class="fi-book-bookmark small-icon"></i>
+    {% if student_studies_list is defined %}
+      <i class="fi-book-bookmark small-icon"></i>
+    {% elseif student_knowledges_list is defined %}
+      <i class="fi-bookmark small-icon"></i>
+    {% else %}
+      <i class="fi-torso-business small-icon"></i>
+    {% endif %}
   </li>
 {% endblock %}
 

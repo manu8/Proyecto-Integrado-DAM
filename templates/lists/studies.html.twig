@@ -32,9 +32,10 @@
           {% else %}
             action="{{ path('studies_category_list') }}"
           {% endif %}
-            method="post" hidden>
+      method="post" hidden>
         {% if student is defined and student is not null %}
           <input type="hidden" name="student" value="{{ student.Id }}" />
+          <input type="hidden" name="listType" value="student" />
           <input type="hidden" name="searchType" value="studies" />
         {% endif %}
         {% if categories is defined and categories is not empty %}
@@ -52,8 +53,9 @@
           </div>
         {% else %}
           <span class="alert round label">¡No se ha creado ninguna categoría!</span>
+          <br><br>
           {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('category_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría</a>
+            <a href="{{ path('category_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría</a>
           {% endif %}
         {% endif %}
       </form>
@@ -65,15 +67,20 @@
               <td>{{ study.Denominacion }}</td>
               <td>
                 {% if student is defined and student is not null %}
-                  <a class="study-add-link success radius small button" href="{{ url('add_study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
-                    <i class="fi-check small-icon"></i>
-                  </a>
-                {% else %}
+                  {% if student_categorized_studies_list is defined %}
+                    <a class="categorized-study-add-link success radius small button" href="{{ path('add_study', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                      <i class="fi-check small-icon"></i>
+                    </a>
+                  {% else %}
+                    <a class="study-add-link success radius small button" href="{{ url('add_study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
+                      <i class="fi-check small-icon"></i>
+                    </a>
+                  {% endif %}
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
                   <a href="{{ path('study_edit', { 'id' : study.Id }) }}" class="warning radius small button">
                     <i class="fi-page-edit small-icon"></i>
                   </a>
-                {% endif %}
-                {% if is_granted('ROLE_USER') %}
                   <a href="{{ url('study_remove', { 'id' : study.Id }) }}" class="study-remove-link alert radius small button">
                     <i class="fi-trash small-icon"></i>
                   </a>
@@ -81,12 +88,18 @@
               </td>
             </tr>
           {% else %}
-            <div>
-              <span class="alert round label">¡No se ha creado ningún estudio!</span>
-              {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('study_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
-              {% endif %}
-            </div>
+            {% if student_categorized_studies_list is defined %}
+              <div>
+                <span class="warning round label">No existen estudios asociados a la categoría indicada</span>
+              </div>
+            {% else %}
+              <div>
+                <span class="alert round label">¡No se ha creado ningún estudio!</span>
+                {% if is_granted('ROLE_USER') %}
+                  <a href="{{ path('study_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
+                {% endif %}
+              </div>
+            {% endif %}
           {% endfor %}
           </tbody>
         </table>
@@ -117,7 +130,7 @@
                     {% elseif student_categorized_studies_list is defined %}
                       href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% elseif studies_list is defined %}
-                      href="{{ path('studies_list', { 'id' : student.Id, 'page' : number }) }}"
+                      href="{{ path('studies_list', { 'page' : number }) }}"
                     {% else %}
                       href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% endif %}
@@ -133,7 +146,7 @@
                     {% elseif student_categorized_studies_list is defined %}
                       href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% elseif studies_list is defined %}
-                      href="{{ path('studies_list', { 'id' : student.Id, 'page' : number }) }}"
+                      href="{{ path('studies_list', { 'page' : number }) }}"
                     {% else %}
                       href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% endif %}
