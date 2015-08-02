@@ -79,12 +79,12 @@ class Alumno {
      */
     private $Empresas;
 
-    public function __construct($nif, $name, $surnames, $address, $cp, $tlf, $email) {
+    public function __construct($nif, $name, $surnames, $address = null, $cp = null, $tlf, $email) {
         $this->NIF = $nif;
         $this->Nombre = $name;
         $this->Apellidos = $surnames;
-        $this->Direccion = $address;
-        $this->CP = $cp;
+        if(!is_null($address)) $this->Direccion = $address;
+        if(!is_null($cp)) $this->CP = $cp;
         $this->Telefono = $tlf;
         $this->Email = $email;
         $this->EstudiosTitulos = new ArrayCollection();

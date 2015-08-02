@@ -31,7 +31,7 @@ class EstudioTitulo {
      */
     private $Alumnos;
 
-    /**
+    /***
      * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="EstudiosTitulos", cascade={"persist"})
      */
     private $Categorias;
@@ -90,6 +90,24 @@ class EstudioTitulo {
     }
 
     /**
+     * @param Alumno $student Alumno a añadir
+     */
+    public function addAlumno(Alumno $student)
+    {
+        $students = $this->Alumnos;
+        if(!$students->contains($student)) $students->add($student);
+    }
+
+    /**
+     * @param Alumno $student Alumno a eliminar
+     */
+    public function removeAlumno(Alumno $student)
+    {
+        $students = $this->Alumnos;
+        if($students->contains($student)) $students->removeElement($student);
+    }
+
+    /**
      * @return array Categorías a las que pertenece el estudio
      */
     public function getCategorias()
@@ -100,7 +118,7 @@ class EstudioTitulo {
     /**
      * @param CategoriaActividad $category Categoría a añadir
      */
-    public function addCategory(CategoriaActividad $category)
+    public function addCategoria(CategoriaActividad $category)
     {
         $categories = $this->Categorias;
         if(!$categories->contains($category)) $categories->add($category);
@@ -109,7 +127,7 @@ class EstudioTitulo {
     /**
      * @param CategoriaActividad $category Categoría a eliminar
      */
-    public function removeCategory(CategoriaActividad $category)
+    public function removeCategoria(CategoriaActividad $category)
     {
         $categories = $this->Categorias;
         if($categories->contains($category)) $categories->removeElement($category);

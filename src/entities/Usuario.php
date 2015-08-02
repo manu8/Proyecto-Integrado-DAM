@@ -32,16 +32,21 @@ class Usuario implements UserInterface {
      */
     private $Activo;
 
-    private $salt;
+    /**
+     * @Column(length=10)
+     */
+    private $Rol;
 
-    private $rol = 'ROLE_USER';
+    private $roles = array('ROLE_USER');
+
+    private $salt;
 
     public function __construct($username, $passwd) {
         $this->Id = uniqid(mt_rand(), true);
         $this->Username = $username;
         $this->Password = $passwd;
         $this->Activo = false;
-        $this->salt = base_convert(sha1($this->Id), 16, 36);
+        $this->Rol = $this->getRoles()[0];
     }
 
     /**
@@ -105,7 +110,7 @@ class Usuario implements UserInterface {
      */
     public function getRoles()
     {
-        return $this->rol;
+        return $this->roles;
     }
 
     /**
@@ -114,7 +119,7 @@ class Usuario implements UserInterface {
      */
     public function hasRole($role)
     {
-        return $this->getRol() === $role;
+        return $this->getRoles() === $role;
     }
 
     /**

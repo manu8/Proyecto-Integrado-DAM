@@ -58,11 +58,22 @@ class Empresa {
     private $Alumnos;
 
     /**
-     * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="Empresas", cascade={"persist"})
+     * @ManyToMany(targetEntity="CategoriaActividad", inversedBy="Empresas", cascade={"persist"})
+     * @JoinTable(name="empresas_actividades",
+     *      joinColumns={@JoinColumn(name="empresa_id", referencedColumnName="Id")},
+     *      inverseJoinColumns={@JoinColumn(name="categoria_id", referencedColumnName="Id", nullable=false)}
+     * )
      */
     private $Actividades;
 
-    public function __construct() {
+    public function __construct($cif, $name, $address = null, $tlf, $email, $cp = null, $contact = null) {
+        $this->CIF = $cif;
+        $this->Denominacion = $name;
+        if(!is_null($address)) $this->Direccion = $address;
+        $this->Telefono = $tlf;
+        $this->Email = $email;
+        if(!is_null($cp)) $this->CP = $cp;
+        if(!is_null($contact)) $this->Contacto = $contact;
         $this->Alumnos = new ArrayCollection();
         $this->Actividades = new ArrayCollection();
     }

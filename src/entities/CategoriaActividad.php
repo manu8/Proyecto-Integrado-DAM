@@ -46,11 +46,7 @@ class CategoriaActividad {
     private $HabilidadesConocimientos;
 
     /**
-     * @ManyToMany(targetEntity="Empresa", inversedBy="Actividades", cascade={"persist"})
-     * @JoinTable(name="empresas_actividades",
-     *      joinColumns={@JoinColumn(name="categoria_id", referencedColumnName="Id", nullable=false)},
-     *      inverseJoinColumns={@JoinColumn(name="empresa_id", referencedColumnName="Id")}
-     * )
+     * @ManyToMany(targetEntity="Empresa", mappedBy="Actividades", cascade={"persist"})
      */
     private $Empresas;
 
