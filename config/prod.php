@@ -39,6 +39,7 @@ $app['security.firewalls'] = array(
         'anonymous' => true
     )
 );
+$app['security.access_rule'] = array(array('^/', 'ROLE_USER'));
 $app['security_encoder.digest'] = $app->share(function () {
     return new MessageDigestPasswordEncoder('sha1', false, 4);
 });
