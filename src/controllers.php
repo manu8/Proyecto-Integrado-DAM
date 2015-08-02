@@ -1,7 +1,11 @@
 <?php
 
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use Lib\Providers\UserProvider;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 Request::enableHttpMethodParameterOverride(); //Habilitación de métodos alternativos de HTTP (PUT, DELETE)
@@ -9,13 +13,79 @@ Request::enableHttpMethodParameterOverride(); //Habilitación de métodos altern
 /*** Ruta principal ***/
 
 $app->get('/', function () use ($app) {
+    //Generación de esquema de BD (si no existe)
+    try {
+        //Test de conexión con la BD
+        $em = $app['orm.em'];
+        $em->getConnection()->connect();
+    } catch (\Exception $e) {
+        $console = require 'console.php';
+        $console->setHelperSet(new Symfony\Component\Console\Helper\HelperSet(array(
+            'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($app["db"]),
+            'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($app["orm.em"])
+        )));
+        $console->addCommands(array(
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand,
+        ));
+
+        $command = $console->find('orm:schema-tool:create');
+        $command->run(new ArrayInput(array('')), new NullOutput());
+    }
+
+
+    $UserProvider = new UserProvider($app);
+    $user = $UserProvider->getCurrentUser();
+
     return $app['twig']->render('index.html.twig', array(
-        'domain' => $GLOBALS['DOMAIN']
+        'domain' => $GLOBALS['DOMAIN'],
+        'user' => $user
     ));
 })->bind('home');
 
 require __DIR__.'/controllers/UsersController.php'; //Controlador de rutas de usuario
 require __DIR__.'/controllers/StudentsController.php'; //Controlador de rutas de alumnos
+require __DIR__.'/controllers/CompaniesController.php'; //Controlador de rutas de empresas
+require __DIR__.'/controllers/StudiesController.php'; //Controlador de rutas de estudios
+require __DIR__.'/controllers/KnowledgesController.php'; //Controlador de rutas de conocimientos
+require __DIR__.'/controllers/CategoriesController.php'; //Controlador de rutas de categorías
+
+/*** Búsqueda por categoría ***/
+
+$app->post('category/search', function (Request $request) use ($app) {
+    $listType = $request->request->get('listType');
+    $categoryId = $request->request->get('category');
+
+    switch($listType){
+        case 'student':
+            $studentId = $request->request->get('student');
+            $searchType = $request->request->get('searchType');
+
+            switch($searchType){
+                case 'studies':
+                    return $app->redirect($app['url_generator']->generate('add_categorized_studies', array(
+                        'id' => $studentId,
+                        'category_id' => $categoryId
+                    )));
+                    break;
+                case 'knowledges':
+                    return $app->redirect($app['url_generator']->generate('add_categorized_knowledges', array(
+                        'id' => $studentId,
+                        'category_id' => $categoryId
+                    )));
+                    break;
+                case 'companies':
+                    return $app->redirect($app['url_generator']->generate('add_categorized_companies', array(
+                        'id' => $studentId,
+                        'category_id' => $categoryId
+                    )));
+            }
+            break;
+        case 'companies':
+            return $app->redirect($app['url_generator']->generate('companies_category_list', array(
+                'id' => $categoryId
+            )));
+    }
+})->bind('category_search');
 
 /*** Páginas de error ***/
 
