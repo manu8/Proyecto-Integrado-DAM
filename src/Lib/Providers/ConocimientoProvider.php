@@ -17,14 +17,20 @@ class ConocimientoProvider {
     /**
      * @return array|null Todos los conocimientos registrados
      */
-    public function getConocimientos()
+    public function getConocimientos($offset = null)
     {
-        $studies = null;
+        $knowledge = null;
         $em = $this->app["orm.em"];
         if($em instanceof \Doctrine\ORM\EntityManager){
-            $studies = $em->getRepository('Entities\HabilidadConocimiento')->findAll();
+            if(!is_null($offset)){
+                $query = $em->createQuery('SELECT c FROM Entities:HabilidadConocimiento c');
+                $query->setMaxResults(5);
+                $query->setFirstResult(($offset - 1) * 5);
+                $knowledge = $query->getResult();
+            }
+            else $knowledge = $em->getRepository('Entities\HabilidadConocimiento')->findAll();
         }
-        return $studies;
+        return $knowledge;
     }
 
     /**
@@ -59,5 +65,27 @@ class ConocimientoProvider {
             $students = $query->getResult();
         } else $students = $knowledge->getAlumnos();
         return $students;
+    }
+
+    /**
+     * Modifica un conocimiento existente en la base de datos
+     * @param HabilidadConocimiento $knowledge Conocimiento a modificar en la BD
+     */
+    public function updateConocimiento(HabilidadConocimiento $knowledge)
+    {
+        $em = $this->app['orm.em'];
+        $em->persist($knowledge);
+        $em->flush();
+    }
+
+    /**
+     * Elimina un conocimiento existente de la base de datos
+     * @param HabilidadConocimiento $knowledge Conocimiento a eliminar de la BD
+     */
+    public function removeConocimiento(HabilidadConocimiento $knowledge)
+    {
+        $em = $this->app['orm.em'];
+        $em->remove($knowledge);
+        $em->flush();
     }
 }

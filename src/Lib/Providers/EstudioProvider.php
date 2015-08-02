@@ -14,6 +14,7 @@ class EstudioProvider {
     }
 
     /**
+     * @param null $offset Índice de primer item del resultado
      * @return array|null Todos los estudios registrados
      */
     public function getEstudios($offset = null)
@@ -27,35 +28,6 @@ class EstudioProvider {
                 $query->setFirstResult(($offset - 1) * 5);
                 $studies = $query->getResult();
             } else $studies = $em->getRepository('Entities\EstudioTitulo')->findAll();
-        }
-        return $studies;
-    }
-
-    /**
-     * @param $id Id de la categoría a buscar
-     * @param null $offset Índice de primer item del resultado
-     * @return array|null Todos los estudios que poseen la categoría indicada
-     */
-    public function getEstudiosbyCategory($id, $offset = null)
-    {
-        $studies = null;
-        $em = $this->app['orm.em'];
-        if($em instanceof \Doctrine\ORM\EntityManager){
-            if(!is_null($offset)){
-                $studies = $em->getRepository('Entities\EstudioTitulo')->findBy(array(
-                    'Categorias' => $em->getRepository('Entities\CategoriaActividad')->findOneBy(array(
-                        'Id' => $id
-                    )),
-                    null,
-                    5,
-                    ($offset - 1) * 5
-                ));
-            } else{
-                $studies = $em->getRepository('Entities\Alumno')->findBy(array(
-                    'Categorias' => $em->getRepository('Entities\CategoriaActividad')->findOneBy(array(
-                        'Id' => $id
-                    ))));
-            }
         }
         return $studies;
     }
@@ -92,5 +64,27 @@ class EstudioProvider {
             $students = $query->getResult();
         } else $students = $study->getAlumnos();
         return $students;
+    }
+
+    /**
+     * Modifica un estudio existente en la base de datos
+     * @param EstudioTitulo $study Empresa a modificar en la BD
+     */
+    public function updateEstudio(EstudioTitulo $study)
+    {
+        $em = $this->app['orm.em'];
+        $em->persist($study);
+        $em->flush();
+    }
+
+    /**
+     * Elimina un estudio existente de la base de datos
+     * @param EstudioTitulo $study Empresa a eliminar de la BD
+     */
+    public function removeEstudio(EstudioTitulo $study)
+    {
+        $em = $this->app['orm.em'];
+        $em->remove($study);
+        $em->flush();
     }
 }

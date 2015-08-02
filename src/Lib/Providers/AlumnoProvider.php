@@ -22,6 +22,7 @@ class AlumnoProvider {
     }
 
     /**
+     * @param null $offset Número de página (paginación)
      * @return array|null Todos los alumnos registrados
      */
     public function getAlumnos($offset = null)
@@ -63,17 +64,17 @@ class AlumnoProvider {
                     ));
                     $studentsStudy = $study->getAlumnos();
                     break;
-                case 'nif': $studentsNIF = $em->getRepository('Entities\Alumno')->findBy(array(
+                case 'nif': $studentsNIF->add($em->getRepository('Entities\Alumno')->findBy(array(
                     'NIF' => $criteria[$key]
-                ));
+                )));
                     break;
-                case 'name': $studentsName = $em->getRepository('Entities\Alumno')->findBy(array(
+                case 'name': $studentsName->add($em->getRepository('Entities\Alumno')->findBy(array(
                     'Nombre' => $criteria[$key]
-                ));
+                )));
                     break;
-                case 'surnames': $studentsSurnames = $em->getRepository('Entities\Alumno')->findBy(array(
+                case 'surnames': $studentsSurnames->add($em->getRepository('Entities\Alumno')->findBy(array(
                     'Apellidos' => $criteria[$key]
-                ));
+                )));
             }
         }
         $studentsFinal = new ArrayCollection(
@@ -124,9 +125,9 @@ class AlumnoProvider {
     }
 
     /**
-     * Elimina un alumno existente de la base de datos
-     * @param Alumno $student Alumno a eliminar de la BD
-     */
+ * Elimina un alumno existente de la base de datos
+ * @param Alumno $student Alumno a eliminar de la BD
+ */
     public function removeAlumno(Alumno $student)
     {
         $em = $this->app['orm.em'];
