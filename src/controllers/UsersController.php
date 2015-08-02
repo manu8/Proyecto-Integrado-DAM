@@ -1,57 +1,60 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Request;
+
 use Lib\Providers\UserProvider;
 use Entities\Usuario;
 
 $app->get('/login', function(Request $request) use ($app) {
-    $userProvider = new UserProvider($app);
-    if($user = $userProvider->getCurrentUser()){
-        return;
-    }
-
-    return $app['twig']->render('forms/login-form.html.twig', array(
+    $UserProvider = new UserProvider($app);
+    $user = $UserProvider->getCurrentUser();
+    return $app['twig']->render('forms/login.html.twig', array(
         'domain' => $GLOBALS['DOMAIN'],
         'user' => $user,
         'error' => $app['security.last_error']($request),
         'last_username' => $app['session']->get('_security.last_username'),
     ));
-});
+})->bind('login');
 
 $app->post('/user/new', function(Request $request) use ($app) {
-    $userProvider = new UserProvider($app);
+    $UserProvider = new UserProvider($app);
     $username = $request->request->getAlnum('username');
     $password = $request->request->getAlnum('password');
-    $userProvider->createUser(new Usuario($username, $password));
+    if(!$UserProvider->createUser(new Usuario($username, $password))){
+        return $app['twig']->render('forms/user-forms.html.twig', array(
+            'domain' => $GLOBALS['DOMAIN'],
+            'duplicate_user' => true
+        ));
+    }
 
     $message = \Swift_Message::newInstance()
         ->setSubject('User Validation')
         ->setFrom(array('noreply' . $GLOBALS['DOMAIN']))
         ->setTo(array($username . $GLOBALS['DOMAIN']))
         ->setBody($GLOBALS['ACTIVATION_MESSAGE'] .
-            $app['url_generator']->generate('activate_user', array(
-                'id' => $userProvider->loadUserByUsername($username)->getId()
+            $app['url_generator']->generate('user_activate', array(
+                'id' => $UserProvider->loadUserByUsername($username)->getId()
             ))
         );
     $app['mailer']->send($message);
 
-    return $app['twig']->render('forms/user-forms.html.twig', array(
+    return $app['twig']->render('forms/login.html.twig', array(
         'domain' => $GLOBALS['DOMAIN'],
         'new_user' => true
     ));
 })->bind('user_create');
 
-$app->get('/user/edit', function(Request $request) use ($app) {
+$app->get('/user/edit', function() use ($app) {
     $token = $app['security']->getToken();
     if($token != null) $user = $token->getUser();
 
     if(!$user) $form_type = "edit";
     else $form_type = 'new';
 
-    return $app['twig']->render('user-forms.html.twig', array(
+    return $app['twig']->render('forms/user-forms.html.twig', array(
         'form_type' => $form_type,
         'user' => $user,
-        'domain' => $GLOBALS['DOMAIN'],
-        'last_view' => $request->getRequestUri()
+        'domain' => $GLOBALS['DOMAIN']
     ));
 })->bind('user_edit');
 
@@ -91,8 +94,29 @@ $app->get('/user/{id}/activate', function($id) use ($app) {
     $UserProvider = new UserProvider($app);
     $UserProvider->activateUser($id);
 
-    return $app['twig']->render('forms/login-form.html.twig', array(
+    return $app['twig']->render('forms/login.html.twig', array(
         'domain' => $GLOBALS['DOMAIN'],
         'activate_user' => true
     ));
 })->bind('user_activate');
+
+$app->get('user/send_email', function() use ($app) {
+    $UserProvider = new UserProvider($app);
+    $user = $UserProvider->getCurrentUser();
+
+    $message = \Swift_Message::newInstance()
+        ->setSubject('User Validation')
+        ->setFrom(array('noreply' . $GLOBALS['DOMAIN']))
+        ->setTo(array($user->getUsername() . $GLOBALS['DOMAIN']))
+        ->setBody($GLOBALS['ACTIVATION_MESSAGE'] .
+            $app['url_generator']->generate('user_activate', array(
+                'id' => $user->getId()
+            ))
+        );
+    $app['mailer']->send($message);
+
+    return $app['twig']->render('forms/login.html.twig', array(
+        'domain' => $GLOBALS['DOMAIN'],
+        'email_send' => true
+    ));
+})->bind('user_send_email');
