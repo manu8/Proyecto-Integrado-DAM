@@ -1,5 +1,68 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-    Welcome to your new Silex Application!
+    <div class="custom-row">
+      <div class="small-12 column">
+        <img src="{{ asset('img/laptop - copia.jpg') }}" alt="Laptop">
+      </div>
+      <div class="small-6 column">
+        <div id="students-chart" ></div>
+        <h4 class="text-center">
+          <span id="studentsTotal" class="radius primary label"></span>
+        </h4>
+      </div>
+      <div class="small-6 column">
+        <div id="companies-chart" ></div>
+        <h4 class="text-center">
+          <span id="companiesTotal" class="radius primary label"></span>
+        </h4>
+      </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+
+    // Load the Google Visualization API and the corechart package.
+    google.load('visualization', '1.0', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(function () {
+      // Create data tables with JSON data loaded from server.
+      var jsonData = $.ajax({
+        url: "data",
+        dataType:"json",
+        async: false
+      }).responseJSON;
+      var studentsData = new google.visualization.DataTable();
+      studentsData.addColumn('string', 'Estudio');
+      studentsData.addColumn('number', '% de estudiantes');
+      $('#studentsTotal').text('Total de alumnos registrados: ' + jsonData[0].splice(jsonData[0].length - 1)[0][1]);
+      studentsData.addRows(jsonData[0]);
+      var companiesData = new google.visualization.DataTable();
+      companiesData.addColumn('string', 'Categoría / Actividad');
+      companiesData.addColumn('number', '% de empresas');
+      $('#companiesTotal').text('Total de empresas registradas: ' + jsonData[1].splice(jsonData[1].length - 1)[0][1]);
+      companiesData.addRows(jsonData[1]);
+      // Create a donut charts
+      var studentsChartOptions = {
+        'title': 'Estudiantes registrados (por estudios)',
+        'height': 400,
+        'pieHole': 0.5,
+        'sliceVisibilityThreshold': 0.1
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('students-chart'));
+      chart.draw(studentsData, studentsChartOptions);
+      var companiesChartOptions = {
+        'title': 'Empresas registradas (por actividad / categoría)',
+        'height': 400,
+        'pieHole': 0.5,
+        'sliceVisibilityThreshold': 0.1
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('companies-chart'));
+      chart.draw(companiesData, companiesChartOptions);
+    });
+  </script>
 {% endblock %}

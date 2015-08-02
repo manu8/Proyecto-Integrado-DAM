@@ -309,7 +309,7 @@
           {% endif %}
           <div class="row small-centered">
             <div class="small-12 medium-3 large-3 columns">
-              {% if form_type == 'edit' %}
+              {% if form_type == 'edit' and is_granted('ROLE_USER') %}
                 <button type="submit" class="button expand round warning"><i class="small-icon fi-pencil"></i>Modificar alumno</button>
               {% elseif form_type == 'new' %}
                 <button type="submit" class="button expand round success"><i class="small-icon fi-plus"></i>Registrar alumno</button>

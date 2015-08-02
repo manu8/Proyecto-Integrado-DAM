@@ -246,7 +246,7 @@
           <div class="small-12 medium-3 large-3 columns">
             {% if form_type == 'new' %}
               <button type="submit" class="success expand round button"><i class="small-icon fi-plus"></i>Crear empresa</button>
-            {% elseif form_type == 'edit' %}
+            {% elseif form_type == 'edit' and is_granted('ROLE_USER') %}
               <button type="submit" class="warning expand round button"><i class="small-icon fi-pencil"></i>Modificar empresa</button>
             {% endif %}
           </div>

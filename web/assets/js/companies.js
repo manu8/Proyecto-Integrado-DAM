@@ -21,7 +21,7 @@ $('a.category-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" src="../../assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#activityAdded').show();
@@ -48,7 +48,7 @@ $('a.category-remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
-                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#activityAdded').show();
@@ -73,7 +73,7 @@ $('a.remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
-                link.parent().append('<img id="loadImg" src="../../assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#activityAdded').show();

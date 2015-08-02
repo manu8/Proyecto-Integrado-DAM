@@ -18,7 +18,7 @@ $('a.remove-link').click(function(event) {
             type: 'DELETE',
             url: $(this).attr('href'),
             beforeSend: function() {
-                $(this).html($('img').src('../img/load.gif'));
+                $(this).html($('img').src('/assets/img/load.gif'));
             },
             success: function() {
                 $('#knowledgeRemoved').show();

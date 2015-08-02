@@ -112,10 +112,10 @@
                   </a>
                 {% endif %}
               {% endif %}
+              <a href="{{ path('company_edit', { 'id' : company.Id }) }}" class="success radius small button">
+                <i class="fi-page-edit small-icon"></i>
+              </a>
               {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('company_edit', { 'id' : company.Id }) }}" class="warning radius small button">
-                  <i class="fi-page-edit small-icon"></i>
-                </a>
                 <a href="{{ path('company_remove', { 'id' : company.Id }) }}" class="remove-company-link alert radius small button">
                   <i class="fi-trash small-icon"></i>
                 </a>
