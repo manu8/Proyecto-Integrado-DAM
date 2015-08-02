@@ -1,7 +1,12 @@
 <?php
 
+use Lib\Providers\AlumnoProvider;
+use Lib\Providers\CategoriaActividadProvider;
+use Lib\Providers\EmpresaProvider;
+use Lib\Providers\EstudioProvider;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -41,6 +46,38 @@ $app->get('/', function () use ($app) {
         'user' => $user
     ));
 })->bind('home');
+
+/*** Ruta de obtención de datos para el dashboard ***/
+
+$app->get('/data', function () use ($app) {
+    //Generación de datos de estudiantes por estudios
+    $EstudioProvider = new EstudioProvider($app);
+    $studies = $EstudioProvider->getEstudios();
+    $AlumnoProvider = new AlumnoProvider($app);
+    $studentsTotal = count($AlumnoProvider->getAlumnos());
+    foreach ($studies as $study) {
+        $studentsByStudy[] = array(
+            $study->getDenominacion(),
+            count($EstudioProvider->getAlumnos($study)) / $studentsTotal
+        );
+    }
+    $studentsByStudy[] = array('Total', $studentsTotal);
+
+    //Generación de datos de empresas por actividad o categoría
+    $CategoriaProvider = new CategoriaActividadProvider($app);
+    $categories = $CategoriaProvider->getCategorias();
+    $EmpresaProvider = new EmpresaProvider($app);
+    $companiesTotal = count($EmpresaProvider->getEmpresas());
+    foreach ($categories as $category) {
+        $companiesByCategory[] = array(
+            $category->getDenominacion(),
+            count($CategoriaProvider->getCompanies($category)) / $companiesTotal
+        );
+    }
+    $companiesByCategory[] = array('Total', $companiesTotal);
+
+    return new JsonResponse(array($studentsByStudy, $companiesByCategory));
+});
 
 require __DIR__.'/controllers/UsersController.php'; //Controlador de rutas de usuario
 require __DIR__.'/controllers/StudentsController.php'; //Controlador de rutas de alumnos
