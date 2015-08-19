@@ -302,7 +302,9 @@
                 <ul class="button-group round even-3">
                   <li><a href="{{ path('add_studies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir estudio(s)</a></li>
                   <li><a href="{{ path('add_knowledges', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir conocimiento(s)</a></li>
-                  <li><a href="{{ path('add_companies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir empresa(s)</a></li>
+                  {% if is_granted('ROLE_USER') %}
+                    <li><a href="{{ path('add_companies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir empresa(s)</a></li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
