@@ -2,6 +2,7 @@
 
 use Lib\Providers\AlumnoProvider;
 use Lib\Providers\CategoriaActividadProvider;
+use Lib\Providers\ConocimientoProvider;
 use Lib\Providers\EmpresaProvider;
 use Lib\Providers\EstudioProvider;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -50,33 +51,64 @@ $app->get('/', function () use ($app) {
 /*** Ruta de obtención de datos para el dashboard ***/
 
 $app->get('/data', function () use ($app) {
-    //Generación de datos de estudiantes por estudios
+    //Generación de datos de estudios
     $EstudioProvider = new EstudioProvider($app);
     $studies = $EstudioProvider->getEstudios();
+    $studiesData = array();
+    foreach ($studies as $study) {
+        $studiesData[] = array($study->getDenominacion());
+    }
+    $studiesData[] = count($EstudioProvider->getEstudios());
+
+    //Generación de datos de estudios por categoría
+    $CategoriaProvider = new CategoriaActividadProvider($app);
+    $categories = $CategoriaProvider->getCategorias();
+    $studiesByCategory = array();
+    foreach ($categories as $category) {
+        $studiesByCategory[] = array(
+            $category->getDenominacion(),
+            count($CategoriaProvider->getStudies($category))
+        );
+    }
+
+    //Generación de datos de estudiantes por estudios
     $AlumnoProvider = new AlumnoProvider($app);
     $studentsTotal = count($AlumnoProvider->getAlumnos());
     foreach ($studies as $study) {
         $studentsByStudy[] = array(
             $study->getDenominacion(),
-            count($EstudioProvider->getAlumnos($study)) / $studentsTotal
+            (count($EstudioProvider->getAlumnos($study)) / $studentsTotal) * $studentsTotal
         );
     }
-    $studentsByStudy[] = array('Total', $studentsTotal);
+    $studentsByStudy[] = $studentsTotal;
+
+    //Generación de datos de estudiantes por conocimientos
+    $ConocimientoProvider = new ConocimientoProvider($app);
+    $studentsByKnowledge = array();
+    foreach ($ConocimientoProvider->getConocimientos() as $knowledge) {
+        $studentsByKnowledge[] = array(
+            $knowledge->getDenominacion(),
+            (count($ConocimientoProvider->getAlumnos($knowledge)) / $studentsTotal) * $studentsTotal
+        );
+    }
 
     //Generación de datos de empresas por actividad o categoría
-    $CategoriaProvider = new CategoriaActividadProvider($app);
-    $categories = $CategoriaProvider->getCategorias();
     $EmpresaProvider = new EmpresaProvider($app);
     $companiesTotal = count($EmpresaProvider->getEmpresas());
     foreach ($categories as $category) {
         $companiesByCategory[] = array(
             $category->getDenominacion(),
-            count($CategoriaProvider->getCompanies($category)) / $companiesTotal
+            (count($CategoriaProvider->getCompanies($category)) / $companiesTotal) * $companiesTotal
         );
     }
-    $companiesByCategory[] = array('Total', $companiesTotal);
+    $companiesByCategory[] = $companiesTotal;
 
-    return new JsonResponse(array($studentsByStudy, $companiesByCategory));
+    return new JsonResponse(array(
+        'studies'  => $studiesData,
+        'categorizedStudies' => $studiesByCategory,
+        'studentsByStudy' => $studentsByStudy,
+        'studentsByKnowledge' => $studentsByKnowledge,
+        'companies' => $companiesByCategory));
 });
 
 require __DIR__.'/controllers/UsersController.php'; //Controlador de rutas de usuario
