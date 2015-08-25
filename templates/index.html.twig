@@ -1,6 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
+  {% if is_granted('ROLE_USER') %}
     <div class="first-row">
       <div class="small-12 medium-6 large-6 columns">
         <div class="chart text-center">
@@ -35,6 +36,13 @@
         </h4>
       </div>
     </div>
+  {% else %}
+    <div class="custom-row">
+      <div class="small-12 column">
+        <img class="img-responsive" src="{{ asset('img/laptop.jpg') }}" alt="Gestor Curricular I.E.S. Virgen del Carmen">
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
