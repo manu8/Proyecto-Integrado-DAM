@@ -39,12 +39,8 @@ $app->get('/', function () use ($app) {
     }
 
 
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-
     return $app['twig']->render('index.html.twig', array(
-        'domain' => $GLOBALS['DOMAIN'],
-        'user' => $user
+        'domain' => $GLOBALS['DOMAIN']
     ));
 })->bind('home');
 
