@@ -69,11 +69,11 @@
             <section class="top-bar-section shown-for-large-up hide-for-medium-down">
               <ul class="right">
                 {% if app.user is not null %}
-                  <li><a href="{{ path('logout') }}" class="button expand">Logout</a></li>
-                  <li><a class="button expand warning" href="{{ path('user_edit', { 'id' : app.user.Id }) }}"><i class="fi-widget"></i></a></li>
+                  <li><a href="{{ path('user_logout') }}" class="button expand">Logout</a></li>
+                  <li><a class="button expand warning" href="{{ path('user-edit', { 'id' : app.user.id }) }}"><i class="fi-widget"></i></a></li>
                 {% else %}
                   <li class="has-form">
-                    <form action="{{ path('login_check') }}" method="post">
+                    <form action="{{ path('user_login_check') }}" method="post">
                       <div class="row collapse">
                         <div class="large-5 column">
                           <input type="text" placeholder="Username" name="_username"
@@ -91,7 +91,7 @@
                       </div>
                     </form>
                   </li>
-                  <li><a href="{{ path('user_edit') }}" class="button expand" data-reveal-id="registerModal">Nuevo registro</a></li>
+                  <li><a class="button expand" data-reveal-id="registerModal">Nuevo registro</a></li>
                 {% endif %}
               </ul>
             </section>
@@ -108,8 +108,8 @@
         <aside class="right-off-canvas-menu">
           <ul class="off-canvas-list">
             {% if app.user is not null %}
-              <li><a class="button radius" href="{{ path('logout') }}">Logout</a></li>
-              <li><a class="button radius warning" href="{{ path('user_edit', { 'id' : app.user.Id }) }}"><i class="fi-widget medium-icon"></i></a></li>
+              <li><a class="button radius" href="{{ path('user_logout') }}">Logout</a></li>
+              <li><a class="button radius warning" href="{{ path('user-edit', { 'id' : app.user.Id }) }}"><i class="fi-widget medium-icon"></i></a></li>
             {% else %}
               <li><a href="#" class="button radius success" data-reveal-id="loginModal">Login</a></li>
               <li><a href="#" class="button radius" data-reveal-id="registerModal">Nuevo registro</a></li>
@@ -178,7 +178,7 @@
       <div class="small-8 small-centered large-8 large-centered columns">
         <h2 id="modalTitle" class="text-center">Nuevo usuario</h2>
         <p class="lead text-center">Rellena el siguiente formulario para inscribirte como usuario</p>
-        <form action="{{ path('user_create') }}" method="post" data-abide>
+        <form action="{{ path('user-new') }}" method="post" data-abide>
           <div class="small-12 column">
             <div class="row collapse">
               <div class="show-for-medium-up medium-4 large-2 column">
@@ -206,7 +206,7 @@
                 <span class="prefix"><i class="fi-alert medium-icon"></i></span>
               </div>
               <div class="small-12 medium-8 large-10 columns">
-                <input type="password" placeholder="Repita su contraseña" pattern="alpha_numeric" data-equalto="password">
+                <input name="confirm_password" type="password" placeholder="Repita su contraseña" pattern="alpha_numeric" data-equalto="password">
                 <small class="error">Las contraseñas no coinciden</small>
               </div>
             </div>
@@ -219,7 +219,7 @@
     </div>
     <div id="loginModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <div class="small-8 small-centered large-8 large-centered columns">
-        <form action="{{ path('login_check') }}" method="post" data-abide>
+        <form action="{{ path('user_login_check') }}" method="post" data-abide>
           <fieldset>
             <legend>Login</legend>
             <div class="small-12 column">

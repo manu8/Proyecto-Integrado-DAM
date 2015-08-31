@@ -2,12 +2,12 @@
 
 namespace Lib\Providers;
 
+use Entities\Usuario;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-
-use Entities\Usuario;
 
 class UserProvider implements UserProviderInterface {
 
@@ -18,13 +18,21 @@ class UserProvider implements UserProviderInterface {
     }
 
     public function loadUserByUsername($username) {
-        $user = null;
-        $em = $this->app["orm.em"];
-        if($em instanceof \Doctrine\ORM\EntityManager){
-            if(!$user = $em->getRepository('Entities\Usuario')->findOneBy(array('Username' => $username))){
-                throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+        $em = $this->app['orm.em'];
+        if (strpos($username, '@')) {
+            $user = $em->getRepository('Entities\Usuario')->findOneBy(array('email' => $username));
+            if (!$user) {
+                throw new UsernameNotFoundException(sprintf('Email "%s" does not exist.', $username));
             }
+
+            return $user;
         }
+
+        $user = $em->getRepository('Entities\Usuario')->findOneBy(array('username' => $username));
+        if (!$user) {
+            throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+        }
+
         return $user;
     }
 
@@ -32,11 +40,36 @@ class UserProvider implements UserProviderInterface {
         if (!$user instanceof Usuario) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
+
         return $this->loadUserByUsername($user->getUsername());
     }
 
-    public function supportsClass($class) {
-        return $class === '\Entities\Usuario';
+    public function supportsClass($class)
+    {
+        return $class === 'Entities\Usuario';
+    }
+
+    public function getUser($id)
+    {
+        return $this->app['orm.em']->getRepository('Entities\Usuario')->find($id);
+    }
+
+    public function createUser($email, $plainPassword, $name = null, $roles = array())
+    {
+        $user = new Usuario($email);
+
+        if (!empty($plainPassword)) {
+            $this->setUserPassword($user, $plainPassword);
+        }
+
+        if ($name !== null) {
+            $user->setName($name);
+        }
+        if (!empty($roles)) {
+            $user->setRoles($roles);
+        }
+
+        return $user;
     }
 
     public function getEncoder(Usuario $user)
@@ -53,11 +86,6 @@ class UserProvider implements UserProviderInterface {
     public function setUserPassword(Usuario $user)
     {
         $user->setPassword($this->encodeUserPassword($user));
-    }
-
-    public function checkUserPassword(Usuario $user)
-    {
-        return $user->getPassword() === $this->encodeUserPassword($user);
     }
 
     function isLoggedIn()
@@ -77,29 +105,28 @@ class UserProvider implements UserProviderInterface {
         return null;
     }
 
-    public function createUser(Usuario $user)
+    public function validate(Usuario $user)
     {
         $em = $this->app['orm.em'];
-        if(is_null($em->getRepository('Entities\Usuario')->find($user->getUsername()))){
-            $this->setUserPassword($user);
-            $em->persist($user);
-            $em->flush();
-            return true;
-        } else return false;
-    }
 
-    public function activateUser($id)
-    {
-        $em = $this->app["orm.em"];
-        if($em instanceof \Doctrine\ORM\EntityManager){
-            if(!$user = $em->getRepository("Usuario")->findOneBy(array("Id"=>$id))){
-                throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $id));
-            } else {
-                $user->setActivo(true);
-                $em->persist($user);
-                $em->flush();
+        // Ensure email address is unique.
+        $duplicates = $em->getRepository('Entities\Usuario')->findBy(array('username' => $user->getUsername()));
+        if (!empty($duplicates)) {
+            foreach ($duplicates as $dup) {
+                if ($dup->getId() == $user->getId()) continue;
+                return false;
             }
         }
+
+        return true;
+    }
+
+    public function persistUser(Usuario $user)
+    {
+        $em = $this->app['orm.em'];
+        $this->setUserPassword($user, $user->getPassword());
+        $em->persist($user);
+        $em->flush();
     }
 
     public function updateUser(Usuario $user)
@@ -114,5 +141,16 @@ class UserProvider implements UserProviderInterface {
         $em = $this->app['orm.em'];
         $em->remove($user);
         $em->flush();
+    }
+
+    public function loginUser(Usuario $user)
+    {
+        if (null !== ($currentToken = $this->app['security']->getToken())) {
+            $providerKey = method_exists($currentToken, 'getProviderKey') ? $currentToken->getProviderKey() : $currentToken->getKey();
+            $token = new UsernamePasswordToken($user, null, $providerKey);
+            $this->app['security']->setToken($token);
+
+            $this->app['user'] = $user;
+        }
     }
 }

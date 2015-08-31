@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use Lib\Providers\UserProvider;
-
 //Request::setTrustedProxies(array('127.0.0.1'));
 Request::enableHttpMethodParameterOverride(); //Habilitación de métodos alternativos de HTTP (PUT, DELETE)
 
@@ -38,9 +36,8 @@ $app->get('/', function () use ($app) {
         $command->run(new ArrayInput(array('')), new NullOutput());
     }
 
-
     return $app['twig']->render('index.html.twig', array(
-        'domain' => $GLOBALS['DOMAIN']
+        'domain' => $GLOBALS['MAILING_DOMAIN']
     ));
 })->bind('home');
 

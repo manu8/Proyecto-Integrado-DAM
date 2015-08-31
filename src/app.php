@@ -1,6 +1,7 @@
 <?php
 
 use Silex\Application;
+use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
@@ -50,8 +51,9 @@ $app->register(new DoctrineOrmServiceProvider, array(
 ));
 
 //Implementación de seguridad
-$app->register(new Silex\Provider\SessionServiceProvider());
+$app->register(new SessionServiceProvider());
 $app->register(new SecurityServiceProvider());
+$app->register(new RememberMeServiceProvider());
 
 //Implementación del servidor de correo para verificación de usuario
 $app->register(new SwiftmailerServiceProvider());

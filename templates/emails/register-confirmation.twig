@@ -1,0 +1,25 @@
+{# The subject line. #}
+{%- block subject -%}{%- autoescape false -%}
+  Confirmación de usuario
+{%- endautoescape -%}{%- endblock -%}
+
+{# The plain text message. #}
+{%- block body_text -%}{%- autoescape false -%}
+
+  ¡Bienvenido al Gestor Curricular del IES Virgen del Carmen!
+
+  Por favor use el enlace de abajo para confirmar su usuario:
+  {{ confirmationUrl }}
+
+{%- endautoescape -%}{%- endblock -%}
+
+{# The HTML message. #}
+{%- block body_html -%}
+
+  <h1>¡Bienvenido al Gestor Curricular del IES Virgen del Carmen!</h1>
+
+  <p>
+    Por favor, <a href="{{ confirmationUrl }}">pulse aquí para confirmar su usuario</a>.
+  </p>
+
+{%- endblock -%}

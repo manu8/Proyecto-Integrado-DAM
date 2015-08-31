@@ -2,7 +2,6 @@
 
 namespace Entities;
 
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -12,118 +11,96 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Usuario implements UserInterface {
 
     /**
-     * @Column(type="integer")
-     */
-    private $Id;
-
-    /**
      * @Id
-     * @Column(length=30)
+     * @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
      */
-    private $Username;
+    protected $id;
 
     /**
      * @Column
      */
-    private $Password;
+    protected $email;
+
+    /**
+     * @Column
+     */
+    protected $password;
+
+    /**
+     * @Column
+     */
+    protected $salt;
+
+    /**
+     * @Column(type="simple_array", nullable=true)
+     */
+    protected $roles = array();
+
+    /**
+     * @Column(length=100)
+     */
+    protected $username;
 
     /**
      * @Column(type="boolean")
      */
-    private $Activo;
+    protected $isEnabled = true;
 
     /**
-     * @Column(length=10)
+     * @Column(length=100, nullable=true)
      */
-    private $Rol;
+    protected $confirmationToken;
 
-    private $roles = array('ROLE_USER');
-
-    private $salt;
-
-    public function __construct($username, $passwd) {
-        $this->Id = uniqid(mt_rand(), true);
-        $this->Username = $username;
-        $this->Password = $passwd;
-        $this->Activo = false;
-        $this->Rol = $this->getRoles()[0];
+    public function __construct($email)
+    {
+        $this->email = $email;
+        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->confirmationToken = self::generateToken();
     }
 
     /**
-     * @return integer Id del usuario
+     * @return integer User id
      */
     public function getId()
     {
-        return $this->Id;
+        return $this->id;
     }
 
     /**
-     * @return string Nombre de usuario
+     * @return string User email
      */
-    public function getUsername()
+    public function getEmail()
     {
-        return $this->Username;
+        return $this->email;
     }
 
     /**
-     * @param string $Username Nombre de usuario
+     * @param string $email User email
      */
-    public function setUsername($username)
+    public function setEmail($email)
     {
-        $this->Username = $username;
+        $this->email = $email;
     }
 
     /**
-     * @return string Contraseña del usuario
+     * @return string User password
      */
     public function getPassword()
     {
-        return $this->Password;
+        return $this->password;
     }
 
     /**
-     * @param string $Password Contraseña del usuario
+     * @param string $password User password
      */
-    public function setPassword($Password)
+    public function setPassword($password)
     {
-        $this->Password = $Password;
+        $this->password = $password;
     }
 
     /**
-     * @return boolean Usuario activo
-     */
-    public function getActivo()
-    {
-        return $this->Activo;
-    }
-
-    /**
-     * @param boolean $Activo Usuario activo
-     */
-    public function setActivo($Activo)
-    {
-        $this->Activo = $Activo;
-    }
-
-    /**
-     * @return array Roles del usuario
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * @param string $role Rol del usuario
-     * @return bool True si posee el rol false si no
-     */
-    public function hasRole($role)
-    {
-        return $this->getRoles() === $role;
-    }
-
-    /**
-     * @return string Codificador de la contraseña
+     * @return string User salt
      */
     public function getSalt()
     {
@@ -131,7 +108,112 @@ class Usuario implements UserInterface {
     }
 
     /**
-     * Elimina las credenciales del usuario
+     * @param string $salt User salt
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    }
+
+    /**
+     * @return array User roles
+     */
+    public function getRoles()
+    {
+        $roles = $this->roles;
+
+        $roles[] = 'ROLE_USER'; // Every user must have at least one role, per Silex security docs.
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param array $roles User roles
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = array();
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+    }
+
+    /**
+     * @return string User username
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username User username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return boolean User is enabled
+     */
+    public function isEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param boolean $isEnabled User activate
+     */
+    public function setEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+    }
+
+    /**
+     * @return string User confirmation token
+     */
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * @param string $confirmationToken User confirmation token
+     */
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmationToken = $confirmationToken;
+    }
+
+    public function generateToken()
+    {
+        return rtrim(strtr(base64_encode($this->getRandomNumber()), '+/', '-_'), '=');
+    }
+
+    private function getRandomNumber()
+    {
+        $nbBytes = 32;
+
+        // try to use OpenSSL
+        if (defined('PHP_WINDOWS_VERSION_BUILD') && version_compare(PHP_VERSION, '5.3.4', '>') &&
+            function_exists('openssl_random_pseudo_bytes')) {
+            $bytes = openssl_random_pseudo_bytes($nbBytes, $strong);
+
+            if (false !== $bytes && true === $strong) {
+                return $bytes;
+            }
+        }
+
+        return hash('sha256', uniqid(mt_rand(), true), true);
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
      */
     public function eraseCredentials() {}
 }

@@ -14,18 +14,19 @@
           <br>
           Se te ha enviado un correo a la dirección proporcionada con el enlace para activar el usuario creado.
           <br>
-          Una vez hecho esto podrás acceder con sus credenciales.
+          Una vez hecho esto podrás acceder con tus credenciales.
           <a href="#" class="close">&times;</a>
         </div>
       </div>
     </div>
-  {% elseif user is defined and user is null %}
+  {% elseif app.user is null %}
     <div class="custom-row first-row">
       <div class="small-6 small-centered column">
         <div data-alert class="alert-box alert round text-center">
-          {% if error == 'Bad credentials.' %}
+          {% if error is defined and error == 'Bad credentials.' %}
             ¡El usuario no existe! Por favor revisa tus credenciales.
           {% elseif error is defined %}
+            {{ error }}
             Algo ha salido mal... Por favor vuelve a intentarlo.
           {% endif %}
           <a href="#" class="close">&times;</a>
@@ -38,7 +39,7 @@
         <div data-alert class="alert-box info round text-center">
           ¡Usuario activado!
           <br>
-          Ya puedes acceder con tus credenciales.
+          ¡Bienvenido, {{ app.user.username }}!
           <a href="#" class="close">&times;</a>
         </div>
       </div>
@@ -49,9 +50,14 @@
         <div data-alert class="alert-box warning round text-center">
           ¡El usuario no está activado!
           <br>
-          Revisa tu correo en busca del email de activación.
-          <br>
-          <a href=""
+          Revisa tu correo, {{ email }}, en busca del email de activación.
+          Accede al link proporcionado en ese correo para activar tu usuario.
+          <div>
+            <form method="POST" action="{{ path('resend-email') }}">
+              <input type="hidden" name="email" value="{{ email }}">
+              <button type="submit" class="btn btn-default">Reenviar el email</button>
+            </form>
+          </div>
           <a href="#" class="close">&times;</a>
         </div>
       </div>
@@ -64,7 +70,24 @@
           <br>
           Revisa tu correo en busca del email de activación.
           <br>
-          <a href="{{ path('user_send_email') }}"
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif token_expired is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          ¡Tu link de activación ha expirado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif reset_password is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡El correo para la modificación de contraseña se ha enviado!
           <a href="#" class="close">&times;</a>
         </div>
       </div>
@@ -72,7 +95,7 @@
   {% endif %}
   <div class="row">
     <div class="small-12 column">
-      <form action="{{ path('login_check') }}" method="post" data-abide>
+      <form action="{{ path('user_login_check') }}" method="post" data-abide>
         <fieldset>
           <legend>Login</legend>
           <div class="small-12 column">
@@ -81,7 +104,7 @@
                 <span class="prefix"><i class="fi-torso medium-icon"></i></span>
               </div>
               <div class="small-8 medium-10 large-10 columns">
-                <input type="text" placeholder="Username" name="_username" required>
+                <input type="text" placeholder="Username" name="_username" value="{{ last_username }}" required>
                 <small class="error">Debes indicar un nombre de usuario</small>
               </div>
             </div>
@@ -94,7 +117,14 @@
                 <small class="error">Debes indicar una contraseña</small>
               </div>
             </div>
+            <div class="row">
+              <div class="small-10 small-offset-1 column">
+                <input type="checkbox" id="remember_me" name="_remember_me" checked />
+                <label for="remember_me">Recordarme</label>
+              </div>
+            </div>
             <button type="submit" class="button round success"><i class="small-icon fi-unlock"></i>Login</button>
+            <a class="button round primary" href="{{ path('forgot-password') }}">¿Olvidaste la contraseña?</a>
           </div>
         </fieldset>
       </form>
