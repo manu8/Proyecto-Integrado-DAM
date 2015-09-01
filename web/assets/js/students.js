@@ -1,10 +1,21 @@
 //Visualización de formularios para listados por criterio
 
+$('#companySearch').click(function(event) {
+    event.preventDefault();
+
+    $('#studySelect').hide();
+    $('#customSelect').hide();
+    $('#knowledgeSelect').hide();
+
+    $('#companySelect').show();
+});
+
 $('#knowledgeSearch').click(function(event) {
     event.preventDefault();
 
     $('#studySelect').hide();
     $('#customSelect').hide();
+    $('#companySelect').hide();
 
     $('#knowledgeSelect').show();
 });
@@ -14,6 +25,7 @@ $('#studySearch').click(function(event) {
 
     $('#knowledgeSelect').hide();
     $('#customSelect').hide();
+    $('#companySelect').hide();
 
     $('#studySelect').show();
 });
@@ -23,6 +35,7 @@ $('#customSearch').click(function(event) {
 
     $('#knowledgeSelect').hide();
     $('#studySelect').hide();
+    $('#companySelect').hide();
 
     $('#customSelect').show();
 });
@@ -32,6 +45,7 @@ $('#categorySearch').click(function(event) {
 
     $('#studySelect').hide();
     $('#customSelect').hide();
+    $('#companySelect').hide();
 
     $('#categorySelect').show();
 });

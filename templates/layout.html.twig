@@ -24,18 +24,18 @@
                   <a href="#">Alumnos</a>
                   <ul class="dropdown">
                     {% if is_granted('ROLE_USER') %}
-                      <li><a href="{{ path('students_list') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
+                      <li><a href="{{ path('students-list') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
                     {% endif %}
-                    <li><a href="{{ path('student_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo alumno</a></li>
+                    <li><a href="{{ path('student-edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo alumno</a></li>
                   </ul>
                 </li>
                 <li class="has-dropdown">
                   <a href="#">Empresas</a>
                   <ul class="dropdown">
                     {% if is_granted('ROLE_USER') %}
-                      <li><a href="{{ path('companies_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
+                      <li><a href="{{ path('companies-list') }}"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
                     {% endif %}
-                    <li><a href="{{ path('company_edit', { 'id' : 0}) }}"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
+                    <li><a href="{{ path('company-edit', { 'id' : 0}) }}"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
                   </ul>
                 </li>
                 {% if is_granted('ROLE_USER') %}
@@ -56,7 +56,7 @@
                   <li class="has-dropdown">
                     <a href="#">Categorías</a>
                     <ul class="dropdown">
-                      <li><a href="{{ path('categories_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Categorías</a></li>
+                      <li><a href="{{ path('categories_list') }}"><i class="fi-star small-icon"></i>Listado de Categorías</a></li>
                       <li><a href="{{ path('category_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir categoría</a></li>
                     </ul>
                   </li>
@@ -123,9 +123,9 @@
               <ul class="left-submenu">
                 <li class="back"><a href="#">Volver</a></li>
                 {% if is_granted('ROLE_USER') %}
-                  <li><a href="{{ path('students_list') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
+                  <li><a href="{{ path('students-list') }}"><i class="fi-torsos-all small-icon"></i>Listado de Alumnos</a></li>
                 {% endif %}
-                <li><a href="{{ path('student_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo alumno</a></li>
+                <li><a href="{{ path('student-edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Nuevo alumno</a></li>
               </ul>
             </li>
             <li class="has-submenu">
@@ -133,9 +133,9 @@
               <ul class="left-submenu">
                 <li class="back"><a href="#">Volver</a></li>
                 {% if is_granted('ROLE_USER') %}
-                  <li><a href="{{ path('companies_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
+                  <li><a href="{{ path('companies-list') }}"><i class="fi-torso-business small-icon"></i>Listado de Empresas</a></li>
                 {% endif %}
-                <li><a href="{{ path('company_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
+                <li><a href="{{ path('company-edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir empresa</a></li>
               </ul>
             </li>
             {% if is_granted('ROLE_USER') %}
@@ -156,7 +156,7 @@
               <li class="has-submenu">
                 <a href="#">Categorías</a>
                 <ul class="left-submenu">
-                  <li><a href="{{ path('categories_list') }}"><i class="fi-torso-business small-icon"></i>Listado de Categorías</a></li>
+                  <li><a href="{{ path('categories_list') }}"><i class="fi-star small-icon"></i>Listado de Categorías</a></li>
                   <li><a href="{{ path('category_edit', { 'id' : 0 }) }}"><i class="fi-plus small-icon"></i>Añadir categoría</a></li>
                 </ul>
               </li>

@@ -25,7 +25,7 @@ $app->get('knowledges/list/{page}', function ($page) use ($app) {
     }
 
     return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['DOMAIN'],
+        'domain' => $GLOBALS['MAILING_DOMAIN'],
         'knowledges' => $knowleges,
         'pages' => $knowledgesPages,
         'categories' => $categories,
@@ -49,7 +49,7 @@ $app->get('knowledeges/category/{id}/{page}', function ($id, $page) use ($app) {
 
     if(count($knowledges) == 0){
         return $app['twig']->render('list-wrapper.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'knowledges' => $knowledges,
             'pages' => $knowledgesPages,
             'categories' => $categories,
@@ -59,7 +59,7 @@ $app->get('knowledeges/category/{id}/{page}', function ($id, $page) use ($app) {
         ));
     } else {
         return $app['twig']->render('list-wrapper.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'knowledges' => $knowledges,
             'pages' => $knowledgesPages,
             'categories' => $categories,
@@ -85,7 +85,7 @@ $app->get('knowledge/{id}/edit', function ($id) use ($app) {
         } else $form_type = 'new';
 
         return $app['twig']->render('forms/knowledge.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'user' => $user,
             'form_type' => $form_type,
             'knowledge' => $knowledge
@@ -106,7 +106,7 @@ $app->post('knowledge/{id}/update', function (Request $request, $id) use ($app) 
         $ConocimientoProvider->updateConocimiento($knowledge);
 
         return $app['twig']->render('forms/company.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'user' => $user,
             'form_type' => 'edit',
             'knowledge' => $knowledge,
@@ -157,12 +157,12 @@ $app->get('knowledge/{id}/categories/{page}', function ($id, $page) use ($app) {
         }
 
         return $app['twig']->render('additions/category-addition.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'user' => $user,
             'knowledge' => $knowledge,
             'categories' => $categories,
             'pages' => $categoriesPages,
-            'knowledge_categories_list' => true
+            'knowledge_addition' => true
         ));
     } else return $app->redirect($app['url_generator']->generate('login'));
 

@@ -31,8 +31,12 @@ class EstudioTitulo {
      */
     private $Alumnos;
 
-    /***
-     * @ManyToMany(targetEntity="CategoriaActividad", mappedBy="EstudiosTitulos", cascade={"persist"})
+    /**
+     * @ManyToMany(targetEntity="CategoriaActividad", inversedBy="EstudiosTitulos", cascade={"persist"})
+     * @JoinTable(name="estudios_categorias",
+     *      joinColumns={@JoinColumn(name="estudio_id", referencedColumnName="Id", nullable=false)},
+     *      inverseJoinColumns={@JoinColumn(name="categoria_id", referencedColumnName="Id", nullable=false)}
+     * )
      */
     private $Categorias;
 
@@ -120,8 +124,8 @@ class EstudioTitulo {
      */
     public function addCategoria(CategoriaActividad $category)
     {
-        $categories = $this->Categorias;
-        if(!$categories->contains($category)) $categories->add($category);
+        if (!is_null($categories = $this->getCategorias()) && !$categories->contains($category))
+            $categories->add($category);
     }
 
     /**
@@ -129,7 +133,7 @@ class EstudioTitulo {
      */
     public function removeCategoria(CategoriaActividad $category)
     {
-        $categories = $this->Categorias;
-        if($categories->contains($category)) $categories->removeElement($category);
+        if (!is_null($categories = $this->getCategorias()) && !$categories->contains($category))
+            $categories->removeElement($category);
     }
 }

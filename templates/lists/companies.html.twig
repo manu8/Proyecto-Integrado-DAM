@@ -25,7 +25,7 @@
   </div>
   <div class="small-12 small-centered text-center column">
     <a id="categorySearch" href="#" class="large button">Búsqueda por categoría</a>
-    <form id="categorySelect" action="{{ path('category_search') }}" method="post" hidden>
+    <form id="categorySelect" action="{{ path('category-search') }}" method="post" hidden>
       {% if student is defined and student is not null %}
         <input type="hidden" name="listType" value="student" />
         <input type="hidden" name="student" value="{{ student.Id }}" />
@@ -54,7 +54,7 @@
         {% endif %}
       {% endif %}
     </form>
-    <form id="customSelect" action="{{ path('students_custom_list') }}" method="post" hidden>
+    <form id="customSelect" action="{{ path('students-custom-list') }}" method="post" hidden>
       <div class="small-6 small-centered column">
         <label>Selecciona una categoría
           <select name="category">
@@ -107,31 +107,31 @@
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% else %}
-                  <a class="company-add-link success radius small button" href="{{ path('add_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                  <a class="company-add-link success radius small button" href="{{ path('add-company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% endif %}
               {% endif %}
-              <a href="{{ path('company_edit', { 'id' : company.Id }) }}" class="success radius small button">
+              <a href="{{ path('company-edit', { 'id' : company.Id }) }}" class="warning radius small button">
                 <i class="fi-page-edit small-icon"></i>
               </a>
               {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('company_remove', { 'id' : company.Id }) }}" class="remove-company-link alert radius small button">
+                <a href="{{ path('company-remove', { 'id' : company.Id }) }}" class="remove-company-link alert radius small button">
                   <i class="fi-trash small-icon"></i>
                 </a>
               {% endif %}
             </td>
           </tr>
         {% else %}
-          {% if student_categorized_companies_list is defined %}
+          {% if student_categorized_companies_list is defined or category_empty_list is defined %}
             <p><span class="warning round label">No existen empresas que pertenezcan a esa categoría</span></p>
           {% else %}
             <div>
               <span class="alert round label">¡No se ha registrado ninguna empresa!</span>
-              {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('company_new') }}" class="success button round"><i class="fi-plus medium-icon"></i>Crear empresa</a>
-              {% endif %}
             </div>
+          {% endif %}
+          {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('company-new') }}" class="success button round"><i class="fi-plus small-icon"></i>Registrar empresa</a>
           {% endif %}
         {% endfor %}
         </tbody>
@@ -191,9 +191,9 @@
       {% endif %}
     </div>
     {% if student is defined and student is not null %}
-      <a class="round button" href="{{ path('student_edit', { 'id' : student.Id }) }}">Volver</a>
+      <a class="round button" href="{{ path('student-edit', { 'id' : student.Id }) }}">Volver</a>
     {% elseif category_list is defined %}
-      <a class="round button" href="{{ path('companies_list') }}"><i class="fi-list-thumbnails small-icon"></i>Ir al listado</a>
+      <a class="round button" href="{{ path('companies-list') }}"><i class="fi-list-thumbnails small-icon"></i>Ir al listado</a>
     {% endif %}
   </div>
 </div>

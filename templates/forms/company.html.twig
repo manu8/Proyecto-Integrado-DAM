@@ -1,6 +1,5 @@
 {% extends 'layout.html.twig' %}
 
-
 {% block breadcrumbs %}
 	<li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
 	<li class="current"><i class="fi-torso-business small-icon"></i></li>
@@ -31,9 +30,9 @@
 		<div class="small-12 column">
 			<form 
 				{% if form_type == 'new' %} 
-					action="{{ path('company_create') }}"
+					action="{{ path('company-new') }}"
 				{% elseif form_type == 'edit' %}
-					action="{{ path('company_update', { 'id' : company.Id }) }}"
+					action="{{ path('company-update', { 'id' : company.Id }) }}"
 				{% endif %}
 			method="post" data-abide>
         {% if form_type == 'new' %}
@@ -214,10 +213,10 @@
                       <td>{{ student.Apellidos }},&nbsp;{{ student.Nombre }}</td>
                       <td>
                         {% if is_granted('ROLE_USER') %}
-                          <a class="button warning" href="{{ path('student_edit', { 'id' : student.Id }) }}">
+                          <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}">
                             <i class="fi-page-edit small-icon"></i>
                           </a>
-                          <a class="button alert" href="{{ path('remove_student_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                          <a class="button alert" href="{{ path('remove-student-company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
                             <i class="fi-trash small-icon"></i>
                           </a>
                         {% endif %}
@@ -234,8 +233,8 @@
               {% if is_granted('ROLE_USER') %}
                 <div class="small-12 column">
                   <ul class="button-group round even-2">
-                    <li><a href="{{ path('company_add_categories', { 'id' : company.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir actividad(es)</a></li>
-                    <li><a href="{{ path('add_students', { 'id' : company.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno(s)</a></li>
+                    <li><a href="{{ path('company-add-categories', { 'id' : company.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir actividad(es)</a></li>
+                    <li><a href="{{ path('add-company-students', { 'id' : company.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno(s)</a></li>
                   </ul>
                 </div>
               {% endif %}
@@ -254,7 +253,7 @@
             {% if form_type == 'new' %}
               <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
             {% elseif is_granted('ROLE_USER') %}
-              <a href="{{ path('company_remove', { 'id' : company.Id }) }}" class="remove-link alert round expand button">
+              <a href="{{ path('company-remove', { 'id' : company.Id }) }}" class="remove-link alert round expand button">
                 <i class="small-icon fi-trash"></i>Borrar
               </a>
             {% endif %}

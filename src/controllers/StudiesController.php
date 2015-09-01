@@ -1,19 +1,17 @@
 <?php
 
+use Lib\Providers\ConocimientoProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Lib\Providers\EstudioProvider;
 use Lib\Providers\CategoriaActividadProvider;
 use Lib\Providers\AlumnoProvider;
-use Lib\Providers\UserProvider;
 
 /*** Listados ***/
 
 $app->get('studies/list/{page}', function ($page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $studiesPages = null;
 
         $CategoriaProvider = new CategoriaActividadProvider($app);
@@ -28,8 +26,7 @@ $app->get('studies/list/{page}', function ($page) use ($app) {
         }
 
         return $app['twig']->render('list-wrapper.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
-            'user' => $user,
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'studies' => $studies,
             'pages' => $studiesPages,
             'categories' => $categories,
@@ -40,9 +37,7 @@ $app->get('studies/list/{page}', function ($page) use ($app) {
 })->bind('studies_list')->value('page', 1);
 
 $app->post('studies/category/{page}', function (Request $request, $page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $studiesPages = null;
 
         $CategoriaProvider = new CategoriaActividadProvider($app);
@@ -59,7 +54,7 @@ $app->post('studies/category/{page}', function (Request $request, $page) use ($a
 
         if(count($studies) == 0){
             return $app['twig']->render('list-wrapper.html.twig', array(
-                'domain' => $GLOBALS['DOMAIN'],
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
                 'studies' => $studies,
                 'pages' => $studiesPages,
                 'categories' => $categories,
@@ -69,7 +64,7 @@ $app->post('studies/category/{page}', function (Request $request, $page) use ($a
             ));
         } else {
             return $app['twig']->render('list-wrapper.html.twig', array(
-                'domain' => $GLOBALS['DOMAIN'],
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
                 'studies' => $studies,
                 'pages' => $studiesPages,
                 'categories' => $categories,
@@ -84,9 +79,7 @@ $app->post('studies/category/{page}', function (Request $request, $page) use ($a
 /*** Operaciones CRUD ***/
 
 $app->get('study/{id}/edit', function ($id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $study = null;
         $categories = null;
         if($id != 0){
@@ -96,8 +89,7 @@ $app->get('study/{id}/edit', function ($id) use ($app) {
         } else $form_type = 'new';
 
         return $app['twig']->render('forms/study.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
-            'user' => $user,
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'form_type' => $form_type,
             'study' => $study
         ));
@@ -106,9 +98,7 @@ $app->get('study/{id}/edit', function ($id) use ($app) {
 })->bind('study_edit');
 
 $app->post('study/{id}/update', function (Request $request, $id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
         $study->setDenominacion($request->request->get('nombre'));
@@ -116,8 +106,7 @@ $app->post('study/{id}/update', function (Request $request, $id) use ($app) {
         $EstudioProvider->updateEstudio($study);
 
         return $app['twig']->render('forms/study.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
-            'user' => $user,
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'form_type' => 'edit',
             'study' => $study,
             'update_study' => true
@@ -127,9 +116,7 @@ $app->post('study/{id}/update', function (Request $request, $id) use ($app) {
 })->bind('study_update');
 
 $app->delete('study/{id}/remove', function ($id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
         $EstudioProvider->removeEstudio($study);
@@ -144,9 +131,7 @@ $app->delete('study/{id}/remove', function ($id) use ($app) {
 /*** Categorías *///Listados
 
 $app->get('study/{id}/categories/{page}', function ($id, $page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $categoriesPages = null;
 
         $EstudioProvider = new EstudioProvider($app);
@@ -156,7 +141,7 @@ $app->get('study/{id}/categories/{page}', function ($id, $page) use ($app) {
         $categories = $CategoriaProvider->getCategorias();
         foreach($categories as $i => $value){
             if(!is_null($study->getCategorias())){
-                if($study->getCategorias->contains($value))
+                if($study->getCategorias()->contains($value))
                     unset($categories[$i]);
             }
             break;
@@ -167,13 +152,12 @@ $app->get('study/{id}/categories/{page}', function ($id, $page) use ($app) {
             $categories = $CategoriaProvider->getCategorias($page);
         }
 
-        return $app['twig']->render('additions/category-addition.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
-            'user' => $user,
+        return $app['twig']->render('additions/study.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'study' => $study,
             'categories' => $categories,
             'pages' => $categoriesPages,
-            'study_addition' => true
+            'study_categories_list' => true
         ));
     } else return $app->redirect($app['url_generator']->generate('/login'));
 
@@ -182,16 +166,14 @@ $app->get('study/{id}/categories/{page}', function ($id, $page) use ($app) {
 /*** Categorías *///Adición
 
 $app->get('study/{id}/category/{category_id}/add', function ($id, $category_id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
         $CategoryProvider = new CategoriaActividadProvider($app);
         $category = $CategoryProvider->getCategoria($category_id);
 
         $study->addCategoria($category);
-        $EstudioProvider->updateEstudio($study);
+        $app['orm.em']->flush();
 
         return new Response(200);
     } else return $app->redirect($app['url_generator']->generate('/login'));
@@ -201,9 +183,7 @@ $app->get('study/{id}/category/{category_id}/add', function ($id, $category_id) 
 /*** Categorías *///Eliminación
 
 $app->delete('study/{id}/category/{category_id}/remove', function ($id, $category_id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
         $CategoriaProvider = new CategoriaActividadProvider($app);
@@ -220,18 +200,18 @@ $app->delete('study/{id}/category/{category_id}/remove', function ($id, $categor
 /*** Alumnos *///Listados
 
 $app->get('study/{id}/students/{page}', function ($id, $page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $studentsPages = null;
 
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
 
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
         $AlumnoProvider = new AlumnoProvider($app);
         $students = $AlumnoProvider->getAlumnos();
         foreach($students as $i => $value){
-            if($study->getEstudiosTitulos()->contains($value))
+            if($study->getAlumnos()->contains($value))
                 unset($students[$i]);
         }
         if(count($students) > 5){
@@ -240,11 +220,11 @@ $app->get('study/{id}/students/{page}', function ($id, $page) use ($app) {
             $students = $AlumnoProvider->getAlumnos($page);
         }
 
-        return $app['twig']->render('forms/user-adding.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
-            'user' => $user,
+        return $app['twig']->render('additions/study.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'study' => $study,
             'students' => $students,
+            'knowledges' => $knowledges,
             'pages' => $studentsPages,
             'study_students_list' => true
         ));
@@ -253,9 +233,7 @@ $app->get('study/{id}/students/{page}', function ($id, $page) use ($app) {
 })->bind('study_add_students')->value('page', 1);
 
 $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, $knowledge_id, $page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $studentsPages = null;
 
         $EstudioProvider = new EstudioProvider($app);
@@ -269,9 +247,8 @@ $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, 
             $students = $AlumnoProvider->getAlumnosBy(array('knowledge' => $knowledge_id), $page);
         }
 
-        return $app['twig']->render('forms/user-adding.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
-            'user' => $user,
+        return $app['twig']->render('additions/study.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'study' => $study,
             'students' => $students,
             'pages' => $studentsPages,
@@ -285,9 +262,7 @@ $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, 
 /*** Alumnos *///Adición
 
 $app->get('study/{id}/student/{student_id}/add', function ($id, $student_id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
         $AlumnoProvider = new AlumnoProvider($app);
@@ -304,9 +279,7 @@ $app->get('study/{id}/student/{student_id}/add', function ($id, $student_id) use
 /*** Alumnos *///Eliminación
 
 $app->delete('study/{id}/student/{student_id}/remove', function ($id, $student_id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $EstudioProvider = new EstudioProvider($app);
         $study = $EstudioProvider->getEstudio($id);
         $AlumnoProvider = new AlumnoProvider($app);

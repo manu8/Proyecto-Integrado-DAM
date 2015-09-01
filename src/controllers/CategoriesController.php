@@ -21,7 +21,7 @@ $app->get('categories/list/{page}', function ($page) use ($app) {
     }
 
     return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['DOMAIN'],
+        'domain' => $GLOBALS['MAILING_DOMAIN'],
         'pages' => $categoriesPages,
         'categories' => $categories,
         'categories_list' => true
@@ -40,7 +40,7 @@ $app->get('category/{id}/edit', function ($id) use ($app) {
     } else $form_type = 'new';
 
     return $app['twig']->render('forms/knowledge.html.twig', array(
-        'domain' => $GLOBALS['DOMAIN'],
+        'domain' => $GLOBALS['MAILING_DOMAIN'],
         'form_type' => $form_type,
         'category' => $category
     ));
@@ -58,7 +58,7 @@ $app->post('category/{id}/update', function (Request $request, $id) use ($app) {
         $CategoriaProvider->updateCategoria($category);
 
         return $app['twig']->render('forms/category.html.twig', array(
-            'domain' => $GLOBALS['DOMAIN'],
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
             'form_type' => 'edit',
             'category' => $category,
             'update_category' => true

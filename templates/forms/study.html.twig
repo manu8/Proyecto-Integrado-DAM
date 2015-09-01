@@ -58,10 +58,8 @@
                         <td>{{ category.Denominacion }}</td>
                         <td>
                           {% if is_granted('ROLE_USER') %}
-                            <ul class="button-group round even-2">
-                              <li><a class="button warning" href="{{ path('category_edit') }}"><i class="fi-page-edit"></i></a></li>
-                              <li><a class="button alert" href="{{ path('remove_study_category') }}"><i class="fi-x"></i></a></li>
-                            </ul>
+                          <a class="button warning" href="{{ path('category_edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
+                          <a class="button alert" href="{{ path('study_remove_category', { 'id': study.Id, 'category_id': category.Id }) }}"><i class="fi-trash"></i></a>
                           {% endif %}
                         </td>
                       </tr>

@@ -38,12 +38,12 @@ $('a.category-add-link').click(function(event) {
 
 /*** Acciones de eliminación */
 
-//Categoría
+//Actividad
 
 $('a.category-remove-link').click(function(event) {
     event.preventDefault();
     var link = $(this);
-    if(confirm("¿Estás seguro de eliminar esta categoría?")){
+    if(confirm("¿Estás seguro de eliminar esta actividad?")){
         $.ajax({
             type: 'DELETE',
             url: link.attr('href'),

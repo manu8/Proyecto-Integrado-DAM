@@ -43,6 +43,7 @@ class AlumnoProvider {
     public function getAlumnosBy(array $criteria, $offset = null)
     {
         $studentsFinal = null;
+        $studentsCompany = new ArrayCollection();
         $studentsKnowledge = new ArrayCollection();
         $studentsStudy = new ArrayCollection();
         $studentsNIF = new ArrayCollection();
@@ -52,6 +53,12 @@ class AlumnoProvider {
         $em = $this->app['orm.em'];
         foreach($criteria as $key => $value){
             switch($key){
+                case 'company':
+                    $company = $em->getRepository('Entities\Empresa')->findOneBy(array(
+                        'Id' => $criteria[$key]
+                    ));
+                    $studentsCompany = $company->getAlumnos();
+                    break;
                 case 'knowledge':
                     $knowledge = $em->getRepository('Entities\HabilidadConocimiento')->findOneBy(array(
                         'Id' => $criteria[$key]
@@ -78,6 +85,7 @@ class AlumnoProvider {
             }
         }
         $studentsFinal = new ArrayCollection(
+            $studentsCompany->toArray() +
             $studentsKnowledge->toArray() +
             $studentsStudy->toArray() +
             $studentsNIF->toArray() +
@@ -85,7 +93,8 @@ class AlumnoProvider {
             $studentsSurnames->toArray()
         );
 
-        return $studentsFinal;
+        if(!is_null($offset)) return array_slice($studentsFinal, ($offset - 1) * 5, 5);
+        else return $studentsFinal;
     }
 
     /**

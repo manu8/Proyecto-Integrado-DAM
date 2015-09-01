@@ -67,17 +67,6 @@ class EstudioProvider {
     }
 
     /**
-     * Modifica un estudio existente en la base de datos
-     * @param EstudioTitulo $study Empresa a modificar en la BD
-     */
-    public function updateEstudio(EstudioTitulo $study)
-    {
-        $em = $this->app['orm.em'];
-        $em->persist($study);
-        $em->flush();
-    }
-
-    /**
      * Elimina un estudio existente de la base de datos
      * @param EstudioTitulo $study Empresa a eliminar de la BD
      */

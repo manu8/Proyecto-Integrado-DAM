@@ -124,30 +124,30 @@ $app->post('category/search', function (Request $request) use ($app) {
 
             switch($searchType){
                 case 'studies':
-                    return $app->redirect($app['url_generator']->generate('add_categorized_studies', array(
+                    return $app->redirect($app['url_generator']->generate('add-categorized-studies', array(
                         'id' => $studentId,
                         'category_id' => $categoryId
                     )));
                     break;
                 case 'knowledges':
-                    return $app->redirect($app['url_generator']->generate('add_categorized_knowledges', array(
+                    return $app->redirect($app['url_generator']->generate('add-categorized-knowledges', array(
                         'id' => $studentId,
                         'category_id' => $categoryId
                     )));
                     break;
                 case 'companies':
-                    return $app->redirect($app['url_generator']->generate('add_categorized_companies', array(
+                    return $app->redirect($app['url_generator']->generate('add-categorized-companies', array(
                         'id' => $studentId,
                         'category_id' => $categoryId
                     )));
             }
             break;
         case 'companies':
-            return $app->redirect($app['url_generator']->generate('companies_category_list', array(
+            return $app->redirect($app['url_generator']->generate('companies-category-list', array(
                 'id' => $categoryId
             )));
     }
-})->bind('category_search');
+})->bind('category-search');
 
 /*** Páginas de error ***/
 

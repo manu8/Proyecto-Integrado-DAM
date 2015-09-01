@@ -28,7 +28,7 @@
       <a id="categorySearch" href="#" class="large button">Búsqueda por categoría</a>
       <form id="categorySelect"
           {% if student is defined and student is not null %}
-            action="{{ path('category_search') }}"
+            action="{{ path('category-search') }}"
           {% else %}
             action="{{ path('studies_category_list') }}"
           {% endif %}
@@ -68,11 +68,11 @@
               <td>
                 {% if student is defined and student is not null %}
                   {% if student_categorized_studies_list is defined %}
-                    <a class="categorized-study-add-link success radius small button" href="{{ path('add_study', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                    <a class="categorized-study-add-link success radius small button" href="{{ path('add-study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
                       <i class="fi-check small-icon"></i>
                     </a>
                   {% else %}
-                    <a class="study-add-link success radius small button" href="{{ url('add_study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
+                    <a class="study-add-link success radius small button" href="{{ url('add-study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
                       <i class="fi-check small-icon"></i>
                     </a>
                   {% endif %}
@@ -90,15 +90,19 @@
           {% else %}
             {% if student_categorized_studies_list is defined %}
               <div>
+                <span class="warning round label">No existen estudios asociados a la categoría indicada o ya están asociados</span>
+              </div>
+            {% elseif category_empty_list is defined %}
+              <div>
                 <span class="warning round label">No existen estudios asociados a la categoría indicada</span>
               </div>
             {% else %}
               <div>
                 <span class="alert round label">¡No se ha creado ningún estudio!</span>
-                {% if is_granted('ROLE_USER') %}
-                  <a href="{{ path('study_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
-                {% endif %}
               </div>
+            {% endif %}
+            {% if is_granted('ROLE_USER') %}
+              <a href="{{ path('study-edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
             {% endif %}
           {% endfor %}
           </tbody>
@@ -158,7 +162,7 @@
         {% endif %}
       </div>
       {% if student is defined and student is not null %}
-        <a href="{{ path('student_edit', { 'id' : student.Id }) }}" class="round button">Volver</a>
+        <a href="{{ path('student-edit', { 'id' : student.Id }) }}" class="round button">Volver</a>
       {% endif %}
     </div>
   </div>

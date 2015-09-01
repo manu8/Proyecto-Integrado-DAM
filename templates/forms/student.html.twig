@@ -38,9 +38,9 @@
     <div class="small-12 column">
       <form
           {% if form_type == 'new' %}
-            action="{{ path('student_new') }}"
+            action="{{ path('student-new') }}"
           {% else %}
-            action="{{ path('student_update', { 'id' : student.Id }) }}"
+            action="{{ path('student-update', { 'id' : student.Id }) }}"
           {% endif %}
           method="post" data-abide>
         {% if form_type == 'new' %}
@@ -195,7 +195,7 @@
                           {% if is_granted('ROLE_USER') %}
                             <a class="warning radius small button" href="{{ path('study_edit', { 'id' : study.Id}) }}"><i class="fi-page-edit small-icon"></i></a>
                           {% endif %}
-                          <a class="study-remove-link alert radius small button" href="{{ url('remove_study', { 'id' : student.Id, 'study_id' : study.Id}) }}">
+                          <a class="study-remove-link alert radius small button" href="{{ url('remove-study', { 'id' : student.Id, 'study_id' : study.Id}) }}">
                             <i class="fi-x small-icon"></i>
                           </a>
                         </td>
@@ -237,7 +237,7 @@
                             <i class="fi-page-edit small-icon"></i>
                           </a>
                         {% endif %}
-                        <a class="knowledge-remove-link alert radius small button" href="{{ path('remove_knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
+                        <a class="knowledge-remove-link alert radius small button" href="{{ path('remove-knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
                           <i class="fi-x small-icon"></i>
                         </a>
                       </td>
@@ -281,11 +281,11 @@
                       <td>{{ company.Email }}</td>
                       <td>
                         {% if is_granted('ROLE_USER') %}
-                          <a class="warning radius small button" href="{{ path('company_edit', { 'id' : company.Id }) }}">
+                          <a class="warning radius small button" href="{{ path('company-edit', { 'id' : company.Id }) }}">
                             <i class="fi-page-edit small-icon"></i>
                           </a>
                         {% endif %}
-                        <a class="company-remove-link alert radius small button" href="{{ path('remove_student_company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                        <a class="company-remove-link alert radius small button" href="{{ path('remove-student-company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
                           <i class="fi-x small-icon"></i>
                         </a>
                       </td>
@@ -300,10 +300,10 @@
             <div class="row small-centered">
               <div class="small-12 column">
                 <ul class="button-group round even-3">
-                  <li><a href="{{ path('add_studies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir estudio(s)</a></li>
-                  <li><a href="{{ path('add_knowledges', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir conocimiento(s)</a></li>
+                  <li><a href="{{ path('add-studies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir estudio(s)</a></li>
+                  <li><a href="{{ path('add-knowledges', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir conocimiento(s)</a></li>
                   {% if is_granted('ROLE_USER') %}
-                    <li><a href="{{ path('add_companies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir empresa(s)</a></li>
+                    <li><a href="{{ path('add-companies', { 'id' : student.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir empresa(s)</a></li>
                   {% endif %}
                 </ul>
               </div>
@@ -321,13 +321,13 @@
               {% if form_type == 'new' %}
                 <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
               {% elseif is_granted('ROLE_USER') %}
-                <a href="{{ path('student_remove', { 'id' : student.Id }) }}" class="student-remove-link alert round expand button ">
+                <a href="{{ path('student-remove', { 'id' : student.Id }) }}" class="student-remove-link alert round expand button ">
                   <i class="small-icon fi-trash"></i>Borrar
                 </a>
               {% endif %}
             </div>
             <div class="small-12 medium-3 large-3 columns">
-              <a href="{{ path('students_list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Ir al listado</a>
+              <a href="{{ path('students-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Ir al listado</a>
             </div>
           </div>
         </fieldset>
