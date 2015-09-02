@@ -149,7 +149,7 @@ class AlumnoProvider {
      * @param Alumno $student Alumno al que añadir el estudio
      * @param EstudioTitulo $study Estudio a añadir
      */
-    public function addStudy(Alumno $student, EstudioTitulo $study)
+    public function addEstudio(Alumno $student, EstudioTitulo $study)
     {
         $em = $this->app['orm.em'];
         $student->addStudy($study);
@@ -162,7 +162,7 @@ class AlumnoProvider {
      * @param Alumno $student Alumno al que añadir el conocimiento o habilidad
      * @param HabilidadConocimiento $knowledge Conocimiento o habilidad a añadir
      */
-    public function addKnowledge(Alumno $student, HabilidadConocimiento $knowledge)
+    public function addConocimiento(Alumno $student, HabilidadConocimiento $knowledge)
     {
         $em = $this->app['orm.em'];
         $student->addKnowledge($knowledge);
@@ -175,7 +175,7 @@ class AlumnoProvider {
      * @param Alumno $student Alumno al que añadir la empresa
      * @param Empresa $company Empresa a añadir
      */
-    public function addCompany(Alumno $student, Empresa $company)
+    public function addEmpresa(Alumno $student, Empresa $company)
     {
         $em = $this->app['orm.em'];
         $student->addCompany($company);

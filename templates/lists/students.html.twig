@@ -125,9 +125,9 @@
         {% endif %}
         <div class="small-6 small-centered column">
           <label>Selecciona una empresa
-            <select name="company">
-              {% for company in companies %}
-                <option value="{{ company.Id }}">{{ company.Denominacion }}</option>
+            <select name="companySelect">
+              {% for enterprise in companies %}
+                <option value="{{ enterprise.Id }}">{{ enterprise.Denominacion }}</option>
               {% endfor %}
             </select>
           </label>
@@ -226,6 +226,22 @@
         <button type="submit" class="button postfix">Buscar</button>
       </div>
     </form>
+    <div id="studentAdded" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Alumno asociado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+    <div id="studentRemoved" class="custom-row first-row" hidden>
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          ¡Alumno eliminado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
     {% if students is defined and students is not empty %}
       <div class="small-12 small-centered columns">
         <table class="list">
@@ -244,8 +260,8 @@
               <td>{{ student.Apellidos }},&nbsp;{{ student.Nombre }}</td>
               <td class="show-for-medium-up"><strong>Tlf:</strong>&nbsp;{{ student.Telefono }}<br><strong>Email:</strong>&nbsp;{{ student.Email }}</td>
               <td>
-                {% if company_study_students_list is defined %}
-                  <a class="student-add-link success radius small button" href="{{ url('company_add_student', { 'id' : company.Id, 'student_id' : student.Id }) }}">
+                {% if company_students_list is defined %}
+                  <a class="student-add-link success radius small button" href="{{ url('company-add-student', { 'id' : company.Id, 'student_id' : student.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% endif %}
@@ -314,13 +330,35 @@
       </div>
     {% else %}
       {% if study_empty_list is defined %}
-        <p><span class="warning round label">No existen alumnos registrados que posean ese estudio</span></p>
+        {% if company_students_list is defined %}
+          <p><span class="warning round label">No existen alumnos registrados que posean ese estudio o ya están asociados</span></p>
+        {% else %}
+          <p><span class="warning round label">No existen alumnos registrados que posean ese estudio</span></p>
+        {% endif %}
       {% elseif knowledge_empty_list is defined %}
-        <p><span class="warning round label">No existen alumnos registrados que posean ese conocimiento</span></p>
+        {% if company_students_list is defined %}
+          <p><span class="warning round label">No existen alumnos registrados que posean ese estudio o ya están asociados</span></p>
+        {% else %}
+          <p><span class="warning round label">No existen alumnos registrados que posean ese conocimiento</span></p>
+        {% endif %}
+      {% elseif company_empty_list is defined %}
+        <p><span class="warning round label">No existen alumnos registrados asociados a esta empresa</span></p>
       {% else %}
-        <p><span class="warning round label">No existen alumnos registrados</span></p>
+        {% if company_students_list is defined %}
+          {% if company_students_list is defined %}
+            <p><span class="warning round label">No existen alumnos registrados que posean ese estudio o ya están asociados</span></p>
+          {% else %}
+            <p><span class="warning round label">No existen alumnos registrados o ya están asociados</span></p>
+          {% endif %}
+        {% else %}
+          {% if company_students_list is defined %}
+            <p><span class="warning round label">No existen alumnos registrados o ya están asociados</span></p>
+          {% else %}
+            <p><span class="warning round label">No existen alumnos registrados</span></p>
+          {% endif %}
+        {% endif %}
       {% endif %}
-      <a href="{{ path('student_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus"></i>&nbsp;Registrar alumno</a>
+      <a href="{{ path('student-edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus"></i>&nbsp;Registrar alumno</a>
     {% endif %}
   </div>
 </div>

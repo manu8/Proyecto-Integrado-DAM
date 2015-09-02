@@ -35,7 +35,7 @@ class Usuario implements UserInterface {
     /**
      * @Column(type="simple_array", nullable=true)
      */
-    protected $roles = array();
+    protected $roles = array('ROLE_USER');
 
     /**
      * @Column(length=100)
@@ -121,9 +121,6 @@ class Usuario implements UserInterface {
     public function getRoles()
     {
         $roles = $this->roles;
-
-        $roles[] = 'ROLE_USER'; // Every user must have at least one role, per Silex security docs.
-
         return array_unique($roles);
     }
 

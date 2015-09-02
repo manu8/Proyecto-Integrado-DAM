@@ -49,7 +49,7 @@
               <td>{{ category.Denominacion }}</td>
               <td>
                 {% if company is defined and company is not null %}
-                  <a class="category-add-link success radius small button" href="{{ url('company_add_category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
+                  <a class="category-add-link success radius small button" href="{{ url('company-add-category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% elseif study is defined and study is not null %}
@@ -126,7 +126,7 @@
         {% endif %}
         <a
           {% if company is defined and company is not null %}
-            href="{{ path('company_edit', { 'id' : company.Id }) }}"
+            href="{{ path('company-edit', { 'id' : company.Id }) }}"
           {% elseif study is defined and study is not null %}
             href="{{ path('study_edit', { 'id' : study.Id }) }}"
           {% else %}

@@ -49,6 +49,24 @@ class EmpresaProvider {
         return $company;
     }
 
+    public function getAlumnos(Empresa $company, $offset = null)
+    {
+        $em = $this->app['orm.em'];
+        if(!is_null($offset)){
+            $qb = $em->createQueryBuilder();
+            $qb->select('a')
+                ->from('Entities:Alumno', 'a')
+                ->leftJoin('a.Empresa', 'e')
+                ->where('e = :company')
+                ->setParameter('company', $company);
+            $query = $qb->getQuery();
+            $query->setMaxResults(5);
+            $query->setFirstResult(($offset - 1) * 5);
+            $students = $query->getResult();
+        } else $students = $company->getAlumnos();
+        return $students;
+    }
+
     /**
      * Crea una nueva empresa en la base de datos
      * @param Empresa $company Empresa a almacenar en la BD
