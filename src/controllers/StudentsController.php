@@ -184,7 +184,7 @@ $app->get('students/company/{id}/{page}', function ($id, $page) use ($app) {
 
 $app->post('students/study/search', function (Request $request) use ($app) {
     $listType = $request->request->get('listType');
-    $id = $request->request->get('study');
+    $id = $request->request->get('studySelect');
     switch($listType){
         case 'company':
             $companyId = $request->request->get('company');
@@ -232,7 +232,7 @@ $app->post('students/company/search', function (Request $request) use ($app) {
 
             return $app->redirect($app['url_generator']->generate('add-study-students-company', array(
                 'id' => $studyId,
-                'study_id' => $id
+                'company_id' => $id
             )));
             break;
         case 'knowledge':
@@ -250,7 +250,7 @@ $app->post('students/company/search', function (Request $request) use ($app) {
 
 $app->post('students/knowledge/search', function (Request $request) use ($app) {
     $listType = $request->request->get('listType');
-    $id = $request->request->get('knowledge');
+    $id = $request->request->get('knowledgeSelect');
     switch($listType) {
         case 'company':
             $companyId = $request->request->get('company');

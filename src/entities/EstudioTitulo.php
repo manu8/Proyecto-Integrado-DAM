@@ -124,8 +124,8 @@ class EstudioTitulo {
      */
     public function addCategoria(CategoriaActividad $category)
     {
-        if (!is_null($categories = $this->getCategorias()) && !$categories->contains($category))
-            $categories->add($category);
+        if (!$this->getCategorias()->contains($category))
+            $this->getCategorias()->add($category);
     }
 
     /**
@@ -133,7 +133,7 @@ class EstudioTitulo {
      */
     public function removeCategoria(CategoriaActividad $category)
     {
-        if (!is_null($categories = $this->getCategorias()) && !$categories->contains($category))
-            $categories->removeElement($category);
+        if ($this->getCategorias()->contains($category))
+            $this->getCategorias()->removeElement($category);
     }
 }

@@ -68,17 +68,6 @@ class ConocimientoProvider {
     }
 
     /**
-     * Modifica un conocimiento existente en la base de datos
-     * @param HabilidadConocimiento $knowledge Conocimiento a modificar en la BD
-     */
-    public function updateConocimiento(HabilidadConocimiento $knowledge)
-    {
-        $em = $this->app['orm.em'];
-        $em->persist($knowledge);
-        $em->flush();
-    }
-
-    /**
      * Elimina un conocimiento existente de la base de datos
      * @param HabilidadConocimiento $knowledge Conocimiento a eliminar de la BD
      */

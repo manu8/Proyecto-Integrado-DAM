@@ -7,13 +7,21 @@
 {% endblock %}
 
 {% block content %}
+  <div id="error" class="custom-row first-row" hidden>
+    <div class="small-6 small-centered column">
+      <div data-alert class="alert-box alert round text-center">
+        ¡La acción no se ha realizado correctamente! Inténtalo de nuevo.
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+  </div>
 	<div class="row">
 		<div class="small-12 column">
 			<form 
 				{% if form_type == 'new' %} 
-					action="{{ path('study_create') }}" 
+					action="{{ path('study-edit', { 'id': 0 }) }}"
 				{% elseif form_type == 'edit' %}
-					action="{{ path('study_edit', { 'id' : study.Id }) }}"
+					action="{{ path('study-edit', { 'id' : study.Id }) }}"
 				{% endif %}
 			method="post" data-abide>
 			  	<fieldset>
@@ -41,6 +49,14 @@
                     </label>
                 </div>
             </div>
+            <div id="categoryRemoved" class="custom-row first-row" hidden>
+              <div class="small-6 small-centered column">
+                <div data-alert class="alert-box alert round text-center">
+                  ¡Categoría eliminada!
+                  <a href="#" class="close">&times;</a>
+                </div>
+              </div>
+            </div>
             <div class="row">
               <h3>Categorías</h3>
               {% if study is defined and study is not null %}
@@ -59,7 +75,9 @@
                         <td>
                           {% if is_granted('ROLE_USER') %}
                           <a class="button warning" href="{{ path('category_edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
-                          <a class="button alert" href="{{ path('study_remove_category', { 'id': study.Id, 'category_id': category.Id }) }}"><i class="fi-trash"></i></a>
+                          <a class="button alert category-remove-link" href="{{ path('study-remove-category', { 'id': study.Id, 'category_id': category.Id }) }}">
+                            <i class="fi-x small-icon"></i>
+                          </a>
                           {% endif %}
                         </td>
                       </tr>
@@ -91,9 +109,9 @@
                             <td>{{ student.NIF }}</td>
                             <td>
                               {% if is_granted('ROLE_USER') %}
-                                <a class="button warning" href="{{ path('student_edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
-                                <a class="button alert" href="{{ path('remove_student_study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
-                                  <i class="fi-trash"></i>
+                                <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
+                                <a class="button alert student-remove-link" href="{{ path('study-remove-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
+                                  <i class="fi-x small-icon"></i>
                                 </a>
                               {% endif %}
                             </td>
@@ -110,8 +128,8 @@
                 <div class="row">
                   <div class="small-12 column">
                     <ul class="button-group round even-2">
-                      <li><a href="{{ path('study_add_categories', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir categoría</a></li>
-                      <li><a href="{{ path('study_add_students', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno</a></li>
+                      <li><a href="{{ path('study-add-categories', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir categoría</a></li>
+                      <li><a href="{{ path('study-add-students', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno</a></li>
                     </ul>
                   </div>
                 </div>
@@ -131,11 +149,16 @@
                 {% endif %}
               {% endif %}
                 <div class="small-4 column">
-                  <a href="{{ path('studies_list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
+                  <a href="{{ path('studies-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
                 </div>
               </div>
 			  	</fieldset>
 			</form>
 		</div>
 	</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/studies.js') }}"></script>
 {% endblock %}

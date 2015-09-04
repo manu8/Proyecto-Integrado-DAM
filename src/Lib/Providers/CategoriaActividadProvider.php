@@ -101,17 +101,6 @@ class CategoriaActividadProvider {
     }
 
     /**
-     * Modifica una categoría existente en la base de datos
-     * @param CategoriaActividad $category Categoría a modificar en la BD
-     */
-    public function updateCategoria(CategoriaActividad $category)
-    {
-        $em = $this->app['orm.em'];
-        $em->persist($category);
-        $em->flush();
-    }
-
-    /**
      * Elimina una categoría existente de la base de datos
      * @param CategoriaActividad $category Categoría a eliminar de la BD
      */

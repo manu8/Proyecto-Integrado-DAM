@@ -193,7 +193,7 @@
                         <td>{{ study.Denominacion }}</td>
                         <td>
                           {% if is_granted('ROLE_USER') %}
-                            <a class="warning radius small button" href="{{ path('study_edit', { 'id' : study.Id}) }}"><i class="fi-page-edit small-icon"></i></a>
+                            <a class="warning radius small button" href="{{ path('study-edit', { 'id' : study.Id}) }}"><i class="fi-page-edit small-icon"></i></a>
                           {% endif %}
                           <a class="study-remove-link alert radius small button" href="{{ url('remove-study', { 'id' : student.Id, 'study_id' : study.Id}) }}">
                             <i class="fi-x small-icon"></i>

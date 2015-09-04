@@ -123,20 +123,9 @@ class AlumnoProvider {
     }
 
     /**
-     * Modifica un alumno existente en la base de datos
-     * @param Alumno $student Alumno a modificar en la BD
-     */
-    public function updateAlumno(Alumno $student)
-    {
-        $em = $this->app['orm.em'];
-        $em->persist($student);
-        $em->flush();
-    }
-
-    /**
- * Elimina un alumno existente de la base de datos
- * @param Alumno $student Alumno a eliminar de la BD
- */
+    * Elimina un alumno existente de la base de datos
+    * @param Alumno $student Alumno a eliminar de la BD
+    */
     public function removeAlumno(Alumno $student)
     {
         $em = $this->app['orm.em'];

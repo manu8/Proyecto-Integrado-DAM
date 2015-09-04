@@ -218,7 +218,8 @@ $app->get('company/{id}/category/{category_id}/add', function ($id, $category_id
     $category = $CategoryProvider->getCategoria($category_id);
 
     $company->addActivity($category);
-    $EmpresaProvider->updateEmpresa($company);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
 })->bind('company-add-category');
@@ -232,7 +233,8 @@ $app->delete('company/{id}/category/{category_id}/remove', function ($id, $categ
     $category = $CategoriaProvider->getCategoria($category_id);
 
     $company->removeActivity($category);
-    $EmpresaProvider->updateEmpresa($company);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
 })->bind('company-remove-category');
@@ -397,6 +399,11 @@ $app->get('company/{id}/students/company/{company_id}/{page}', function ($id, $c
 
     $AlumnoProvider = new AlumnoProvider($app);
     $students = $AlumnoProvider->getAlumnosBy(array('company' => $company_id));
+    foreach($students as $i => $value){
+        if($company->getAlumnos()->contains($value))
+            unset($students[$i]);
+    }
+
     if(count($students) > 5){
         $pagination = $app['pagination'](count($students), $page);
         $studentsPages = $pagination->build();
@@ -434,16 +441,15 @@ $app->get('company/{id}/students/company/{company_id}/{page}', function ($id, $c
 /*** Alumnos *///Adición
 
 $app->get('company/{id}/student/{student_id}/add', function ($id, $student_id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-
-    if(!is_null($user)){
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN')) {
         $EmpresaProvider = new EmpresaProvider($app);
         $company = $EmpresaProvider->getEmpresa($id);
         $AlumnoProvider = new AlumnoProvider($app);
         $student = $AlumnoProvider->getAlumno($student_id);
 
         $AlumnoProvider->addEmpresa($student, $company);
+        $em = $app['orm.em'];
+        $em->flush();
 
         return new Response(200);
     } else return $app->redirect($app['url_generator']->generate('/login'));
@@ -459,7 +465,8 @@ $app->delete('student/{id}/study/{study_id}/remove', function ($id, $study_id) u
     $study = $EstudioProvider->getEstudio($study_id);
 
     $student->removeStudy($study);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
 })->bind('company-remove-student');

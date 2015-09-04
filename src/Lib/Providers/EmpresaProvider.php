@@ -79,17 +79,6 @@ class EmpresaProvider {
     }
 
     /**
-     * Modifica una empresa existente en la base de datos
-     * @param Empresa $company Empresa a modificar en la BD
-     */
-    public function updateEmpresa(Empresa $company)
-    {
-        $em = $this->app['orm.em'];
-        $em->persist($company);
-        $em->flush();
-    }
-
-    /**
      * Elimina una empresa existente de la base de datos
      * @param Empresa $company Empresa a eliminar de la BD
      */

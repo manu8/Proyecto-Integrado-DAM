@@ -30,7 +30,7 @@
           {% if student is defined and student is not null %}
             action="{{ path('category-search') }}"
           {% else %}
-            action="{{ path('studies_category_list') }}"
+            action="{{ path('studies-category-list') }}"
           {% endif %}
       method="post" hidden>
         {% if student is defined and student is not null %}
@@ -78,10 +78,10 @@
                   {% endif %}
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
-                  <a href="{{ path('study_edit', { 'id' : study.Id }) }}" class="warning radius small button">
+                  <a href="{{ path('study-edit', { 'id' : study.Id }) }}" class="warning radius small button">
                     <i class="fi-page-edit small-icon"></i>
                   </a>
-                  <a href="{{ url('study_remove', { 'id' : study.Id }) }}" class="study-remove-link alert radius small button">
+                  <a href="{{ url('study-remove', { 'id' : study.Id }) }}" class="study-remove-link alert radius small button">
                     <i class="fi-trash small-icon"></i>
                   </a>
                 {% endif %}
@@ -102,7 +102,7 @@
               </div>
             {% endif %}
             {% if is_granted('ROLE_USER') %}
-              <a href="{{ path('study-edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
+              <br><a href="{{ path('study-edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
             {% endif %}
           {% endfor %}
           </tbody>

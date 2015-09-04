@@ -1,7 +1,7 @@
 <div class="custom-row first-row">
   <div id="error" class="custom-row first-row" hidden>
     <div class="small-6 small-centered column">
-      <div data-alert class="alert-box info round text-center">
+      <div data-alert class="alert-box alert round text-center">
         ¡La acción no se ha realizado correctamente! Inténtalo de nuevo.
         <a href="#" class="close">&times;</a>
       </div>
@@ -59,7 +59,7 @@
         {% endif %}
         <div class="small-6 small-centered column">
           <label>Selecciona una conocimiento
-            <select name="knowledge">
+            <select name="knowledgeSelect">
               {% for knowledge in knowledges %}
                 <option value="{{ knowledge.Id }}">{{ knowledge.Denominacion }}</option>
               {% endfor %}
@@ -92,7 +92,7 @@
         {% endif %}
         <div class="small-6 small-centered column">
           <label>Selecciona un estudio
-            <select name="study">
+            <select name="studySelect">
               {% for study in studies %}
                 <option value="{{ study.Id }}">{{ study.Denominacion }}</option>
               {% endfor %}
@@ -105,7 +105,7 @@
       {% else %}
         <span class="alert round label">¡No se ha creado ningún estudio!</span>
         {% if is_granted('ROLE_USER') %}
-          <a href="{{ path('study_edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
+          <a href="{{ path('study-edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus small-icon"></i>Crear estudio</a>
         {% endif %}
       {% endif %}
     </form>
@@ -264,6 +264,10 @@
                   <a class="student-add-link success radius small button" href="{{ url('company-add-student', { 'id' : company.Id, 'student_id' : student.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
+                {% elseif study_students_list is defined %}
+                  <a class="student-add-link success radius small button" href="{{ url('study-add-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
                 {% endif %}
                 <a href="{{ path('student-edit', { 'id' : student.Id }) }}" class="warning radius small button">
                   <i class="fi-page-edit small-icon"></i>
@@ -330,19 +334,23 @@
       </div>
     {% else %}
       {% if study_empty_list is defined %}
-        {% if company_students_list is defined %}
+        {% if company_students_list is defined or study_students_list is defined %}
           <p><span class="warning round label">No existen alumnos registrados que posean ese estudio o ya están asociados</span></p>
         {% else %}
           <p><span class="warning round label">No existen alumnos registrados que posean ese estudio</span></p>
         {% endif %}
       {% elseif knowledge_empty_list is defined %}
-        {% if company_students_list is defined %}
+        {% if company_students_list is defined or study_students_list is defined %}
           <p><span class="warning round label">No existen alumnos registrados que posean ese estudio o ya están asociados</span></p>
         {% else %}
           <p><span class="warning round label">No existen alumnos registrados que posean ese conocimiento</span></p>
         {% endif %}
       {% elseif company_empty_list is defined %}
-        <p><span class="warning round label">No existen alumnos registrados asociados a esta empresa</span></p>
+        {% if company_students_list is defined or study_students_list is defined %}
+          <p><span class="warning round label">No existen alumnos registrados asociados a esta empresa o ya están asociados</span></p>
+        {% else %}
+          <p><span class="warning round label">No existen alumnos registrados asociados a esta empresa</span></p>
+        {% endif %}
       {% else %}
         {% if company_students_list is defined %}
           {% if company_students_list is defined %}
@@ -359,6 +367,13 @@
         {% endif %}
       {% endif %}
       <a href="{{ path('student-edit', { 'id' : 0 }) }}" class="success button round"><i class="fi-plus"></i>&nbsp;Registrar alumno</a>
+    {% endif %}
+    {% if company_students_list is defined %}
+      <a href="{{ path('company-edit', { 'id' : company.Id }) }}" class="button round">Volver</a>
+    {% elseif study_students_list is defined %}
+      <a href="{{ path('study-edit', { 'id' : study.Id }) }}" class="button round">Volver</a>
+    {% elseif knowledge_students_list is defined %}
+      <a href="{{ path('knowledge-edit', { 'id' : knowledge.Id }) }}" class="button round">Volver</a>
     {% endif %}
   </div>
 </div>
