@@ -11,9 +11,9 @@
 		<div class="small-12 column">
 			<form
 				{% if form_type == 'new' %} 
-					action="{{ path('knowledge-create', { 'id': 0 }) }}"
+					action="{{ path('knowledge-edit', { 'id': 0 }) }}"
 				{% elseif form_type == 'edit' %}
-					action="{{ path('knowledge-edit', { 'id': knowledge.Id }) }}"
+					action="{{ path('knowledge-update', { 'id': knowledge.Id }) }}"
 				{% endif %}
 			method="post" data-abide>
 			  	<fieldset>
@@ -41,9 +41,9 @@
                     </label>
                 </div>
             </div>
-            <div class="row">
-              <h3>Categorías</h3>
-              {% if knowledge is defined and knowledge is not null %}
+            {% if knowledge is defined and knowledge is not null %}
+              <div class="row">
+                <h3>Categorías</h3>
                 {% if knowledge.Categorias is not empty %}
                   <table class="list">
                     <thead>
@@ -71,11 +71,11 @@
                 {% else %}
                   <p class="text-center"><span class="warning round label">No existen categorias asociadas</span></p>
                 {% endif %}
-              {% endif %}
-            </div>
-					  <div class="row">
-							<h3>Alumnos</h3>
-              {% if knowledge is defined and knowledge is not null %}
+              </div>
+            {% endif %}
+            {% if knowledge is defined and knowledge is not null %}
+              <div class="row">
+                <h3>Alumnos</h3>
                 {% if knowledge.Alumnos is not empty %}
                   <table class="list">
                     <thead>
@@ -105,8 +105,8 @@
                 {% else %}
                   <p class="text-center"><span class="warning round label">No existen alumnos que posean este conocimiento</span></p>
                 {% endif %}
-              {% endif %}
-						</div>
+              </div>
+            {% endif %}
             {% if form_type == 'edit' %}
               <div class="row">
                 <div class="small-12 column">

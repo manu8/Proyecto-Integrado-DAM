@@ -42,7 +42,9 @@ class CategoriaActividad {
      */
     private $Empresas;
 
-    public function __construct() {
+    public function __construct($name, $description) {
+        $this->Denominacion = $name;
+        $this->Descripcion = $description;
         $this->Estudios_Titulos = new ArrayCollection();
         $this->Habilidades_Conocimientos = new ArrayCollection();
         $this->Empresas = new ArrayCollection();

@@ -38,7 +38,7 @@
 		<div class="small-12 column">
 			<form 
 				{% if form_type == 'new' %} 
-					action="{{ path('company-new') }}"
+					action="{{ path('company-edit', { 'id': 0}) }}"
 				{% elseif form_type == 'edit' %}
 					action="{{ path('company-update', { 'id' : company.Id }) }}"
 				{% endif %}
@@ -165,40 +165,40 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <h3>Actividades</h3>
-              {% if company is defined and company is not null %}
-                {% if company.Actividades is empty %}
-                  <p>
-                    <span class="warning round label">No existen actividades asociadas</span><br><br>
-                  </p>
-                {% else %}
-                  <table class="list">
-                    <thead>
+          {% if company is defined and company is not null %}
+            <div class="row">
+              <h3>Actividades</h3>
+              {% if company.Actividades is empty %}
+                <p>
+                  <span class="warning round label">No existen actividades asociadas</span><br><br>
+                </p>
+              {% else %}
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <th>Denominación</th>
+                    {% if is_granted('ROLE_USER') %}
+                      <th>Acciones</th>
+                    {% endif %}
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for category in company.Actividades %}
                     <tr>
-                      <th>Denominación</th>
-                      {% if is_granted('ROLE_USER') %}
-                        <th>Acciones</th>
-                      {% endif %}
+                      <td>{{ category.Denominacion }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="warning button" href="{{ path('category_edit', { 'id' : category.Id }) }}"><i class="fi-page-edit small-icon"></i></a>
+                        {% endif %}
+                        <a class="alert button category-remove-link" href="{{ path('company-remove-category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
+                          <i class="fi-x small-icon"></i>
+                        </a>
+                      </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for category in company.Actividades %}
-                      <tr>
-                        <td>{{ category.Denominacion }}</td>
-                        <td>
-                          {% if is_granted('ROLE_USER') %}
-                            <a class="warning button" href="{{ path('category_edit', { 'id' : category.Id }) }}"><i class="fi-page-edit small-icon"></i></a>
-                          {% endif %}
-                          <a class="alert button category-remove-link" href="{{ path('company-remove-category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
-                            <i class="fi-x small-icon"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
               {% if not is_granted('ROLE_USER') %}
                 <div class="small-3 small-centered column">
                   <a class="radius button centered" href="{{ path('company_add_categories', { 'id' : company.Id }) }}">
@@ -216,40 +216,40 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <h3>Alumnos</h3>
-              {% if company is defined and company is not null %}
-                {% if company.Alumnos is empty %}
-                  <p><span class="warning round label">No existen alumnos que hayan trabajado en esta empresa</span></p>
-                {% else %}
-                  <table class="list">
-                    <thead>
+          {% if company is defined and company is not null %}
+            <div class="row">
+              <h3>Alumnos</h3>
+              {% if company.Alumnos is empty %}
+                <p><span class="warning round label">No existen alumnos que hayan trabajado en esta empresa</span></p>
+              {% else %}
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <th>NIF</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for student in company.Alumnos %}
                     <tr>
-                      <th>NIF</th>
-                      <th>Nombre</th>
-                      <th>Acciones</th>
+                      <td>{{ student.NIF }}</td>
+                      <td>{{ student.Apellidos }},&nbsp;{{ student.Nombre }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}">
+                            <i class="fi-page-edit small-icon"></i>
+                          </a>
+                          <a class="button alert student-remove-link" href="{{ path('remove-student-company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
+                            <i class="fi-x small-icon"></i>
+                          </a>
+                        {% endif %}
+                      </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for student in company.Alumnos %}
-                      <tr>
-                        <td>{{ student.NIF }}</td>
-                        <td>{{ student.Apellidos }},&nbsp;{{ student.Nombre }}</td>
-                        <td>
-                          {% if is_granted('ROLE_USER') %}
-                            <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}">
-                              <i class="fi-page-edit small-icon"></i>
-                            </a>
-                            <a class="button alert student-remove-link" href="{{ path('remove-student-company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
-                              <i class="fi-x small-icon"></i>
-                            </a>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
             </div>
           {% endif %}
           {% if form_type == 'edit' %}

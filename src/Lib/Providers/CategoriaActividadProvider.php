@@ -101,6 +101,17 @@ class CategoriaActividadProvider {
     }
 
     /**
+     * Crea una nueva categoría en la base de datos
+     * @param CategoriaActividad $category Categoría/Actividad a almacenar en la BD
+     */
+    public function createCategoria(CategoriaActividad $category)
+    {
+        $em = $this->app['orm.em'];
+        $em->persist($category);
+        $em->flush();
+    }
+
+    /**
      * Elimina una categoría existente de la base de datos
      * @param CategoriaActividad $category Categoría a eliminar de la BD
      */

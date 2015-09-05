@@ -26,9 +26,26 @@ $app->get('categories/list/{page}', function ($page) use ($app) {
         'categories' => $categories,
         'categories_list' => true
     ));
-})->bind('categories_list')->value('page', 1);
+})->bind('categories-list')->value('page', 1);
 
 /*** Operaciones CRUD ***/
+
+$app->put('category/create', function (Request $request) use ($app) {
+    $CategoriaProvider = new CategoriaActividadProvider($app);
+
+    $name = $request->request->get("name");
+    $description = $request->request->get("description");
+
+    $category = new \Entities\CategoriaActividad($name, $description);
+    $CategoriaProvider->createCategoria($category);
+
+    return $app['twig']->render('forms/category.html.twig', array(
+        'domain' => $GLOBALS['MAILING_DOMAIN'],
+        'form_type' => 'edit',
+        'category' => $category,
+        'new_category' => true
+    ));
+})->bind('category-new');
 
 $app->get('category/{id}/edit', function ($id) use ($app) {
     $category = null;
@@ -39,12 +56,12 @@ $app->get('category/{id}/edit', function ($id) use ($app) {
         $category = $CategoryProvider->getCategoria($id);
     } else $form_type = 'new';
 
-    return $app['twig']->render('forms/knowledge.html.twig', array(
+    return $app['twig']->render('forms/category.html.twig', array(
         'domain' => $GLOBALS['MAILING_DOMAIN'],
         'form_type' => $form_type,
         'category' => $category
     ));
-})->bind('category_edit');
+})->bind('category-edit');
 
 $app->post('category/{id}/update', function (Request $request, $id) use ($app) {
     $UserProvider = new UserProvider($app);
@@ -65,7 +82,7 @@ $app->post('category/{id}/update', function (Request $request, $id) use ($app) {
         ));
     } else return $app->redirect($app['url_generator']->generate('login'));
 
-})->bind('category_update');
+})->bind('category-update');
 
 $app->delete('category/{id}/remove', function ($id) use ($app) {
     $UserProvider = new UserProvider($app);
@@ -79,4 +96,4 @@ $app->delete('category/{id}/remove', function ($id) use ($app) {
         return new Response(200);
     } else return $app->redirect($app['url_generator']->generate('login'));
 
-})->bind('category_remove');
+})->bind('category-remove');

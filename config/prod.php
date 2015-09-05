@@ -1,6 +1,7 @@
 <?php
 
 use Lib\Providers\UserProvider;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 //Constantes de la aplicación
 $GLOBALS['MAILING_DOMAIN'] = '@iesvirgendelcarmen.com';
@@ -38,3 +39,10 @@ $app['security.firewalls'] = array(
         'anonymous' => true
     )
 );
+/*** Encoder ***/
+$app['security.encoder.digest'] = $app->share(function () {
+    // use the sha1 algorithm
+    // don't base64 encode the password
+    // use only 1 iteration
+    return new MessageDigestPasswordEncoder('sha1', false, 1);
+});

@@ -21,7 +21,7 @@
 				{% if form_type == 'new' %} 
 					action="{{ path('study-edit', { 'id': 0 }) }}"
 				{% elseif form_type == 'edit' %}
-					action="{{ path('study-edit', { 'id' : study.Id }) }}"
+					action="{{ path('study-update', { 'id' : study.Id }) }}"
 				{% endif %}
 			method="post" data-abide>
 			  	<fieldset>
@@ -57,9 +57,9 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <h3>Categorías</h3>
-              {% if study is defined and study is not null %}
+            {% if study is defined and study is not null %}
+              <div class="row">
+                <h3>Categorías</h3>
                 {% if study.Categorias is not empty %}
                   <table class="list">
                     <thead>
@@ -87,42 +87,42 @@
                 {% else %}
                   <p class="text-center"><span class="warning round label">No existen categorias asociadas</span></p>
                 {% endif %}
-              {% endif %}
-            </div>
-            <div class="row">
-              <h3>Alumnos</h3>
-              <table class="list">
-                <thead>
-                  <tr>
+              </div>
+            {% endif %}
+            {% if study is defined and study is not null %}
+              <div class="row">
+                <h3>Alumnos</h3>
+                <table class="list">
+                  <thead>
+                    <tr>
                       <th>Apellidos</th>
-                        <th>Nombre</th>
-                        <th>NIF</th>
-                        <th>Acciones</th>
+                      <th>Nombre</th>
+                      <th>NIF</th>
+                      <th>Acciones</th>
                     </tr>
-                </thead>
-                <tbody>
-                  {% if study is defined and study is not null %}
+                  </thead>
+                  <tbody>
                     {% for student in study.Alumnos %}
-                          <tr>
-                            <td>{{ student.Apellidos }}</td>
-                            <td>{{ student.Nombre }}</td>
-                            <td>{{ student.NIF }}</td>
-                            <td>
-                              {% if is_granted('ROLE_USER') %}
-                                <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
-                                <a class="button alert student-remove-link" href="{{ path('study-remove-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
-                                  <i class="fi-x small-icon"></i>
-                                </a>
-                              {% endif %}
-                            </td>
-                          </tr>
-                        {% else %}
-                          <p class="text-center"><span class="warning round label">No existen alumnos que posean este título</span></p>
-                        {% endfor %}
-                      {% endif %}
-                </tbody>
-              </table>
-            </div>
+                      <tr>
+                        <td>{{ student.Apellidos }}</td>
+                        <td>{{ student.Nombre }}</td>
+                        <td>{{ student.NIF }}</td>
+                        <td>
+                          {% if is_granted('ROLE_USER') %}
+                            <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
+                            <a class="button alert student-remove-link" href="{{ path('study-remove-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
+                              <i class="fi-x small-icon"></i>
+                            </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% else %}
+                      <p class="text-center"><span class="warning round label">No existen alumnos que posean este título</span></p>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endif %}
             {% if is_granted('ROLE_USER') %}
               {% if form_type == 'edit' %}
                 <div class="row">

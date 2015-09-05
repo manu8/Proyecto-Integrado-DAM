@@ -324,8 +324,8 @@ $app->post('students/custom/search', function (Request $request) use ($app) {
 $app->put('student/create', function (Request $request) use ($app) {
     $AlumnoProvider = new AlumnoProvider($app);
 
-    $nif = $request->request->getAlnum("nif");
-    $name = $request->request->getAlpha("nombre");
+    $nif = $request->request->get("nif");
+    $name = $request->request->get("nombre");
     $surnames = $request->request->get("apellidos");
     if($surnames == '') $surnames = $request->request->get("small_apellidos");
     $address = $request->request->get("direccion");

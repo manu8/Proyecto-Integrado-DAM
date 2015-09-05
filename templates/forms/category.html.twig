@@ -7,55 +7,94 @@
 {% endblock %}
 
 {% block content %}
-	<form 
-		{% if form_type == 'new' %} 
-			action="{{ path('category_create') }}" 
-		{% elseif form_type == 'edit' %}
-			action="{{ path('category_edit') }}"
-		{% endif %}
-	method="post" data-abide>
-	  	<fieldset>
-	    	<legend>Datos de la Categoría</legend>
-	    	<div class="row">
-			    <div class="small-12 column">
-			    	<label>Denominación
-				      	<input type="text" placeholder="Denominación" pattern="alpha" 
-				      		{% if category is defined and category is not null %}
-								value="{{ category.Denominacion }}"
-							{% endif %}
-				      	required/>
-				      	<small class="error">No se permiten números en el nombre</small>
-				    </label>
-			    </div>
-			</div>
-			<div class="row">
-			    <div class="small-12 column">
-			    	<label>Descripción
-			      		<textarea placeholder="Descripción">
-			      			{% if category is defined and category is not null %}
-								value="{{ category.Descripcion }}"
-							{% endif %}
-			      		</textarea>
-			      	</label>
-			    </div>
-			</div>
-			{% if is_granted('ROLE_USER') %}						
-				<div class="small-3 small-centered column">
-					{% if form_type == 'new' %}
-	            		<button type="submit" class="button expand round sucess"><i class="small-icon fi-plus"></i>Crear categoría</button>
-	                {% elseif form_type == 'edit' %}
-	                	<button type="submit" class="button expand round sucess"><i class="small-icon fi-pencil"></i>Modificar categoría</button>
-	                {% endif %}
-	              	</div>
-	              		{% if form_type == 'new' %}
-		              		<div class="small-3 small-centered column">
-		                		<button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
-		              		</div>
-		              	{% endif %}          			
-	              	{% endif %}
-	              	<div class="small-3 small-centered column">
-	              		<a href="{{ path('categories_list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
-	              	</div>
-	  	</fieldset>
-	</form>
+  {% if new_category is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Categoría/Actividad creada!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if update_category is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box info round text-center">
+          ¡Categoría/Actividad modificada!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div id="error" class="custom-row first-row" hidden>
+    <div class="small-6 small-centered column">
+      <div data-alert class="alert-box info round text-center">
+        ¡Algo ha salido mal! Inténtalo de nuevo.
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 column">
+      <form
+        {% if form_type == 'new' %}
+          action="{{ path('category-new') }}"
+        {% elseif form_type == 'edit' %}
+          action="{{ path('category-update', { 'id': category.Id }) }}"
+        {% endif %}
+      method="post" data-abide>
+          <fieldset>
+            <legend>Datos de la Categoría</legend>
+            <div class="row">
+              <div class="small-12 column">
+                <label>Denominación
+                    <input name="name" type="text" placeholder="Denominación" pattern="alpha"
+                      {% if category is defined and category is not null %}
+                    value="{{ category.Denominacion }}"
+                  {% endif %}
+                    required/>
+                    <small class="error">No se permiten números en el nombre</small>
+                </label>
+              </div>
+          </div>
+          <div class="row">
+              <div class="small-12 column">
+                <label>Descripción
+                    <textarea name="description" placeholder="Descripción"
+                      {% if category is defined and category is not null %}
+                        value="{{ category.Descripcion }}"
+                      {% endif %}>
+                    </textarea>
+                  </label>
+              </div>
+          </div>
+          {% if is_granted('ROLE_USER') %}
+            <div class="small-4 column">
+              {% if form_type == 'new' %}
+                <button type="submit" class="success round button expand"><i class="small-icon fi-plus"></i>Crear categoría</button>
+              {% elseif form_type == 'edit' %}
+                <button type="submit" class="warning round button expand"><i class="small-icon fi-pencil"></i>Modificar categoría</button>
+              {% endif %}
+            </div>
+            <div class="small-4 column">
+            {% if form_type == 'new' %}
+              <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
+            {% elseif form_type == 'edit' %}
+              <a href="{{ path('category-removed', { 'id': category.Id }) }}" class="warning round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
+            {% endif %}
+            </div>
+          {% endif %}
+          <div class="small-4 column">
+            <a href="{{ path('categories-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
+          </div>
+          </fieldset>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/categories.js') }}"></script>
 {% endblock %}

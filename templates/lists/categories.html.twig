@@ -11,7 +11,7 @@
     <div id="categoryAdded" class="custom-row first-row" hidden>
       <div class="small-6 small-centered column">
         <div data-alert class="alert-box success round text-center">
-          ¡Categoría añadida!
+          ¡Categoría/Actividad añadida!
           <a href="#" class="close">&times;</a>
         </div>
       </div>
@@ -19,23 +19,7 @@
     <div id="categoryRemoved" class="custom-row first-row" hidden>
       <div class="small-6 small-centered column">
         <div data-alert class="alert-box alert round text-center">
-          ¡Categoría eliminada!
-          <a href="#" class="close">&times;</a>
-        </div>
-      </div>
-    </div>
-    <div id="activityAdded" class="custom-row first-row" hidden>
-      <div class="small-6 small-centered column">
-        <div data-alert class="alert-box success round text-center">
-          ¡Actividad añadida!
-          <a href="#" class="close">&times;</a>
-        </div>
-      </div>
-    </div>
-    <div id="activityRemoved" class="custom-row first-row" hidden>
-      <div class="small-6 small-centered column">
-        <div data-alert class="alert-box alert round text-center">
-          ¡Actividad eliminada!
+          ¡Categoría/Actividad eliminada!
           <a href="#" class="close">&times;</a>
         </div>
       </div>
@@ -62,10 +46,10 @@
                   </a>
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
-                  <a href="{{ path('category_edit', { 'id' : category.Id }) }}" class="warning radius small button">
+                  <a href="{{ path('category-edit', { 'id' : category.Id }) }}" class="warning radius small button">
                     <i class="fi-page-edit small-icon"></i>
                   </a>
-                  <a href="{{ url('category_remove', { 'id' : category.Id }) }}" class="category-remove-link alert radius small button">
+                  <a href="{{ url('category-remove', { 'id' : category.Id }) }}" class="remove-link alert radius small button">
                     <i class="fi-trash small-icon"></i>
                   </a>
                 {% endif %}
@@ -75,7 +59,7 @@
             <div>
               <span class="alert round label">¡No se ha creado ninguna categoría o actividad!</span>
               {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('category_new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría o actividad</a>
+                <a href="{{ path('category-new') }}" class="success button round"><i class="fi-plus small-icon"></i>Crear categoría o actividad</a>
               {% endif %}
             </div>
           {% endfor %}
@@ -133,7 +117,7 @@
             href="{{ path('company-edit', { 'id' : company.Id }) }}"
           {% elseif study is defined and study is not null %}
             href="{{ path('study-edit', { 'id' : study.Id }) }}"
-          {% else %}
+          {% elseif knowledge is defined and knowledge is not null %}
             href="{{ path('knowledge-edit', { 'id' : knowledge.Id }) }}"
           {% endif %}
         class="round button">Volver</a>

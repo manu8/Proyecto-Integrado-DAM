@@ -2,6 +2,7 @@
 
 namespace Lib\Providers;
 
+use Silex\Application;
 use Entities\Usuario;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -13,7 +14,7 @@ class UserProvider implements UserProviderInterface {
 
     private $app;
 
-    public function __construct(\Silex\Application $app) {
+    public function __construct(Application $app) {
         $this->app = $app;
     }
 
