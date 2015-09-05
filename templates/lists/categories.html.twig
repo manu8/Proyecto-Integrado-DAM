@@ -56,6 +56,10 @@
                   <a class="category-add-link success radius small button" href="{{ url('study-add-category', { 'id' : study.Id, 'category_id' : category.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
+                {% elseif knowledge is defined and knowledge is not null %}
+                  <a class="category-add-link success radius small button" href="{{ url('knowledge-add-category', { 'id' : knowledge.Id, 'category_id' : category.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
                   <a href="{{ path('category_edit', { 'id' : category.Id }) }}" class="warning radius small button">
@@ -84,11 +88,11 @@
                 <li class="arrow">
                   <a
                     {% if company_categories_list is defined %}
-                      href="{{ path('company_add_categories', { 'id' : company.Id, 'page' : number }) }}"
+                      href="{{ path('company-add-categories', { 'id' : company.Id, 'page' : number }) }}"
                     {% elseif study_categories_list is defined %}
-                      href="{{ path('study_add_categories', { 'id' : study.Id, 'page' : number }) }}"
+                      href="{{ path('study-add-categories', { 'id' : study.Id, 'page' : number }) }}"
                     {% else %}
-                      href="{{ path('knowledge_add_categories', { 'id' : knowledge.Id, 'page' : number }) }}"
+                      href="{{ path('knowledge-add-categories', { 'id' : knowledge.Id, 'page' : number }) }}"
                     {% endif %}
                   >&laquo;</a>
                 </li>
@@ -98,11 +102,11 @@
                 <li>
                   <a
                     {% if company_categories_list is defined %}
-                      href="{{ path('company_add_categories', { 'id' : company.Id, 'page' : number }) }}"
+                      href="{{ path('company-add-categories', { 'id' : company.Id, 'page' : number }) }}"
                     {% elseif study_categories_list is defined %}
-                      href="{{ path('study_add_categories', { 'id' : study.Id, 'page' : number }) }}"
+                      href="{{ path('study-add-categories', { 'id' : study.Id, 'page' : number }) }}"
                     {% else %}
-                      href="{{ path('knowledge_add_categories', { 'id' : knowledge.Id, 'page' : number }) }}"
+                      href="{{ path('knowledge-add-categories', { 'id' : knowledge.Id, 'page' : number }) }}"
                     {% endif %}
                   >{{ number }}</a>
                 </li>
@@ -112,11 +116,11 @@
                 <li class="arrow">
                   <a
                     {% if company_categories_list is defined %}
-                      href="{{ path('company_add_categories', { 'id' : company.Id, 'page' : number }) }}"
+                      href="{{ path('company-add-categories', { 'id' : company.Id, 'page' : number }) }}"
                     {% elseif study_categories_list is defined %}
-                      href="{{ path('study_add_categories', { 'id' : study.Id, 'page' : number }) }}"
+                      href="{{ path('study-add-categories', { 'id' : study.Id, 'page' : number }) }}"
                     {% else %}
-                      href="{{ path('knowledge_add_categories', { 'id' : knowledge.Id, 'page' : number }) }}"
+                      href="{{ path('knowledge-add-categories', { 'id' : knowledge.Id, 'page' : number }) }}"
                     {% endif %}
                   ></a>
                 </li>
@@ -130,7 +134,7 @@
           {% elseif study is defined and study is not null %}
             href="{{ path('study-edit', { 'id' : study.Id }) }}"
           {% else %}
-            href="{{ path('knowledge_edit', { 'id' : knowledge.Id }) }}"
+            href="{{ path('knowledge-edit', { 'id' : knowledge.Id }) }}"
           {% endif %}
         class="round button">Volver</a>
       </div>

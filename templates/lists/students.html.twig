@@ -268,6 +268,10 @@
                   <a class="student-add-link success radius small button" href="{{ url('study-add-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
+                {% elseif knowledge_students_list is defined %}
+                  <a class="student-add-link success radius small button" href="{{ url('knowledge-add-student', { 'id' : knowledge.Id, 'student_id' : student.Id }) }}">
+                    <i class="fi-check small-icon"></i>
+                  </a>
                 {% endif %}
                 <a href="{{ path('student-edit', { 'id' : student.Id }) }}" class="warning radius small button">
                   <i class="fi-page-edit small-icon"></i>

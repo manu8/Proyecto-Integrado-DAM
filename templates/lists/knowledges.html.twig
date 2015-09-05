@@ -1,4 +1,4 @@
-<div class="row">
+<div class="first-row">
   <div id="error" class="custom-row first-row" hidden>
     <div class="small-6 small-centered column">
       <div data-alert class="alert-box info round text-center">
@@ -29,7 +29,7 @@
         {% if student is defined and student is not null %}
           action="{{ path('category-search') }}"
         {% else %}
-          action="{{ path('knowledges_category_list') }}"
+          action="{{ path('knowledges-category-list') }}"
         {% endif %}
           method="post" hidden>
       {% if student is defined and student is not null %}
@@ -76,10 +76,10 @@
                 {% endif %}
               {% endif %}
               {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('knowledge_edit', { 'id' : knowledge.Id }) }}" class="warning radius small button">
+                <a href="{{ path('knowledge-edit', { 'id' : knowledge.Id }) }}" class="warning radius small button">
                   <i class="fi-page-edit small-icon"></i>
                 </a>
-                <a href="{{ path('knowledge_remove', { 'id' : knowledge.Id }) }}" class="remove-knowledge-link alert radius small button">
+                <a href="{{ path('knowledge-remove', { 'id' : knowledge.Id }) }}" class="remove-knowledge-link alert radius small button">
                   <i class="fi-trash small-icon"></i>
                 </a>
               {% endif %}

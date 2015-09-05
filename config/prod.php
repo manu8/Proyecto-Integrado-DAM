@@ -1,8 +1,6 @@
 <?php
 
 use Lib\Providers\UserProvider;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
-use \Doctrine\Common\Annotations\AnnotationRegistry;
 
 //Constantes de la aplicación
 $GLOBALS['MAILING_DOMAIN'] = '@iesvirgendelcarmen.com';
@@ -40,5 +38,3 @@ $app['security.firewalls'] = array(
         'anonymous' => true
     )
 );
-/*** Access rules ***/
-$app['security.access_rule'] = array(array('^.*$', 'ROLE_USER'));

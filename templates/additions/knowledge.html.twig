@@ -1,0 +1,33 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumbs %}
+  <li><a href="{{ path('home') }}"><i class="fi-home small-icon"></i></a></li>
+  <li class="current">
+    <i class="fi-plus small-icon"></i>
+    {% if study_students_list is defined %}
+      <i class="fi-torso small-icon"></i>
+    {% else %}
+      <i class="fi-star small-icon"></i>
+    {% endif %}
+  </li>
+{% endblock %}
+
+{% block content %}
+  {% if knowledge_categories_list is defined %}
+    <h2>Añadir categoría</h2>
+    <p class="lead">Selecciona la categoría que quieres asociar al conocimiento</p>
+    {% include 'lists/categories.html.twig' %}
+  {% else %}
+    <h2>Añadir alumno</h2>
+    <p class="lead">Selecciona el alumno(s) que quieres asociar al conocimiento</p>
+    {% include 'lists/students.html.twig' %}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ parent() }}
+  <script src="{{ asset('js/knowledges.js') }}"></script>
+  {% if knowledge_students_list is defined %}
+    <script src="{{ asset('js/students.js') }}"></script>
+  {% endif %}
+{% endblock %}

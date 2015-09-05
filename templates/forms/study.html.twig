@@ -74,10 +74,10 @@
                         <td>{{ category.Denominacion }}</td>
                         <td>
                           {% if is_granted('ROLE_USER') %}
-                          <a class="button warning" href="{{ path('category_edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
-                          <a class="button alert category-remove-link" href="{{ path('study-remove-category', { 'id': study.Id, 'category_id': category.Id }) }}">
-                            <i class="fi-x small-icon"></i>
-                          </a>
+                            <a class="button warning" href="{{ path('category_edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
+                            <a class="button alert category-remove-link" href="{{ path('study-remove-category', { 'id': study.Id, 'category_id': category.Id }) }}">
+                              <i class="fi-x small-icon"></i>
+                            </a>
                           {% endif %}
                         </td>
                       </tr>
