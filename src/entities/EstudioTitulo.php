@@ -40,7 +40,9 @@ class EstudioTitulo {
      */
     private $Categorias;
 
-    public function __construct() {
+    public function __construct($name, $description) {
+        $this->Denominacion = $name;
+        $this->Descripcion = $description;
         $this->Alumnos = new ArrayCollection();
         $this->Categorias = new ArrayCollection();
     }

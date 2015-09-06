@@ -1,5 +1,6 @@
 <?php
 
+use Entities\EstudioTitulo;
 use Lib\Providers\ConocimientoProvider;
 use Lib\Providers\EmpresaProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,6 +79,26 @@ $app->post('studies/category/{page}', function (Request $request, $page) use ($a
 })->bind('studies-category-list')->value('page', 1);
 
 /*** Operaciones CRUD ***/
+
+$app->put('study/create', function (Request $request) use ($app) {
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $EstudioProvider = new EstudioProvider($app);
+
+        $name = $request->request->get("name");
+        $description = $request->request->get("description");
+
+        $study = new EstudioTitulo($name, $description);
+
+        $EstudioProvider->createEstudio($study);
+
+        return $app['twig']->render('forms/study.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'form_type' => 'edit',
+            'study' => $study,
+            'new_study' => true
+        ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
+})->bind('study-new');
 
 $app->get('study/{id}/edit', function ($id) use ($app) {
     if($app['security.authorization_checker']->isGranted('ROLE_USER')){
@@ -238,31 +259,46 @@ $app->get('study/{id}/students/{page}', function ($id, $page) use ($app) {
 })->bind('study-add-students')->value('page', 1);
 
 $app->get('study/{id}/students/study/{study_id}/{page}', function ($id, $study_id, $page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
-    $study = $EstudiosProvider->getEstudio($id);
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
+        $study = $EstudiosProvider->getEstudio($id);
 
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
 
-    $AlumnoProvider = new AlumnoProvider($app);
-    $students = $AlumnoProvider->getAlumnosBy(array('study' => $study_id));
-    foreach($students as $i => $value){
-        if($study->getAlumnos()->contains($value))
-            unset($students[$i]);
-    }
+        $AlumnoProvider = new AlumnoProvider($app);
+        $students = $AlumnoProvider->getAlumnosBy(array('study' => $study_id));
+        foreach($students as $i => $value){
+            if($study->getAlumnos()->contains($value))
+                unset($students[$i]);
+        }
 
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $AlumnoProvider->getAlumnosBy(array('study' => $study_id), $page);
-    }
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $AlumnoProvider->getAlumnosBy(array('study' => $study_id), $page);
+        }
 
-    if(count($students) == 0) {
+        if(count($students) == 0) {
+            return $app['twig']->render('additions/study.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'study' => $study,
+                'students' => $students,
+                'pages' => $studentsPages,
+                'study_id' => $study_id,
+                'studies' => $studies,
+                'companies' => $companies,
+                'knowledges' => $knowledges,
+                'study_students_list' => true,
+                'study_empty_list' => true
+            ));
+        }
+
         return $app['twig']->render('additions/study.html.twig', array(
             'domain' => $GLOBALS['MAILING_DOMAIN'],
             'study' => $study,
@@ -272,50 +308,52 @@ $app->get('study/{id}/students/study/{study_id}/{page}', function ($id, $study_i
             'studies' => $studies,
             'companies' => $companies,
             'knowledges' => $knowledges,
-            'study_students_list' => true,
-            'study_empty_list' => true
+            'study_students_list' => true
         ));
-    }
-
-    return $app['twig']->render('additions/study.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'study' => $study,
-        'students' => $students,
-        'pages' => $studentsPages,
-        'study_id' => $study_id,
-        'studies' => $studies,
-        'companies' => $companies,
-        'knowledges' => $knowledges,
-        'study_students_list' => true
-    ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('add-study-students-study')->value('page', 1);
 
 $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, $knowledge_id, $page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
-    $study = $EstudiosProvider->getEstudio($id);
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
+        $study = $EstudiosProvider->getEstudio($id);
 
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
 
-    $AlumnoProvider = new AlumnoProvider($app);
-    $students = $AlumnoProvider->getAlumnosBy(array('knowledge' => $knowledge_id));
-    foreach($students as $i => $value){
-        if($study->getAlumnos()->contains($value))
-            unset($students[$i]);
-    }
+        $AlumnoProvider = new AlumnoProvider($app);
+        $students = $AlumnoProvider->getAlumnosBy(array('knowledge' => $knowledge_id));
+        foreach($students as $i => $value){
+            if($study->getAlumnos()->contains($value))
+                unset($students[$i]);
+        }
 
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $AlumnoProvider->getAlumnosBy(array('knowledge' => $knowledge_id), $page);
-    }
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $AlumnoProvider->getAlumnosBy(array('knowledge' => $knowledge_id), $page);
+        }
 
-    if(count($students) == 0) {
+        if(count($students) == 0) {
+            return $app['twig']->render('additions/study.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'study' => $study,
+                'students' => $students,
+                'pages' => $studentsPages,
+                'knowledge_id' => $knowledge_id,
+                'studies' => $studies,
+                'companies' => $companies,
+                'knowledges' => $knowledges,
+                'study_students_list' => true,
+                'knowledge_empty_list' => true
+            ));
+        }
+
         return $app['twig']->render('additions/study.html.twig', array(
             'domain' => $GLOBALS['MAILING_DOMAIN'],
             'study' => $study,
@@ -325,50 +363,52 @@ $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, 
             'studies' => $studies,
             'companies' => $companies,
             'knowledges' => $knowledges,
-            'study_students_list' => true,
-            'knowledge_empty_list' => true
+            'study_students_list' => true
         ));
-    }
-
-    return $app['twig']->render('additions/study.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'study' => $study,
-        'students' => $students,
-        'pages' => $studentsPages,
-        'knowledge_id' => $knowledge_id,
-        'studies' => $studies,
-        'companies' => $companies,
-        'knowledges' => $knowledges,
-        'study_students_list' => true
-    ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('add-study-students-knowledge')->value('page', 1);
 
 $app->get('study/{id}/students/company/{company_id}/{page}', function ($id, $company_id, $page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
-    $study = $EstudiosProvider->getEstudio($id);
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
+        $study = $EstudiosProvider->getEstudio($id);
 
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
 
-    $AlumnoProvider = new AlumnoProvider($app);
-    $students = $AlumnoProvider->getAlumnosBy(array('company' => $company_id));
-    foreach($students as $i => $value){
-        if($study->getAlumnos()->contains($value))
-            unset($students[$i]);
-    }
+        $AlumnoProvider = new AlumnoProvider($app);
+        $students = $AlumnoProvider->getAlumnosBy(array('company' => $company_id));
+        foreach($students as $i => $value){
+            if($study->getAlumnos()->contains($value))
+                unset($students[$i]);
+        }
 
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $AlumnoProvider->getAlumnosBy(array('company' => $company_id), $page);
-    }
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $AlumnoProvider->getAlumnosBy(array('company' => $company_id), $page);
+        }
 
-    if(count($students) == 0) {
+        if(count($students) == 0) {
+            return $app['twig']->render('additions/study.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'study' => $study,
+                'students' => $students,
+                'pages' => $studentsPages,
+                'company_id' => $company_id,
+                'studies' => $studies,
+                'companies' => $companies,
+                'knowledges' => $knowledges,
+                'study_students_list' => true,
+                'company_empty_list' => true
+            ));
+        }
+
         return $app['twig']->render('additions/study.html.twig', array(
             'domain' => $GLOBALS['MAILING_DOMAIN'],
             'study' => $study,
@@ -378,22 +418,9 @@ $app->get('study/{id}/students/company/{company_id}/{page}', function ($id, $com
             'studies' => $studies,
             'companies' => $companies,
             'knowledges' => $knowledges,
-            'study_students_list' => true,
-            'company_empty_list' => true
+            'study_students_list' => true
         ));
-    }
-
-    return $app['twig']->render('additions/study.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'study' => $study,
-        'students' => $students,
-        'pages' => $studentsPages,
-        'company_id' => $company_id,
-        'studies' => $studies,
-        'companies' => $companies,
-        'knowledges' => $knowledges,
-        'study_students_list' => true
-    ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('add-study-students-company')->value('page', 1);
 
 /*** Alumnos *///Adición

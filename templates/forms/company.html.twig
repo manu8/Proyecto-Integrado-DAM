@@ -38,7 +38,7 @@
 		<div class="small-12 column">
 			<form 
 				{% if form_type == 'new' %} 
-					action="{{ path('company-edit', { 'id': 0}) }}"
+					action="{{ path('company-new') }}"
 				{% elseif form_type == 'edit' %}
 					action="{{ path('company-update', { 'id' : company.Id }) }}"
 				{% endif %}
@@ -188,7 +188,7 @@
                       <td>{{ category.Denominacion }}</td>
                       <td>
                         {% if is_granted('ROLE_USER') %}
-                          <a class="warning button" href="{{ path('category_edit', { 'id' : category.Id }) }}"><i class="fi-page-edit small-icon"></i></a>
+                          <a class="warning button" href="{{ path('category-edit', { 'id' : category.Id }) }}"><i class="fi-page-edit small-icon"></i></a>
                         {% endif %}
                         <a class="alert button category-remove-link" href="{{ path('company-remove-category', { 'id' : company.Id, 'category_id' : category.Id }) }}">
                           <i class="fi-x small-icon"></i>

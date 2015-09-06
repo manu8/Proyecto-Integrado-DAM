@@ -4,47 +4,50 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Lib\Providers\CategoriaActividadProvider;
-use Lib\Providers\UserProvider;
 
 /*** Listados ***/
 
 $app->get('categories/list/{page}', function ($page) use ($app) {
-    $categoriesPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')) {
+        $categoriesPages = null;
 
-    $CategoriaProvider = new CategoriaActividadProvider($app);
-    $categories = $CategoriaProvider->getCategorias();
+        $CategoriaProvider = new CategoriaActividadProvider($app);
+        $categories = $CategoriaProvider->getCategorias();
 
-    if(count($categories) > 5){
-        $pagination = $app['pagination'](count($categories), $page);
-        $categoriesPages = $pagination->build();
-        $categories = $CategoriaProvider->getCategorias($page);
-    }
+        if (count($categories) > 5) {
+            $pagination = $app['pagination'](count($categories), $page);
+            $categoriesPages = $pagination->build();
+            $categories = $CategoriaProvider->getCategorias($page);
+        }
 
-    return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'pages' => $categoriesPages,
-        'categories' => $categories,
-        'categories_list' => true
-    ));
+        return $app['twig']->render('list-wrapper.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'pages' => $categoriesPages,
+            'categories' => $categories,
+            'categories_list' => true
+        ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('categories-list')->value('page', 1);
 
 /*** Operaciones CRUD ***/
 
 $app->put('category/create', function (Request $request) use ($app) {
-    $CategoriaProvider = new CategoriaActividadProvider($app);
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $CategoriaProvider = new CategoriaActividadProvider($app);
 
-    $name = $request->request->get("name");
-    $description = $request->request->get("description");
+        $name = $request->request->get("name");
+        $description = $request->request->get("description");
 
-    $category = new \Entities\CategoriaActividad($name, $description);
-    $CategoriaProvider->createCategoria($category);
+        $category = new \Entities\CategoriaActividad($name, $description);
+        $CategoriaProvider->createCategoria($category);
 
-    return $app['twig']->render('forms/category.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'form_type' => 'edit',
-        'category' => $category,
-        'new_category' => true
-    ));
+        return $app['twig']->render('forms/category.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'form_type' => 'edit',
+            'category' => $category,
+            'new_category' => true
+        ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('category-new');
 
 $app->get('category/{id}/edit', function ($id) use ($app) {
@@ -64,10 +67,7 @@ $app->get('category/{id}/edit', function ($id) use ($app) {
 })->bind('category-edit');
 
 $app->post('category/{id}/update', function (Request $request, $id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $CategoriaProvider = new CategoriaActividadProvider($app);
         $category = $CategoriaProvider->getCategoria($id);
         $category->setDenominacion($request->request->get('nombre'));
@@ -85,10 +85,7 @@ $app->post('category/{id}/update', function (Request $request, $id) use ($app) {
 })->bind('category-update');
 
 $app->delete('category/{id}/remove', function ($id) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-
-    if(!is_null($user)){
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $CategoriaProvider = new CategoriaActividadProvider($app);
         $category = $CategoriaProvider->getCategoria($id);
         $CategoriaProvider->removeCategoria($category);

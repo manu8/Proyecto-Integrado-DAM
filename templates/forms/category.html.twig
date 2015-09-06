@@ -81,7 +81,7 @@
             {% if form_type == 'new' %}
               <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
             {% elseif form_type == 'edit' %}
-              <a href="{{ path('category-removed', { 'id': category.Id }) }}" class="warning round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
+              <a href="{{ path('category-remove', { 'id': category.Id }) }}" class="warning round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
             {% endif %}
             </div>
           {% endif %}

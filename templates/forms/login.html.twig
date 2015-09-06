@@ -24,9 +24,10 @@
       <div class="small-6 small-centered column">
         <div data-alert class="alert-box alert round text-center">
           {% if error is defined and error == 'Bad credentials.' %}
-            ¡El usuario no existe! Por favor revisa tus credenciales.
+            ¡Usuario o contraseña incorrecta! Por favor revisa tus credenciales.
           {% elseif error is defined %}
             {{ error }}
+            <br>
             Algo ha salido mal... Por favor vuelve a intentarlo.
           {% endif %}
           <a href="#" class="close">&times;</a>
@@ -113,7 +114,7 @@
                 <span class="prefix"><i class="fi-lock medium-icon"></i></span>
               </div>
               <div class="small-8 medium-10 large-10 columns">
-                <input type="password" placeholder="Contraseña" name="_password" pattern="alpha_numeric" required>
+                <input type="password" placeholder="Contraseña" name="_password" required>
                 <small class="error">Debes indicar una contraseña</small>
               </div>
             </div>

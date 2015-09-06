@@ -261,15 +261,15 @@
               <td class="show-for-medium-up"><strong>Tlf:</strong>&nbsp;{{ student.Telefono }}<br><strong>Email:</strong>&nbsp;{{ student.Email }}</td>
               <td>
                 {% if company_students_list is defined %}
-                  <a class="student-add-link success radius small button" href="{{ url('company-add-student', { 'id' : company.Id, 'student_id' : student.Id }) }}">
+                  <a class="student-add-link success radius small button" href="{{ url('add-company', { 'id' : student.Id, 'company_id' : company.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% elseif study_students_list is defined %}
-                  <a class="student-add-link success radius small button" href="{{ url('study-add-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
+                  <a class="student-add-link success radius small button" href="{{ url('add-study', { 'id' : student.Id, 'study_id' : study.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% elseif knowledge_students_list is defined %}
-                  <a class="student-add-link success radius small button" href="{{ url('knowledge-add-student', { 'id' : knowledge.Id, 'student_id' : student.Id }) }}">
+                  <a class="student-add-link success radius small button" href="{{ url('add-knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
                     <i class="fi-check small-icon"></i>
                   </a>
                 {% endif %}
@@ -293,42 +293,144 @@
                 {% if position == 'first' %}
                   <li class="arrow">
                     <a
-                        {% if all_list is defined %}
-                          href="/students/all/{{ number }}"
-                        {% elseif study_list is defined %}
-                          href="/students/study/{{ study_id }}/{{ number }}"
-                        {% elseif knowledge_list is defined %}
-                          href="/students/knowledge/{{ knowledge_id }}/{{ number }}"
+                      {% if company_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-company-students-study', { 'id': company.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-company-students-knowledge', { 'id': company.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-company-students-company', { 'id': company.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-company-students', { 'id': company.Id, 'page': number }) }}"
                         {% endif %}
-                        >&laquo;</a>
+                      {% elseif study_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-study-students-study', { 'id': study.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-study-students-knowledge', { 'id': study.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-study-students-company', { 'id': study.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-study-students', { 'id': study.Id, 'page': number }) }}"
+                        {% endif %}
+                      {% elseif knowledge_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-knowledge-students-study', { 'id': knowledge.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-knowledge-students-knowledge', { 'id': knowledge.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-knowledge-students-company', { 'id': knowledge.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-knowledge-students', { 'id': knowledge.Id, 'page': number }) }}"
+                        {% endif %}
+                      {% else %}
+                        {% if study_list is defined %}
+                          href="{{ path('students-study-list', { 'id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_list is defined %}
+                          href="{{ path('students-knowledge-list', { 'id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_list is defined %}
+                          href="{{ path('students-company-list', { 'id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('students-list', { 'page': number }) }}"
+                        {% endif %}
+                      {% endif %}
+                    >&laquo;</a>
                   </li>
                 {% elseif position == 'less' or position == 'more' %}
                   <li class="unavailable"><a href="">&hellip;</a></li>
                 {% elseif position == 'previous' or position == 'next' %}
                   <li>
                     <a
-                        {% if all_list is defined %}
-                          href="/students/all/{{ number }}"
-                        {% elseif study_list is defined %}
-                          href="/students/study/{{ study_id }}/{{ number }}"
-                        {% elseif knowledge_list is defined %}
-                          href="/students/knowledge/{{ knowledge_id }}/{{ number }}"
+                      {% if company_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-company-students-study', { 'id': company.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-company-students-knowledge', { 'id': company.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-company-students-company', { 'id': company.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-company-students', { 'id': company.Id, 'page': number }) }}"
                         {% endif %}
-                        >{{ number }}</a>
+                      {% elseif study_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-study-students-study', { 'id': study.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-study-students-knowledge', { 'id': study.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-study-students-company', { 'id': study.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-study-students', { 'id': study.Id, 'page': number }) }}"
+                        {% endif %}
+                      {% elseif knowledge_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-knowledge-students-study', { 'id': knowledge.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-knowledge-students-knowledge', { 'id': knowledge.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-knowledge-students-company', { 'id': knowledge.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-knowledge-students', { 'id': knowledge.Id, 'page': number }) }}"
+                        {% endif %}
+                      {% else %}
+                        {% if study_list is defined %}
+                          href="{{ path('students-study-list', { 'id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_list is defined %}
+                          href="{{ path('students-knowledge-list', { 'id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_list is defined %}
+                          href="{{ path('students-company-list', { 'id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('students-list', { 'page': number }) }}"
+                        {% endif %}
+                      {% endif %}
+                    >{{ number }}</a>
                   </li>
                 {% elseif position == 'current' %}
                   <li class="current"><a href="">{{ number }}</a></li>
                 {% elseif position == 'last' %}
                   <li class="arrow">
                     <a
-                        {% if all_list is defined %}
-                          href="/students/all/{{ number }}"
-                        {% elseif study_list is defined %}
-                          href="/students/study/{{ study_id }}/{{ number }}"
-                        {% elseif knowledge_list is defined %}
-                          href="/students/knowledge/{{ knowledge_id }}/{{ number }}"
+                      {% if company_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-company-students-study', { 'id': company.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-company-students-knowledge', { 'id': company.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-company-students-company', { 'id': company.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-company-students', { 'id': company.Id, 'page': number }) }}"
                         {% endif %}
-                        >&raquo;</a>
+                      {% elseif study_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-study-students-study', { 'id': study.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-study-students-knowledge', { 'id': study.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-study-students-company', { 'id': study.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-study-students', { 'id': study.Id, 'page': number }) }}"
+                        {% endif %}
+                      {% elseif knowledge_students_list is defined %}
+                        {% if study_id is defined %}
+                          href="{{ path('add-knowledge-students-study', { 'id': knowledge.Id, 'study_id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_id is defined %}
+                          href="{{ path('add-knowledge-students-knowledge', { 'id': knowledge.Id, 'knowledge_id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_id is defined %}
+                          href="{{ path('add-knowledge-students-company', { 'id': knowledge.Id, 'company_id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('add-knowledge-students', { 'id': knowledge.Id, 'page': number }) }}"
+                        {% endif %}
+                      {% else %}
+                        {% if study_list is defined %}
+                          href="{{ path('students-study-list', { 'id': study_id, 'page': number }) }}"
+                        {% elseif knowledge_list is defined %}
+                          href="{{ path('students-knowledge-list', { 'id': knowledge_id, 'page': number }) }}"
+                        {% elseif company_list is defined %}
+                          href="{{ path('students-company-list', { 'id': company_id, 'page': number }) }}"
+                        {% else %}
+                          href="{{ path('students-list', { 'page': number }) }}"
+                        {% endif %}
+                      {% endif %}
+                    >&raquo;</a>
                   </li>
                 {% endif %}
               {% endfor %}

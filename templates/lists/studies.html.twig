@@ -130,13 +130,13 @@
                 <li>
                   <a
                     {% if student_studies_list is defined %}
-                      href="{{ path('add_studies', { 'id' : student.Id, 'page' : number }) }}"
+                      href="{{ path('add-studies', { 'id' : student.Id, 'page' : number }) }}"
                     {% elseif student_categorized_studies_list is defined %}
-                      href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                      href="{{ path('add-categorized-studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% elseif studies_list is defined %}
-                      href="{{ path('studies_list', { 'page' : number }) }}"
+                      href="{{ path('studies-list', { 'page' : number }) }}"
                     {% else %}
-                      href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                      href="{{ path('studies-category-list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% endif %}
                   >{{ number }}</a>
                 </li>
@@ -146,13 +146,13 @@
                 <li class="arrow">
                   <a
                     {% if student_studies_list is defined %}
-                      href="{{ path('add_studies', { 'id' : student.Id, 'page' : number }) }}"
+                      href="{{ path('add-studies', { 'id' : student.Id, 'page' : number }) }}"
                     {% elseif student_categorized_studies_list is defined %}
-                      href="{{ path('add_categorized_studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                      href="{{ path('add-categorized-studies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% elseif studies_list is defined %}
-                      href="{{ path('studies_list', { 'page' : number }) }}"
+                      href="{{ path('studies-list', { 'page' : number }) }}"
                     {% else %}
-                      href="{{ path('studies_category_list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                      href="{{ path('studies-category-list', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                     {% endif %}
                   >&raquo;</a>
                 </li>

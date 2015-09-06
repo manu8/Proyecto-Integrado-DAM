@@ -68,6 +68,17 @@ class ConocimientoProvider {
     }
 
     /**
+     * Crea una nuevo conocimiento en la base de datos
+     * @param HabilidadConocimiento $knowledge Conocimiento/Habilidad a almacenar en la BD
+     */
+    public function createConocimiento(HabilidadConocimiento $knowledge)
+    {
+        $em = $this->app['orm.em'];
+        $em->persist($knowledge);
+        $em->flush();
+    }
+
+    /**
      * Elimina un conocimiento existente de la base de datos
      * @param HabilidadConocimiento $knowledge Conocimiento a eliminar de la BD
      */

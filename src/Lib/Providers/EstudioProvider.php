@@ -67,6 +67,17 @@ class EstudioProvider {
     }
 
     /**
+     * Crea una nuevo estudio en la base de datos
+     * @param EstudioTitulo $study Estudio/Título a almacenar en la BD
+     */
+    public function createEstudio(EstudioTitulo $study)
+    {
+        $em = $this->app['orm.em'];
+        $em->persist($study);
+        $em->flush();
+    }
+
+    /**
      * Elimina un estudio existente de la base de datos
      * @param EstudioTitulo $study Empresa a eliminar de la BD
      */

@@ -1,7 +1,6 @@
 <?php
 
 use Lib\Providers\UserProvider;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 //Constantes de la aplicación
 $GLOBALS['MAILING_DOMAIN'] = '@iesvirgendelcarmen.com';
@@ -21,8 +20,12 @@ $app['twig.options'] = array('cache' => __DIR__.'/../var/cache/twig');
 //Configuración de seguridad
 /*** Firewalls ***/
 $app['security.firewalls'] = array(
+    'dev_and_assets' => array(
+        'pattern' => '^/(_(profiler|wdt)|assets)/',
+        'security' => false
+    ),
     'secured' => array(
-        'pattern' => '^.*$',
+        'pattern' => '^/',
         'remember_me' => array(
             'key' => 'VhrvJ4qx6F',
             'always_remember_me' => true,
@@ -32,17 +35,14 @@ $app['security.firewalls'] = array(
             'login_path' => '/user/login',
             'check_path' => '/user/login_check',
         ),
-        'users' => $app->share(function() use ($app) {
+        'users' => $app->share(function ($app) {
             return new UserProvider($app);
         }),
         'logout' => array('logout_path' => '/user/logout'),
         'anonymous' => true
     )
 );
-/*** Encoder ***/
-$app['security.encoder.digest'] = $app->share(function () {
-    // use the sha1 algorithm
-    // don't base64 encode the password
-    // use only 1 iteration
-    return new MessageDigestPasswordEncoder('sha1', false, 1);
-});
+/*** Session ***/
+$app['session.storage.options'] = array(
+    'cookie_lifetime' => 604800 # 1 week
+);

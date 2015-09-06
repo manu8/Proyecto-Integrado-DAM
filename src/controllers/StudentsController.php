@@ -15,99 +15,118 @@ use Entities\Alumno;
 /*** Listados ***/
 
 $app->get('students/list/{page}', function ($page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
 
-    $AlumnoProvider = new AlumnoProvider($app);
-    $students = $AlumnoProvider->getAlumnos();
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $AlumnoProvider->getAlumnos($page);
-    }
+        $AlumnoProvider = new AlumnoProvider($app);
+        $students = $AlumnoProvider->getAlumnos();
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $AlumnoProvider->getAlumnos($page);
+        }
 
-    return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'students' => $students,
-        'pages' => $studentsPages,
-        'knowledges' => $knowledges,
-        'studies' => $studies,
-        'companies' => $companies,
-        'students_list' => true
-    ));
+        return $app['twig']->render('list-wrapper.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'students' => $students,
+            'pages' => $studentsPages,
+            'knowledges' => $knowledges,
+            'studies' => $studies,
+            'companies' => $companies,
+            'students_list' => true
+        ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
+
 })->bind('students-list')->value('page', 1);
 
 $app->get('students/study/{id}/{page}', function ($id, $page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
-    $EstudioProvider = new EstudioProvider($app);
-    $studies = $EstudioProvider->getEstudios();
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
+        $EstudioProvider = new EstudioProvider($app);
+        $studies = $EstudioProvider->getEstudios();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
 
-    $study = $EstudioProvider->getEstudio($id);
-    $students = $EstudioProvider->getAlumnos($study);
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $EstudioProvider->getAlumnos($study, $page);
-    }
+        $study = $EstudioProvider->getEstudio($id);
+        $students = $EstudioProvider->getAlumnos($study);
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $EstudioProvider->getAlumnos($study, $page);
+        }
 
-    if(count($students) == 0){
-        return $app['twig']->render('list-wrapper.html.twig', array(
-            'domain' => $GLOBALS['MAILING_DOMAIN'],
-            'students' => $students,
-            'pages' => $studentsPages,
-            'knowledges' => $knowledges,
-            'studies' => $studies,
-            'companies' => $companies,
-            'students_list' => true,
-            'study_list' => true,
-            'study_id' => $id,
-            'study_empty_list' => true
-        ));
-    } else {
-        return $app['twig']->render('list-wrapper.html.twig', array(
-            'domain' => $GLOBALS['MAILING_DOMAIN'],
-            'students' => $students,
-            'pages' => $studentsPages,
-            'knowledges' => $knowledges,
-            'studies' => $studies,
-            'companies' => $companies,
-            'students_list' => true,
-            'study_list' => true,
-            'study_id' => $id
-        ));
-    }
+        if(count($students) == 0){
+            return $app['twig']->render('list-wrapper.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'students' => $students,
+                'pages' => $studentsPages,
+                'knowledges' => $knowledges,
+                'studies' => $studies,
+                'companies' => $companies,
+                'students_list' => true,
+                'study_list' => true,
+                'study_id' => $id,
+                'study_empty_list' => true
+            ));
+        } else {
+            return $app['twig']->render('list-wrapper.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'students' => $students,
+                'pages' => $studentsPages,
+                'knowledges' => $knowledges,
+                'studies' => $studies,
+                'companies' => $companies,
+                'students_list' => true,
+                'study_list' => true,
+                'study_id' => $id
+            ));
+        }
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('students-study-list')->value('page', 1);
 
 $app->get('students/knowledge/{id}/{page}', function ($id, $page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
 
-    $knowledge = $ConocimientoProvider->getConocimiento($id);
-    $students = $ConocimientoProvider->getAlumnos($knowledge);
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $ConocimientoProvider->getAlumnos($knowledge, $page);
-    }
+        $knowledge = $ConocimientoProvider->getConocimiento($id);
+        $students = $ConocimientoProvider->getAlumnos($knowledge);
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $ConocimientoProvider->getAlumnos($knowledge, $page);
+        }
 
-    if(count($students) == 0){
+        if(count($students) == 0){
+            return $app['twig']->render('list-wrapper.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'students' => $students,
+                'pages' => $studentsPages,
+                'knowledges' => $knowledges,
+                'studies' => $studies,
+                'companies' => $companies,
+                'students_list' => true,
+                'knowledge_list' => true,
+                'knowledge_id' => $id,
+                'knowledge_empty_list' => true
+            ));
+        }
         return $app['twig']->render('list-wrapper.html.twig', array(
             'domain' => $GLOBALS['MAILING_DOMAIN'],
             'students' => $students,
@@ -117,42 +136,44 @@ $app->get('students/knowledge/{id}/{page}', function ($id, $page) use ($app) {
             'companies' => $companies,
             'students_list' => true,
             'knowledge_list' => true,
-            'knowledge_id' => $id,
-            'knowledge_empty_list' => true
+            'knowledge_id' => $id
         ));
-    }
-    return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'students' => $students,
-        'pages' => $studentsPages,
-        'knowledges' => $knowledges,
-        'studies' => $studies,
-        'companies' => $companies,
-        'students_list' => true,
-        'knowledge_list' => true,
-        'knowledge_id' => $id
-    ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('students-knowledge-list')->value('page', 1);
 
 $app->get('students/company/{id}/{page}', function ($id, $page) use ($app) {
-    $studentsPages = null;
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $studentsPages = null;
 
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
-    $EmpresaProvider = new EmpresaProvider($app);
-    $companies = $EmpresaProvider->getEmpresas();
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
 
-    $company = $EmpresaProvider->getEmpresa($id);
-    $students = $EmpresaProvider->getAlumnos($company);
-    if(count($students) > 5){
-        $pagination = $app['pagination'](count($students), $page);
-        $studentsPages = $pagination->build();
-        $students = $EmpresaProvider->getAlumnos($company, $page);
-    }
+        $company = $EmpresaProvider->getEmpresa($id);
+        $students = $EmpresaProvider->getAlumnos($company);
+        if(count($students) > 5){
+            $pagination = $app['pagination'](count($students), $page);
+            $studentsPages = $pagination->build();
+            $students = $EmpresaProvider->getAlumnos($company, $page);
+        }
 
-    if(count($students) == 0){
+        if(count($students) == 0){
+            return $app['twig']->render('list-wrapper.html.twig', array(
+                'domain' => $GLOBALS['MAILING_DOMAIN'],
+                'students' => $students,
+                'pages' => $studentsPages,
+                'knowledges' => $knowledges,
+                'studies' => $studies,
+                'companies' => $companies,
+                'students_list' => true,
+                'company_list' => true,
+                'company_id' => $id,
+                'company_empty_list' => true
+            ));
+        }
         return $app['twig']->render('list-wrapper.html.twig', array(
             'domain' => $GLOBALS['MAILING_DOMAIN'],
             'students' => $students,
@@ -162,161 +183,153 @@ $app->get('students/company/{id}/{page}', function ($id, $page) use ($app) {
             'companies' => $companies,
             'students_list' => true,
             'company_list' => true,
-            'company_id' => $id,
-            'company_empty_list' => true
+            'company_id' => $id
         ));
-    }
-    return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'students' => $students,
-        'pages' => $studentsPages,
-        'knowledges' => $knowledges,
-        'studies' => $studies,
-        'companies' => $companies,
-        'students_list' => true,
-        'company_list' => true,
-        'company_id' => $id
-    ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('students-company-list')->value('page', 1);
 
 
 /*** Búsquedas ***/
 
 $app->post('students/study/search', function (Request $request) use ($app) {
-    $listType = $request->request->get('listType');
-    $id = $request->request->get('studySelect');
-    switch($listType){
-        case 'company':
-            $companyId = $request->request->get('company');
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $listType = $request->request->get('listType');
+        $id = $request->request->get('studySelect');
+        switch($listType){
+            case 'company':
+                $companyId = $request->request->get('company');
 
-            return $app->redirect($app['url_generator']->generate('add-company-students-study', array(
-                'id' => $companyId,
-                'study_id' => $id
-            )));
-            break;
-        case 'study':
-            $studyId = $request->request->get('study');
+                return $app->redirect($app['url_generator']->generate('add-company-students-study', array(
+                    'id' => $companyId,
+                    'study_id' => $id
+                )));
+                break;
+            case 'study':
+                $studyId = $request->request->get('study');
 
-            return $app->redirect($app['url_generator']->generate('add-study-students-study', array(
-                'id' => $studyId,
-                'study_id' => $id
-            )));
-            break;
-        case 'knowledge':
-            $knowledgeId = $request->request->get('knowledge');
+                return $app->redirect($app['url_generator']->generate('add-study-students-study', array(
+                    'id' => $studyId,
+                    'study_id' => $id
+                )));
+                break;
+            case 'knowledge':
+                $knowledgeId = $request->request->get('knowledge');
 
-            return $app->redirect($app['url_generator']->generate('add-knowledge-students-study', array(
-                'id' => $knowledgeId,
-                'study_id' => $id
-            )));
-            break;
-        case 'student':
-            return $app->redirect($app['url_generator']->generate('students-study-list', array('id' => $id)));
-    }
+                return $app->redirect($app['url_generator']->generate('add-knowledge-students-study', array(
+                    'id' => $knowledgeId,
+                    'study_id' => $id
+                )));
+                break;
+            case 'student':
+                return $app->redirect($app['url_generator']->generate('students-study-list', array('id' => $id)));
+        }
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('study-search');
 
 $app->post('students/company/search', function (Request $request) use ($app) {
-    $listType = $request->request->get('listType');
-    $id = $request->request->get('companySelect');
-    switch($listType){
-        case 'company':
-            $companyId = $request->request->get('company');
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $listType = $request->request->get('listType');
+        $id = $request->request->get('companySelect');
+        switch($listType){
+            case 'company':
+                $companyId = $request->request->get('company');
 
-            return $app->redirect($app['url_generator']->generate('add-company-students-company', array(
-                'id' => $companyId,
-                'company_id' => $id
-            )));
-            break;
-        case 'study':
-            $studyId = $request->request->get('study');
+                return $app->redirect($app['url_generator']->generate('add-company-students-company', array(
+                    'id' => $companyId,
+                    'company_id' => $id
+                )));
+                break;
+            case 'study':
+                $studyId = $request->request->get('study');
 
-            return $app->redirect($app['url_generator']->generate('add-study-students-company', array(
-                'id' => $studyId,
-                'company_id' => $id
-            )));
-            break;
-        case 'knowledge':
-            $knowledgeId = $request->request->get('knowledge');
+                return $app->redirect($app['url_generator']->generate('add-study-students-company', array(
+                    'id' => $studyId,
+                    'company_id' => $id
+                )));
+                break;
+            case 'knowledge':
+                $knowledgeId = $request->request->get('knowledge');
 
-            return $app->redirect($app['url_generator']->generate('add-knowledge-students-study', array(
-                'id' => $knowledgeId,
-                'study_id' => $id
-            )));
-            break;
-        case 'student':
-            return $app->redirect($app['url_generator']->generate('students-study-list', array('id' => $id)));
-    }
+                return $app->redirect($app['url_generator']->generate('add-knowledge-students-study', array(
+                    'id' => $knowledgeId,
+                    'study_id' => $id
+                )));
+                break;
+            case 'student':
+                return $app->redirect($app['url_generator']->generate('students-study-list', array('id' => $id)));
+        }
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('company-search');
 
 $app->post('students/knowledge/search', function (Request $request) use ($app) {
-    $listType = $request->request->get('listType');
-    $id = $request->request->get('knowledgeSelect');
-    switch($listType) {
-        case 'company':
-            $companyId = $request->request->get('company');
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $listType = $request->request->get('listType');
+        $id = $request->request->get('knowledgeSelect');
+        switch($listType) {
+            case 'company':
+                $companyId = $request->request->get('company');
 
-            return $app->redirect($app['url_generator']->generate('add-company-students-knowledge', array(
-                'id' => $companyId,
-                'knowledge_id' => $id
-            )));
-            break;
-        case 'study':
-            $studyId = $request->request->get('study');
+                return $app->redirect($app['url_generator']->generate('add-company-students-knowledge', array(
+                    'id' => $companyId,
+                    'knowledge_id' => $id
+                )));
+                break;
+            case 'study':
+                $studyId = $request->request->get('study');
 
-            return $app->redirect($app['url_generator']->generate('add-study-students-knowledge', array(
-                'id' => $studyId,
-                'knowledge_id' => $id
-            )));
-            break;
-        case 'knowledge':
-            $knowledgeId = $request->request->get('knowledge');
+                return $app->redirect($app['url_generator']->generate('add-study-students-knowledge', array(
+                    'id' => $studyId,
+                    'knowledge_id' => $id
+                )));
+                break;
+            case 'knowledge':
+                $knowledgeId = $request->request->get('knowledge');
 
-            return $app->redirect($app['url_generator']->generate('add-knowledge-students-knowledge', array(
-                'id' => $knowledgeId,
-                'knowledge_id' => $id
-            )));
-            break;
-        case 'student':
-            return $app->redirect($app['url_generator']->generate('students-knowledge-list', array('id' => $id)));
-    }
+                return $app->redirect($app['url_generator']->generate('add-knowledge-students-knowledge', array(
+                    'id' => $knowledgeId,
+                    'knowledge_id' => $id
+                )));
+                break;
+            case 'student':
+                return $app->redirect($app['url_generator']->generate('students-knowledge-list', array('id' => $id)));
+        }
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('knowledge-search');
 
 $app->post('students/custom/search', function (Request $request) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
+    if($app['security.authorization_checker']->isGranted('ROLE_USER')){
+        $criteria = array();
 
-    $criteria = array();
+        $knowledge = $request->request->get('knowledge');
+        $study = $request->request->get('study');
+        $company = $request->request->get('company');
+        $nif = $request->request->get('nif');
+        $name = $request->request->get('nombre');
+        $surnames = $request->request->get('apellidos');
 
-    $knowledge = $request->request->get('knowledge');
-    $study = $request->request->get('study');
-    $company = $request->request->get('company');
-    $nif = $request->request->get('nif');
-    $name = $request->request->get('nombre');
-    $surnames = $request->request->get('apellidos');
+        if(!empty($knowledge)) $criteria['knowledge'] = $knowledge;
+        if(!empty($study)) $criteria['study'] = $study;
+        if(!empty($company)) $criteria['company'] = $company;
+        if(!empty($nif)) $criteria['nif'] = $nif;
+        if(!empty($name)) $criteria['name'] = $name;
+        if(!empty($surnames)) $criteria['surnames'] = $surnames;
 
-    if(!empty($knowledge)) $criteria['knowledge'] = $knowledge;
-    if(!empty($study)) $criteria['study'] = $study;
-    if(!empty($company)) $criteria['company'] = $company;
-    if(!empty($nif)) $criteria['nif'] = $nif;
-    if(!empty($name)) $criteria['name'] = $name;
-    if(!empty($surnames)) $criteria['surnames'] = $surnames;
+        $ConocimientoProvider = new ConocimientoProvider($app);
+        $knowledges = $ConocimientoProvider->getConocimientos();
+        $EstudiosProvider = new EstudioProvider($app);
+        $studies = $EstudiosProvider->getEstudios();
 
-    $ConocimientoProvider = new ConocimientoProvider($app);
-    $knowledges = $ConocimientoProvider->getConocimientos();
-    $EstudiosProvider = new EstudioProvider($app);
-    $studies = $EstudiosProvider->getEstudios();
+        $AlumnoProvider = new AlumnoProvider($app);
+        $students = $AlumnoProvider->getAlumnosBy($criteria);
 
-    $AlumnoProvider = new AlumnoProvider($app);
-    $students = $AlumnoProvider->getAlumnosBy($criteria);
-
-    return $app['twig']->render('list-wrapper.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'user' => $user,
-        'students' => $students,
-        'knowledges' => $knowledges,
-        'studies' => $studies,
-        'students_custom_list' => true
-    ));
+        return $app['twig']->render('list-wrapper.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'students' => $students,
+            'knowledges' => $knowledges,
+            'studies' => $studies,
+            'students_custom_list' => true
+        ));
+    } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('students-custom-list');
 
 /*** Operaciones CRUD ***/
@@ -426,12 +439,8 @@ $app->get('student/{id}/studies/{page}', function ($id, $page) use ($app) {
         $studies = $EstudioProvider->getEstudios($page);
     }
 
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-
     return $app['twig']->render('additions/student.html.twig', array(
         'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'user' => $user,
         'student' => $student,
         'studies' => $studies,
         'categories' => $categories,
@@ -482,7 +491,8 @@ $app->get('student/{id}/study/{study_id}/add', function ($id, $study_id) use ($a
     $study = $EstudioProvider->getEstudio($study_id);
 
     $student->addStudy($study);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
 })->bind('add-study');
@@ -496,17 +506,15 @@ $app->delete('student/{id}/study/{study_id}/remove', function ($id, $study_id) u
     $study = $EstudioProvider->getEstudio($study_id);
 
     $student->removeStudy($study);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
-})->bind('remove-study');
+})->bind('remove-student-study');
 
 /*** Conocimientos *///Listados
 
 $app->get('student/{id}/knowledges/{page}', function ($id, $page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-
     $knowledgesPages = null;
 
     $CategoriaProvider = new CategoriaActividadProvider($app);
@@ -528,7 +536,6 @@ $app->get('student/{id}/knowledges/{page}', function ($id, $page) use ($app) {
 
     return $app['twig']->render('additions/student.html.twig', array(
         'domain' => $GLOBALS['MAILING_DOMAIN'],
-        'user' => $user,
         'student' => $student,
         'knowledges' => $knowledges,
         'pages' => $knowledgesPages,
@@ -576,10 +583,11 @@ $app->get('student/{id}/knowledge/{knowledge_id}/add', function ($id, $knowledge
     $knowledge = $ConocimientoProvider->getConocimiento($knowledge_id);
 
     $student->addKnowledge($knowledge);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
-})->bind('add_knowledge');
+})->bind('add-knowledge');
 
 /*** Conocimientos *///Eliminación
 
@@ -590,46 +598,42 @@ $app->delete('student/{id}/knowledge/{knowledge_id}/remove', function ($id, $kno
     $knowledge = $ConocimientoProvider->getConocimiento($knowledge_id);
 
     $student->removeKnowledge($knowledge);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
-})->bind('remove-knowledge');
+})->bind('remove-student-knowledge');
 
 /*** Empresas *///Listados
 
 $app->get('student/{id}/companies/{page}', function ($id, $page) use ($app) {
-    $UserProvider = new UserProvider($app);
-    $user = $UserProvider->getCurrentUser();
-    if(!is_null($user)){
-        $companiesPages = null;
+    $companiesPages = null;
 
-        $CategoriaProvider = new CategoriaActividadProvider($app);
-        $categories = $CategoriaProvider->getCategorias();
+    $CategoriaProvider = new CategoriaActividadProvider($app);
+    $categories = $CategoriaProvider->getCategorias();
 
-        $AlumnoProvider = new AlumnoProvider($app);
-        $student = $AlumnoProvider->getAlumno($id);
+    $AlumnoProvider = new AlumnoProvider($app);
+    $student = $AlumnoProvider->getAlumno($id);
 
-        $EmpresaProvider = new EmpresaProvider($app);
-        $companies = $EmpresaProvider->getEmpresas();
-        foreach($companies as $i => $value){
-            if($student->getEmpresas()->contains($value))
-                unset($companies[$i]);
-        }
-        if(count($companies) > 5){
-            $pagination = $app['pagination'](count($companies), $page);
-            $companiesPages = $pagination->build();
-        }
+    $EmpresaProvider = new EmpresaProvider($app);
+    $companies = $EmpresaProvider->getEmpresas();
+    foreach($companies as $i => $value){
+        if($student->getEmpresas()->contains($value))
+            unset($companies[$i]);
+    }
+    if(count($companies) > 5){
+        $pagination = $app['pagination'](count($companies), $page);
+        $companiesPages = $pagination->build();
+    }
 
-        return $app['twig']->render('additions/student.html.twig', array(
-            'domain' => $GLOBALS['MAILING_DOMAIN'],
-            'user' => $user,
-            'student' => $student,
-            'companies' => $companies,
-            'pages' => $companiesPages,
-            'categories' => $categories,
-            'student_companies_list' => true
-        ));
-    } else return $app->redirect($app['url_generator']->generate('login'));
+    return $app['twig']->render('additions/student.html.twig', array(
+        'domain' => $GLOBALS['MAILING_DOMAIN'],
+        'student' => $student,
+        'companies' => $companies,
+        'pages' => $companiesPages,
+        'categories' => $categories,
+        'student_companies_list' => true
+    ));
 
 })->bind('add-companies')->value('page', 1);
 
@@ -670,7 +674,8 @@ $app->get('student/{id}/company/{company_id}/add', function ($id, $company_id) u
     $company = $EmpresaProvider->getEmpresa($company_id);
 
     $student->addCompany($company);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
 })->bind('add-company');
@@ -684,7 +689,8 @@ $app->delete('student/{id}/company/{company_id}/remove', function ($id, $company
     $company = $EmpresaProvider->getEmpresa($company_id);
 
     $student->removeCompany($company);
-    $AlumnoProvider->updateAlumno($student);
+    $em = $app['orm.em'];
+    $em->flush();
 
     return new Response(200);
 })->bind('remove-student-company');

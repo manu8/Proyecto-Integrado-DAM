@@ -75,18 +75,22 @@
                   <li class="has-form">
                     <form action="{{ path('user_login_check') }}" method="post">
                       <div class="row collapse">
-                        <div class="large-5 column">
+                        <div class="large-3 column">
                           <input type="text" placeholder="Username" name="_username"
                             {% if last_username is defined %}
                               value="{{ last_username }}"
                             {% endif %}
                           required>
                         </div>
-                        <div class="large-5 column">
+                        <div class="large-3 column">
                           <input type="password" placeholder="Contraseña" name="_password" required>
                         </div>
                         <div class="large-2 column">
                           <button type="submit" class="success button expand">Login</button>
+                        </div>
+                        <div class="large-3 column">
+                          <input type="checkbox" id="remember_me" name="_remember_me" checked />
+                          <label class="header" for="remember_me">Recordarme</label>
                         </div>
                       </div>
                     </form>

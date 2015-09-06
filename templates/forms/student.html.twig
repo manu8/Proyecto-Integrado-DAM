@@ -38,7 +38,7 @@
     <div class="small-12 column">
       <form
           {% if form_type == 'new' %}
-            action="{{ path('student-edit', { 'id': 0}) }}"
+            action="{{ path('student-new') }}"
           {% else %}
             action="{{ path('student-update', { 'id' : student.Id }) }}"
           {% endif %}

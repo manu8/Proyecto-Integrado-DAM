@@ -4,7 +4,8 @@ $(document).foundation({
     abide: {
         patterns: {
             surnames: /^([a-zA-ZáÁéÉíÍóÓúÚ+\s+])+$/,
-            tlf: /^(\d{9})$/
+            tlf: /^(\d{9})$/,
+            names: /^[a-zA-Z\s]+$/
         }
     }
 });
