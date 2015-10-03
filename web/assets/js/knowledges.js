@@ -13,16 +13,17 @@ $('#categorySearch').click(function(event) {
 
 $('a.remove-link').click(function(event) {
     event.preventDefault();
+    var link = $(this);
     if(confirm("¿Estás seguro de eliminar este conocimiento?")){
         $.ajax({
             type: 'DELETE',
-            url: $(this).attr('href'),
+            url: link.attr('href'),
             beforeSend: function() {
-                $(this).html($('img').src('/assets/img/load.gif'));
+                link.hide();
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
-                $('#knowledgeRemoved').show();
-                $(this).parent().parent().remove();
+                window.location.replace('http://'+ document.domain + '/knowledge/lists')
             },
             error: function() {
                 $('#error').show();
@@ -97,6 +98,7 @@ $('a.category-remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
+                link.hide();
                 link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
@@ -122,6 +124,7 @@ $('a.student-remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
+                link.hide();
                 link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {

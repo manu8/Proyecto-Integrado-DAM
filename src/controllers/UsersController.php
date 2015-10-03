@@ -1,7 +1,9 @@
 <?php
+
 use Lib\Mailer;
 use Symfony\Component\HttpFoundation\Request;
 use Lib\Providers\UserProvider;
+
 $app->get('user/login', function(Request $request) use ($app) {
     $UserProvider = new UserProvider($app);
     $user = $UserProvider->getCurrentUser();
@@ -21,6 +23,7 @@ $app->get('user/login', function(Request $request) use ($app) {
         'last_username' => $app['session']->get('_security.last_username'),
     ));
 })->bind('login');
+
 $app->post('/user/register', function(Request $request) use ($app) {
     $UserProvider = new UserProvider($app);
     $username = $request->request->get('username');
@@ -48,6 +51,7 @@ $app->post('/user/register', function(Request $request) use ($app) {
         'last_username' => $app['session']->get('_security.last_username')
     ));
 })->bind('user-new');
+
 $app->get('/user/edit', function() use ($app) {
     $UserProvider = new UserProvider($app);
     $user = $UserProvider->getCurrentUser();
@@ -58,6 +62,7 @@ $app->get('/user/edit', function() use ($app) {
         'domain' => $GLOBALS['DOMAIN']
     ));
 })->bind('user-edit');
+
 $app->post('/user/{id}/update', function($id) use ($app) {
     $UserProvider = new UserProvider($app);
     $user = $UserProvider->getUser($id);
@@ -81,12 +86,14 @@ $app->post('/user/{id}/update', function($id) use ($app) {
         'update_user' => true
     )));
 })->bind('user-update');
+
 $app->post('/user/{id}/delete', function($id) use ($app) {
     $UserProvider = new UserProvider($app);
     $user = $UserProvider->getUser($id);
     $UserProvider->deleteUser($user);
     return $app->redirect($app['url_generator']->generate('user_logout')); //User logout
 })->bind('user-delete');
+
 $app->get('/user/confirm-email/{token}', function($token) use ($app) {
     $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('confirmationToken' => $token));
     if (!$user) {
@@ -107,6 +114,7 @@ $app->get('/user/confirm-email/{token}', function($token) use ($app) {
         'last_username' => $app['session']->get('_security.last_username'),
     ));
 })->bind('confirm-email');
+
 $app->post('user/resend_email', function(Request $request) use ($app) {
     $email = $request->request->get('email');
     $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('email' => $email));
@@ -126,10 +134,16 @@ $app->post('user/resend_email', function(Request $request) use ($app) {
         'last_username' => $email
     ));
 })->bind('resend-email');
+
 $app->match('user/forgot_password', function(Request $request) use ($app) {
     if ($request->isMethod('POST')) {
-        $email = $request->request->get('email');
-        $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('email' => $email));
+        $email = $request->request->get('_username');
+        if (strpos($email, '@')) {
+            $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('email' => $email));
+        } else {
+            $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('username' => $email));
+        }
+
         if ($user) {
             if (!$user->getConfirmationToken()) {
                 $user->setConfirmationToken($user->generateToken());
@@ -144,26 +158,51 @@ $app->match('user/forgot_password', function(Request $request) use ($app) {
                 'last_username' => $app['session']->get('_security.last_username'),
             ));
         }
+
+        return $app['twig']->render('forms/forgot-password.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'sender' => $GLOBALS['SENDER_EMAIL'],
+            'last_username' => $app['session']->get('_security.last_username'),
+            'user_not_found' => true
+        ));
     }
     return $app['twig']->render('forms/forgot-password.html.twig', array(
-        'sender' => $GLOBALS['SENDER_EMAIL']
+        'domain' => $GLOBALS['MAILING_DOMAIN'],
+        'sender' => $GLOBALS['SENDER_EMAIL'],
+        'last_username' => $app['session']->get('_security.last_username')
     ));
 })->method('GET|POST')->bind('forgot-password');
-$app->match('user/reset_password', function(Request $request) use ($app) {
+
+$app->match('user/reset_password/{token}', function(Request $request, $token) use ($app) {
     if ($request->isMethod('POST')) {
+        $passwd = $request->request->get('password');
+
         $UserProvider = new UserProvider($app);
-        $user = $UserProvider->getCurrentUser();
-        if ($user) {
-            $UserProvider->setUserPassword($user, $request->request->get('password'));
-            $UserProvider->updateUser($user);
-            return $app['twig']->render('forms/login.html.twig', array(
-                'domain' => $GLOBALS['MAILING_DOMAIN'],
-                'reset_password' => true,
-                'last_username' => $app['session']->get('_security.last_username'),
-            ));
-        }
+        $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('confirmationToken' => $token));
+        $user->setConfirmationToken(null);
+        $user->setPassword($passwd);
+        $UserProvider->setUserPassword($user);
+        $UserProvider->updateUser($user);
+
+        return $app['twig']->render('forms/login.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'reset_password_success' => true,
+            'last_username' => $app['session']->get('_security.last_username'),
+        ));
     }
-    return $app['twig']->render('forms/reset-password.html.twig', array(
-        'domain' => $GLOBALS['MAILING_DOMAIN']
-    ));
+
+    $user = $app['orm.em']->getRepository('Entities\Usuario')->findOneBy(array('confirmationToken' => $token));
+    if (!$user) {
+        return $app['twig']->render('forms/login.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'token_expired' => true,
+            'last_username' => $app['session']->get('_security.last_username'),
+        ));
+    } else {
+        return $app['twig']->render('forms/reset-password.html.twig', array(
+            'domain' => $GLOBALS['MAILING_DOMAIN'],
+            'token' => $token,
+            'user' => $user
+        ));
+    }
 })->method('GET|POST')->bind('reset-password');

@@ -28,7 +28,7 @@
         "kilte/silex-pagination": "dev-master"
     },
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-4": { "": "src/" }
     },
     "extra": {
         "branch-alias": {

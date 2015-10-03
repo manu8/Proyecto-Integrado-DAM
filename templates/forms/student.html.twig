@@ -195,7 +195,7 @@
                           {% if is_granted('ROLE_USER') %}
                             <a class="warning radius small button" href="{{ path('study-edit', { 'id' : study.Id}) }}"><i class="fi-page-edit small-icon"></i></a>
                           {% endif %}
-                          <a class="study-remove-link alert radius small button" href="{{ url('remove-study', { 'id' : student.Id, 'study_id' : study.Id}) }}">
+                          <a class="study-remove-link alert radius small button" href="{{ url('remove-student-study', { 'id' : student.Id, 'study_id' : study.Id}) }}">
                             <i class="fi-x small-icon"></i>
                           </a>
                         </td>
@@ -233,11 +233,11 @@
                       <td>{{ knowledge.Denominacion }}</td>
                       <td>
                         {% if is_granted('ROLE_USER') %}
-                          <a class="warning radius small button" href="{{ path('knowledge_edit', { 'id' : knowledge.Id}) }}">
+                          <a class="warning radius small button" href="{{ path('knowledge-edit', { 'id' : knowledge.Id}) }}">
                             <i class="fi-page-edit small-icon"></i>
                           </a>
                         {% endif %}
-                        <a class="knowledge-remove-link alert radius small button" href="{{ path('remove-knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
+                        <a class="knowledge-remove-link alert radius small button" href="{{ path('remove-student-knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
                           <i class="fi-x small-icon"></i>
                         </a>
                       </td>
@@ -309,28 +309,28 @@
               </div>
             </div>
           {% endif %}
-          <div class="row small-centered">
-            <div class="small-12 medium-3 large-3 columns">
-              {% if form_type == 'edit' and is_granted('ROLE_USER') %}
-                <button type="submit" class="button expand round warning"><i class="small-icon fi-pencil"></i>Modificar alumno</button>
-              {% elseif form_type == 'new' %}
-                <button type="submit" class="button expand round success"><i class="small-icon fi-plus"></i>Registrar alumno</button>
-              {% endif %}
-            </div>
-            <div class="small-12 medium-3 large-3 columns">
-              {% if form_type == 'new' %}
-                <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
-              {% elseif is_granted('ROLE_USER') %}
-                <a href="{{ path('student-remove', { 'id' : student.Id }) }}" class="student-remove-link alert round expand button ">
-                  <i class="small-icon fi-trash"></i>Borrar
-                </a>
-              {% endif %}
-            </div>
-            <div class="small-12 medium-3 large-3 columns">
-              <a href="{{ path('students-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Ir al listado</a>
-            </div>
-          </div>
         </fieldset>
+        <div class="row small-centered">
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'edit' and is_granted('ROLE_USER') %}
+              <button type="submit" class="button expand round warning"><i class="small-icon fi-pencil"></i>Modificar alumno</button>
+            {% elseif form_type == 'new' %}
+              <button type="submit" class="button expand round success"><i class="small-icon fi-plus"></i>Registrar alumno</button>
+            {% endif %}
+          </div>
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'new' %}
+              <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
+            {% elseif is_granted('ROLE_USER') %}
+              <a href="{{ path('student-remove', { 'id' : student.Id }) }}" class="student-remove-link alert round expand button ">
+                <i class="small-icon fi-trash"></i>Borrar
+              </a>
+            {% endif %}
+          </div>
+          <div class="small-12 medium-3 large-3 columns">
+            <a href="{{ path('students-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Ir al listado</a>
+          </div>
+        </div>
       </form>
     </div>
   </div>

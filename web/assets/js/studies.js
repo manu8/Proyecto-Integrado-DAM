@@ -75,6 +75,7 @@ $('a.category-remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
+                link.hide();
                 link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
@@ -100,6 +101,7 @@ $('a.student-remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
+                link.hide();
                 link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
@@ -124,14 +126,16 @@ $('a.remove-link').click(function(event) {
             type: 'DELETE',
             url: $(this).attr('href'),
             beforeSend: function() {
-                $(this).html($('img').src('/assets/img/load.gif'));
+                link.hide();
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
-                $('#knowledgeRemoved').show();
-                $(this).parent().parent().remove();
+                window.location.replace('http://'+ document.domain + '/studies/lists')
             },
             error: function() {
                 $('#error').show();
+                $('#loadImg').remove();
+                link.show();
             }
         });
     }

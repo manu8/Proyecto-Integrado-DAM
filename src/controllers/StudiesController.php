@@ -256,7 +256,7 @@ $app->get('study/{id}/students/{page}', function ($id, $page) use ($app) {
         ));
     } else return $app->redirect($app['url_generator']->generate('/login'));
 
-})->bind('study-add-students')->value('page', 1);
+})->bind('add-study-students')->value('page', 1);
 
 $app->get('study/{id}/students/study/{study_id}/{page}', function ($id, $study_id, $page) use ($app) {
     if($app['security.authorization_checker']->isGranted('ROLE_USER')){

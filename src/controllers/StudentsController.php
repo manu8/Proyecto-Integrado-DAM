@@ -318,6 +318,8 @@ $app->post('students/custom/search', function (Request $request) use ($app) {
         $knowledges = $ConocimientoProvider->getConocimientos();
         $EstudiosProvider = new EstudioProvider($app);
         $studies = $EstudiosProvider->getEstudios();
+        $EmpresaProvider = new EmpresaProvider($app);
+        $companies = $EmpresaProvider->getEmpresas();
 
         $AlumnoProvider = new AlumnoProvider($app);
         $students = $AlumnoProvider->getAlumnosBy($criteria);
@@ -327,6 +329,7 @@ $app->post('students/custom/search', function (Request $request) use ($app) {
             'students' => $students,
             'knowledges' => $knowledges,
             'studies' => $studies,
+            'companies' => $companies,
             'students_custom_list' => true
         ));
     } else return $app->redirect($app['url_generator']->generate('/login'));

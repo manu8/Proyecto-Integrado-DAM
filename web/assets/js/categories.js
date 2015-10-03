@@ -6,11 +6,11 @@ $('a.remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.hide();
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
-                $('#categoryRemoved').show();
-                link.parent().parent().remove();
+                window.location.replace('http://'+ document.domain + '/categories/lists')
             },
             error: function() {
                 $('#error').show();

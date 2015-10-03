@@ -13,7 +13,7 @@ use Lib\Providers\UserProvider;
 
 /*** Listados ***/
 
-$app->get('knowledges/list/{page}', function ($page) use ($app) {
+$app->get('knowledge/list/{page}', function ($page) use ($app) {
     if($app['security.authorization_checker']->isGranted('ROLE_USER')){
         $knowledgesPages = null;
 
@@ -38,7 +38,7 @@ $app->get('knowledges/list/{page}', function ($page) use ($app) {
     } else return $app->redirect($app['url_generator']->generate('/login'));
 })->bind('knowledges-list')->value('page', 1);
 
-$app->get('knowledeges/category/{page}', function (Request $request, $page) use ($app) {
+$app->get('knowledege/category/{page}', function (Request $request, $page) use ($app) {
     if($app['security.authorization_checker']->isGranted('ROLE_USER')) {
         $knowledgesPages = null;
 

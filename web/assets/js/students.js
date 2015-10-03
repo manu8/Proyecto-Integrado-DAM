@@ -63,7 +63,7 @@ $('a.study-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyAdded').show();
@@ -87,7 +87,7 @@ $('a.categorized-study-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyAdded').show();
@@ -113,7 +113,7 @@ $('a.knowledge-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeAdded').show();
@@ -137,7 +137,7 @@ $('a.categorized-knowledge-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeAdded').show();
@@ -163,7 +163,7 @@ $('a.company-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyAdded').show();
@@ -187,7 +187,7 @@ $('a.categorized-company-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyAdded').show();
@@ -214,19 +214,16 @@ $('a.student-remove-link').click(function(event) {
             type: 'DELETE',
             url: link.attr('href'),
             beforeSend: function() {
-                link.html('');
-                link.append($('img').attr({
-                    src: '../../assets/img/load.gif',
-                    id: 'loadImg'
-                }));
+                link.hide();
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
-                window.location.replace('http://pidam.local/students/lists')
+                window.location.replace('http://'+ document.domain + '/students/lists')
             },
             error: function() {
                 $('#error').show();
                 $('#loadImg').remove();
-                link.html('<i class="fi-trash small-icon"></i>Borrar');
+                link.show();
             }
         });
     }
@@ -243,7 +240,7 @@ $('a.study-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyRemoved').show();
@@ -269,7 +266,7 @@ $('a.knowledge-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeRemoved').show();
@@ -295,7 +292,7 @@ $('a.company-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyRemoved').show();

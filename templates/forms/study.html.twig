@@ -44,140 +44,141 @@
 					action="{{ path('study-update', { 'id' : study.Id }) }}"
 				{% endif %}
 			method="post" data-abide>
-          {% if form_type == 'new' %}
-            <input type="hidden" id="_method" name="_method" value="PUT" />
-          {% endif %}
-			  	<fieldset>
-			    	<legend>Datos del Estudio</legend>
-			    	<div class="row">
-					    <div class="small-12 column">
-					    	<label>Denominación
-						      	<input name="name" type="text" placeholder="Denominación" pattern="names"
-                      {% if study is defined and study is not null %}
-                        value="{{ study.Denominacion }}"
-                      {% endif %}
-						      	required/>
-						      	<small class="error">No se permiten números en el nombre</small>
-						    </label>
-					    </div>
-					  </div>
-            <div class="row">
-                <div class="small-12 column">
-                  <label>Descripción
+        {% if form_type == 'new' %}
+          <input type="hidden" id="_method" name="_method" value="PUT" />
+        {% endif %}
+        <fieldset>
+          <legend>Datos del Estudio</legend>
+          <div class="row">
+            <div class="small-12 column">
+              <label>Denominación
+                <input name="name" type="text" placeholder="Denominación" pattern="names"
+                    {% if study is defined and study is not null %}
+                      value="{{ study.Denominacion }}"
+                    {% endif %}
+                       required/>
+                <small class="error">No se permiten números en el nombre</small>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-12 column">
+              <label>Descripción
                       <textarea name="description" placeholder="Descripción" rows="8">
                         {% if study is defined and study is not null %}
                           {{ study.Descripcion }}
                         {% endif %}
                       </textarea>
-                    </label>
-                </div>
+              </label>
             </div>
-            <div id="categoryRemoved" class="custom-row first-row" hidden>
-              <div class="small-6 small-centered column">
-                <div data-alert class="alert-box alert round text-center">
-                  ¡Categoría eliminada!
-                  <a href="#" class="close">&times;</a>
-                </div>
+          </div>
+          <div id="categoryRemoved" class="custom-row first-row" hidden>
+            <div class="small-6 small-centered column">
+              <div data-alert class="alert-box alert round text-center">
+                ¡Categoría eliminada!
+                <a href="#" class="close">&times;</a>
               </div>
             </div>
-            {% if study is defined and study is not null %}
-              <div class="row">
-                <h3>Categorías</h3>
-                {% if study.Categorias is not empty %}
-                  <table class="list">
-                    <thead>
-                    <tr>
-                      <th>Denominación</th>
-                      <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for category in study.Categorias %}
-                      <tr>
-                        <td>{{ category.Denominacion }}</td>
-                        <td>
-                          {% if is_granted('ROLE_USER') %}
-                            <a class="button warning" href="{{ path('category-edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
-                            <a class="button alert category-remove-link" href="{{ path('study-remove-category', { 'id': study.Id, 'category_id': category.Id }) }}">
-                              <i class="fi-x small-icon"></i>
-                            </a>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                {% else %}
-                  <p class="text-center"><span class="warning round label">No existen categorias asociadas</span></p>
-                {% endif %}
-              </div>
-            {% endif %}
-            {% if study is defined and study is not null %}
-              <div class="row">
-                <h3>Alumnos</h3>
+          </div>
+          {% if study is defined and study is not null %}
+            <div class="row">
+              <h3>Categorías</h3>
+              {% if study.Categorias is not empty %}
                 <table class="list">
                   <thead>
-                    <tr>
-                      <th>Apellidos</th>
-                      <th>Nombre</th>
-                      <th>NIF</th>
-                      <th>Acciones</th>
-                    </tr>
+                  <tr>
+                    <th>Denominación</th>
+                    <th>Acciones</th>
+                  </tr>
                   </thead>
                   <tbody>
-                    {% for student in study.Alumnos %}
-                      <tr>
-                        <td>{{ student.Apellidos }}</td>
-                        <td>{{ student.Nombre }}</td>
-                        <td>{{ student.NIF }}</td>
-                        <td>
-                          {% if is_granted('ROLE_USER') %}
-                            <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
-                            <a class="button alert student-remove-link" href="{{ path('study-remove-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
-                              <i class="fi-x small-icon"></i>
-                            </a>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    {% else %}
-                      <p class="text-center"><span class="warning round label">No existen alumnos que posean este título</span></p>
-                    {% endfor %}
+                  {% for category in study.Categorias %}
+                    <tr>
+                      <td>{{ category.Denominacion }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="button warning" href="{{ path('category-edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
+                          <a class="button alert category-remove-link" href="{{ path('study-remove-category', { 'id': study.Id, 'category_id': category.Id }) }}">
+                            <i class="fi-x small-icon"></i>
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
                   </tbody>
                 </table>
+              {% else %}
+                <p class="text-center"><span class="warning round label">No existen categorias asociadas</span></p>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if study is defined and study is not null %}
+            <div class="row">
+              <h3>Alumnos</h3>
+              <table class="list">
+                <thead>
+                <tr>
+                  <th>Apellidos</th>
+                  <th>Nombre</th>
+                  <th>NIF</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for student in study.Alumnos %}
+                  <tr>
+                    <td>{{ student.Apellidos }}</td>
+                    <td>{{ student.Nombre }}</td>
+                    <td>{{ student.NIF }}</td>
+                    <td>
+                      {% if is_granted('ROLE_USER') %}
+                        <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
+                        <a class="button alert student-remove-link" href="{{ path('study-remove-student', { 'id' : study.Id, 'student_id' : student.Id }) }}">
+                          <i class="fi-x small-icon"></i>
+                        </a>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% else %}
+                  <p class="text-center"><span class="warning round label">No existen alumnos que posean este título</span></p>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endif %}
+          {% if is_granted('ROLE_USER') %}
+            {% if form_type == 'edit' %}
+              <div class="row">
+                <div class="small-12 column">
+                  <ul class="button-group round even-2">
+                    <li><a href="{{ path('study-add-categories', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir categoría</a></li>
+                    <li><a href="{{ path('add-study-students', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno</a></li>
+                  </ul>
+                </div>
               </div>
             {% endif %}
-            {% if is_granted('ROLE_USER') %}
-              {% if form_type == 'edit' %}
-                <div class="row">
-                  <div class="small-12 column">
-                    <ul class="button-group round even-2">
-                      <li><a href="{{ path('study-add-categories', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir categoría</a></li>
-                      <li><a href="{{ path('study-add-students', { 'id' : study.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno</a></li>
-                    </ul>
-                  </div>
-                </div>
-              {% endif %}
-              <div class="row">
-                <div class="small-4 column">
-                  {% if form_type == 'new' %}
-                    <button type="submit" class="success round button"><i class="small-icon fi-plus"></i>Crear estudio</button>
-                  {% elseif form_type == 'edit' %}
-                    <button type="submit" class="warning round button"><i class="small-icon fi-pencil"></i>Modificar estudio</button>
-                  {% endif %}
-                </div>
-                <div class="small-4 column">
-                  {% if form_type == 'new' %}
-                    <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
-                  {% elseif form_type == 'edit' %}
-                    <a href="{{ path('study-remove', { 'id': study.Id }) }}" class="warning round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
-                  {% endif %}
-                </div>
-              {% endif %}
-                <div class="small-4 column">
-                  <a href="{{ path('studies-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
-                </div>
-              </div>
-			  	</fieldset>
+          {% endif %}
+        </fieldset>
+        <div class="row small-centered">
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'new' %}
+              <button type="submit" class="success round button"><i class="small-icon fi-plus"></i>Crear estudio</button>
+            {% elseif form_type == 'edit' %}
+              <button type="submit" class="warning round button"><i class="small-icon fi-pencil"></i>Modificar estudio</button>
+            {% endif %}
+          </div>
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'new' %}
+              <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
+            {% elseif form_type == 'edit' %}
+              <a href="{{ path('study-remove', { 'id': study.Id }) }}" class="alert round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
+            {% endif %}
+          </div>
+          {% endif %}
+          <div class="small-12 medium-3 large-3 columns">
+            <a href="{{ path('studies-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
+          </div>
+        </div>
 			</form>
 		</div>
 	</div>

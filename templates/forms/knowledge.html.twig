@@ -44,128 +44,130 @@
 					action="{{ path('knowledge-update', { 'id': knowledge.Id }) }}"
 				{% endif %}
 			method="post" data-abide>
-          {% if form_type == 'new' %}
-            <input type="hidden" id="_method" name="_method" value="PUT" />
-          {% endif %}
-			  	<fieldset>
-			    	<legend>Datos del Conocimiento</legend>
-			    	<div class="row">
-					    <div class="small-12 column">
-					    	<label>Denominación
-						      <input name="name" type="text" placeholder="Denominación" pattern="names"
-						      	{% if knowledge is defined and knowledge is not null %}
-							      		value="{{ knowledge.Denominacion }}"
+        {% if form_type == 'new' %}
+          <input type="hidden" id="_method" name="_method" value="PUT" />
+        {% endif %}
+        <fieldset>
+          <legend>Datos del Conocimiento</legend>
+          <div class="row">
+            <div class="small-12 column">
+              <label>Denominación
+                <input name="name" type="text" placeholder="Denominación" pattern="names"
+                    {% if knowledge is defined and knowledge is not null %}
+                      value="{{ knowledge.Denominacion }}"
                     {% endif %}
-                  required/>
-						      <small class="error">No se permiten números en el nombre</small>
-						    </label>
-					    </div>
-					  </div>
-            <div class="row">
-                <div class="small-12 column">
-                  <label>Descripción
+                       required/>
+                <small class="error">No se permiten números en el nombre</small>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-12 column">
+              <label>Descripción
                       <textarea name="description" placeholder="Descripción"
-                        {% if knowledge is defined and knowledge is not null %}
-                          value="{{ knowledge.Descripcion }}"
-                        {% endif %}
-                      ></textarea>
-                    </label>
-                </div>
-            </div>
-            {% if knowledge is defined and knowledge is not null %}
-              <div class="row">
-                <h3>Categorías</h3>
-                {% if knowledge.Categorias is not empty %}
-                  <table class="list">
-                    <thead>
-                    <tr>
-                      <th>Denominación</th>
-                      <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for category in knowledge.Categorias %}
-                      <tr>
-                        <td>{{ category.Denominacion }}</td>
-                        <td>
-                          {% if is_granted('ROLE_USER') %}
-                            <a class="button warning" href="{{ path('category-edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
-                            <a class="button alert category-remove-link" href="{{ path('knowledge-remove-category', { 'id': knowledge.Id, 'category_id': category.Id }) }}">
-                              <i class="fi-x small-icon"></i>
-                            </a>
+                          {% if knowledge is defined and knowledge is not null %}
+                            value="{{ knowledge.Descripcion }}"
                           {% endif %}
-                        </td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                {% else %}
-                  <p class="text-center"><span class="warning round label">No existen categorias asociadas</span></p>
-                {% endif %}
-              </div>
-            {% endif %}
-            {% if knowledge is defined and knowledge is not null %}
-              <div class="row">
-                <h3>Alumnos</h3>
-                {% if knowledge.Alumnos is not empty %}
-                  <table class="list">
-                    <thead>
-                      <tr>
-                        <th>Denominación</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for student in knowledge.Alumnos %}
-                        <tr>
-                          <td>{{ student.Apellidos }}</td>
-                          <td>{{ student.Nombre }}</td>
-                          <td>{{ student.NIF }}</td>
-                          <td>
-                            {% if is_granted('ROLE_USER') %}
-                              <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
-                              <a class="button alert student-remove-link" href="{{ path('remove-student-knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
-                                <i class="fi-x small-icon"></i>
-                              </a>
-                            {% endif %}
-                          </td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                {% else %}
-                  <p class="text-center"><span class="warning round label">No existen alumnos que posean este conocimiento</span></p>
-                {% endif %}
-              </div>
-            {% endif %}
-            {% if form_type == 'edit' %}
-              <div class="row">
-                <div class="small-12 column">
-                  <ul class="button-group round even-2">
-                    <li><a href="{{ path('knowledge-add-categories', { 'id' : knowledge.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir categoría</a></li>
-                    <li><a href="{{ path('add-knowledge-students', { 'id' : knowledge.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno</a></li>
-                  </ul>
-                </div>
-              </div>
-            {% endif %}
-            <div class="small-4 column">
-              {% if form_type == 'new' %}
-                <button type="submit" class="success round button"><i class="small-icon fi-plus"></i>Crear conocimiento</button>
-              {% elseif form_type == 'edit' %}
-                <button type="submit" class="warning round button"><i class="small-icon fi-pencil"></i>Modificar conocimiento</button>
+                          ></textarea>
+              </label>
+            </div>
+          </div>
+          {% if knowledge is defined and knowledge is not null %}
+            <div class="row">
+              <h3>Categorías</h3>
+              {% if knowledge.Categorias is not empty %}
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <th>Denominación</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for category in knowledge.Categorias %}
+                    <tr>
+                      <td>{{ category.Denominacion }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="button warning" href="{{ path('category-edit', { 'id': category.Id }) }}"><i class="fi-page-edit"></i></a>
+                          <a class="button alert category-remove-link" href="{{ path('knowledge-remove-category', { 'id': knowledge.Id, 'category_id': category.Id }) }}">
+                            <i class="fi-x small-icon"></i>
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <p class="text-center"><span class="warning round label">No existen categorias asociadas</span></p>
               {% endif %}
             </div>
-            <div class="small-4 column">
-              {% if form_type == 'new' %}
-                <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
-              {% elseif form_type == 'edit' %}
-                <a href="{{ path('knowledge-remove', { 'id': knowledge.Id }) }}" class="warning round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
+          {% endif %}
+          {% if knowledge is defined and knowledge is not null %}
+            <div class="row">
+              <h3>Alumnos</h3>
+              {% if knowledge.Alumnos is not empty %}
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <th>Denominación</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for student in knowledge.Alumnos %}
+                    <tr>
+                      <td>{{ student.Apellidos }}</td>
+                      <td>{{ student.Nombre }}</td>
+                      <td>{{ student.NIF }}</td>
+                      <td>
+                        {% if is_granted('ROLE_USER') %}
+                          <a class="button warning" href="{{ path('student-edit', { 'id' : student.Id }) }}"><i class="fi-page-edit"></i></a>
+                          <a class="button alert student-remove-link" href="{{ path('remove-student-knowledge', { 'id' : student.Id, 'knowledge_id' : knowledge.Id }) }}">
+                            <i class="fi-x small-icon"></i>
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <p class="text-center"><span class="warning round label">No existen alumnos que posean este conocimiento</span></p>
               {% endif %}
             </div>
-            <div class="small-4 column">
-              <a href="{{ path('knowledges-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
+          {% endif %}
+          {% if form_type == 'edit' %}
+            <div class="row">
+              <div class="small-12 column">
+                <ul class="button-group round even-2">
+                  <li><a href="{{ path('knowledge-add-categories', { 'id' : knowledge.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir categoría</a></li>
+                  <li><a href="{{ path('add-knowledge-students', { 'id' : knowledge.Id }) }}" class="button"><i class="fi-plus"></i>&nbsp;Añadir alumno</a></li>
+                </ul>
+              </div>
             </div>
-			  	</fieldset>
+          {% endif %}
+        </fieldset>
+        <div class="row small-centered">
+          <div class="small-12 medium-3 large-3 columns">
+            {% if form_type == 'new' %}
+              <button type="submit" class="success round button"><i class="small-icon fi-plus"></i>Crear conocimiento</button>
+            {% elseif form_type == 'edit' %}
+              <button type="submit" class="warning round button"><i class="small-icon fi-pencil"></i>Modificar conocimiento</button>
+            {% endif %}
+          </div>
+          <div class="small-12 medium-3 large-3 columns column">
+            {% if form_type == 'new' %}
+              <button type="reset" class="button expand round alert"><i class="small-icon fi-trash"></i>Limpiar</button>
+            {% elseif form_type == 'edit' %}
+              <a href="{{ path('knowledge-remove', { 'id': knowledge.Id }) }}" class="warning round button expand remove-link"><i class="small-icon fi-trash"></i>Eliminar</a>
+            {% endif %}
+          </div>
+          <div class="small-12 medium-3 large-3 columns">
+            <a href="{{ path('knowledges-list') }}" class="button round"><i class="small-icon fi-list-thumbnails"></i>Volver al listado</a>
+          </div>
+        </div>
 			</form>
 		</div>
 	</div>

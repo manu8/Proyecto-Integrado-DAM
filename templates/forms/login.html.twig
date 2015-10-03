@@ -19,21 +19,6 @@
         </div>
       </div>
     </div>
-  {% elseif app.user is null %}
-    <div class="custom-row first-row">
-      <div class="small-6 small-centered column">
-        <div data-alert class="alert-box alert round text-center">
-          {% if error is defined and error == 'Bad credentials.' %}
-            ¡Usuario o contraseña incorrecta! Por favor revisa tus credenciales.
-          {% elseif error is defined %}
-            {{ error }}
-            <br>
-            Algo ha salido mal... Por favor vuelve a intentarlo.
-          {% endif %}
-          <a href="#" class="close">&times;</a>
-        </div>
-      </div>
-    </div>
   {% elseif activate_user is defined %}
     <div class="custom-row first-row">
       <div class="small-6 small-centered column">
@@ -89,6 +74,30 @@
       <div class="small-6 small-centered column">
         <div data-alert class="alert-box info round text-center">
           ¡El correo para la modificación de contraseña se ha enviado!
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif reset_password_success is defined %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box success round text-center">
+          ¡Contraseña modificada! Por favor introduzca sus nuevas credenciales.
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+    </div>
+  {% elseif app.user is null %}
+    <div class="custom-row first-row">
+      <div class="small-6 small-centered column">
+        <div data-alert class="alert-box alert round text-center">
+          {% if error is defined and error == 'Bad credentials.' %}
+            ¡Usuario o contraseña incorrecta! Por favor revisa tus credenciales.
+          {% elseif error is defined %}
+            {{ error }}
+            <br>
+            Algo ha salido mal... Por favor vuelve a intentarlo.
+          {% endif %}
           <a href="#" class="close">&times;</a>
         </div>
       </div>
