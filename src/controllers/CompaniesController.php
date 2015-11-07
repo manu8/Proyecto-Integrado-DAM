@@ -36,7 +36,7 @@ $app->get('companies/list/{page}', function ($page) use ($app) {
             'categories' => $categories,
             'companies_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('companies-list')->value('page', 1);
 
 $app->get('companies/category/{id}/{page}', function ($id, $page) use ($app) {
@@ -76,7 +76,7 @@ $app->get('companies/category/{id}/{page}', function ($id, $page) use ($app) {
                 'category_id' => $id
             ));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('companies-category-list')->value('page', 1);
 
 /*** Búsqueda avanzada ***/
@@ -111,7 +111,7 @@ $app->post('companies/custom/search', function (Request $request) use ($app) {
             'studies' => $studies,
             'company_custom_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('company-custom-list');
 
 /*** Operaciones CRUD ***/
