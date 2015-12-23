@@ -7,7 +7,7 @@ $('a.remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg" src="/assets/img/load.gif"/>');
             },
             success: function() {
                 window.location.replace('http://'+ document.domain + '/categories/lists')

@@ -95,7 +95,7 @@
                       </div>
                     </form>
                   </li>
-                  <li><a class="button expand" data-reveal-id="registerModal">Nuevo registro</a></li>
+                  <li><a class="button expand" href="{{ path('user.register') }}">Nuevo registro</a></li>
                 {% endif %}
               </ul>
             </section>
@@ -116,7 +116,7 @@
               <li><a class="button radius warning" href="{{ path('user-edit', { 'id' : app.user.Id }) }}"><i class="fi-widget medium-icon"></i></a></li>
             {% else %}
               <li><a href="#" class="button radius success" data-reveal-id="loginModal">Login</a></li>
-              <li><a href="#" class="button radius" data-reveal-id="registerModal">Nuevo registro</a></li>
+              <li><a href="{{ path('user.register') }}" class="button radius">Nuevo registro</a></li>
             {% endif %}
           </ul>
         </aside>

@@ -34,7 +34,7 @@ $app->get('studies/list/{page}', function ($page) use ($app) {
             'categories' => $categories,
             'studies_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('studies-list')->value('page', 1);
 
@@ -74,7 +74,7 @@ $app->post('studies/category/{page}', function (Request $request, $page) use ($a
                 'category_id' => $id
             ));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('studies-category-list')->value('page', 1);
 
@@ -97,7 +97,7 @@ $app->put('study/create', function (Request $request) use ($app) {
             'study' => $study,
             'new_study' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('study-new');
 
 $app->get('study/{id}/edit', function ($id) use ($app) {
@@ -115,7 +115,7 @@ $app->get('study/{id}/edit', function ($id) use ($app) {
             'form_type' => $form_type,
             'study' => $study
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-edit');
 
@@ -133,7 +133,7 @@ $app->post('study/{id}/update', function (Request $request, $id) use ($app) {
             'study' => $study,
             'update_study' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-update');
 
@@ -144,7 +144,7 @@ $app->delete('study/{id}/remove', function ($id) use ($app) {
         $EstudioProvider->removeEstudio($study);
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-remove');
 
@@ -179,7 +179,7 @@ $app->get('study/{id}/categories/{page}', function ($id, $page) use ($app) {
             'pages' => $categoriesPages,
             'study_categories_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-add-categories')->value('page', 1);
 
@@ -196,7 +196,7 @@ $app->get('study/{id}/category/{category_id}/add', function ($id, $category_id) 
         $app['orm.em']->flush();
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-add-category');
 
@@ -214,7 +214,7 @@ $app->delete('study/{id}/category/{category_id}/remove', function ($id, $categor
         $em->flush();
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-remove-category');
 
@@ -254,7 +254,7 @@ $app->get('study/{id}/students/{page}', function ($id, $page) use ($app) {
             'pages' => $studentsPages,
             'study_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('add-study-students')->value('page', 1);
 
@@ -310,7 +310,7 @@ $app->get('study/{id}/students/study/{study_id}/{page}', function ($id, $study_i
             'knowledges' => $knowledges,
             'study_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('add-study-students-study')->value('page', 1);
 
 $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, $knowledge_id, $page) use ($app) {
@@ -365,7 +365,7 @@ $app->get('study/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, 
             'knowledges' => $knowledges,
             'study_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('add-study-students-knowledge')->value('page', 1);
 
 $app->get('study/{id}/students/company/{company_id}/{page}', function ($id, $company_id, $page) use ($app) {
@@ -420,7 +420,7 @@ $app->get('study/{id}/students/company/{company_id}/{page}', function ($id, $com
             'knowledges' => $knowledges,
             'study_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('add-study-students-company')->value('page', 1);
 
 /*** Alumnos *///Adición
@@ -437,7 +437,7 @@ $app->get('study/{id}/student/{student_id}/add', function ($id, $student_id) use
         $em->flush();
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-add-student');
 
@@ -455,6 +455,6 @@ $app->delete('study/{id}/student/{student_id}/remove', function ($id, $student_i
         $em->flush();
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('study-remove-student');

@@ -42,7 +42,7 @@ $app->get('students/list/{page}', function ($page) use ($app) {
             'companies' => $companies,
             'students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('students-list')->value('page', 1);
 
@@ -91,7 +91,7 @@ $app->get('students/study/{id}/{page}', function ($id, $page) use ($app) {
                 'study_id' => $id
             ));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('students-study-list')->value('page', 1);
 
 $app->get('students/knowledge/{id}/{page}', function ($id, $page) use ($app) {
@@ -138,7 +138,7 @@ $app->get('students/knowledge/{id}/{page}', function ($id, $page) use ($app) {
             'knowledge_list' => true,
             'knowledge_id' => $id
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('students-knowledge-list')->value('page', 1);
 
 $app->get('students/company/{id}/{page}', function ($id, $page) use ($app) {
@@ -185,7 +185,7 @@ $app->get('students/company/{id}/{page}', function ($id, $page) use ($app) {
             'company_list' => true,
             'company_id' => $id
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('students-company-list')->value('page', 1);
 
 
@@ -223,7 +223,7 @@ $app->post('students/study/search', function (Request $request) use ($app) {
             case 'student':
                 return $app->redirect($app['url_generator']->generate('students-study-list', array('id' => $id)));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('study-search');
 
 $app->post('students/company/search', function (Request $request) use ($app) {
@@ -258,7 +258,7 @@ $app->post('students/company/search', function (Request $request) use ($app) {
             case 'student':
                 return $app->redirect($app['url_generator']->generate('students-study-list', array('id' => $id)));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('company-search');
 
 $app->post('students/knowledge/search', function (Request $request) use ($app) {
@@ -293,7 +293,7 @@ $app->post('students/knowledge/search', function (Request $request) use ($app) {
             case 'student':
                 return $app->redirect($app['url_generator']->generate('students-knowledge-list', array('id' => $id)));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('knowledge-search');
 
 $app->post('students/custom/search', function (Request $request) use ($app) {
@@ -332,7 +332,7 @@ $app->post('students/custom/search', function (Request $request) use ($app) {
             'companies' => $companies,
             'students_custom_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('students-custom-list');
 
 /*** Operaciones CRUD ***/

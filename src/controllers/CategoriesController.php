@@ -26,7 +26,7 @@ $app->get('categories/list/{page}', function ($page) use ($app) {
             'categories' => $categories,
             'categories_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('categories-list')->value('page', 1);
 
 /*** Operaciones CRUD ***/
@@ -47,7 +47,7 @@ $app->put('category/create', function (Request $request) use ($app) {
             'category' => $category,
             'new_category' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('category-new');
 
 $app->get('category/{id}/edit', function ($id) use ($app) {

@@ -25,7 +25,8 @@
         "symfony/doctrine-bridge": "2.*",
         "dflydev/doctrine-orm-service-provider": "~1.0",
         "swiftmailer/swiftmailer": "5.*",
-        "kilte/silex-pagination": "dev-master"
+        "kilte/silex-pagination": "dev-master",
+        "jasongrimes/silex-simpleuser": "^2.0"
     },
     "autoload": {
         "psr-4": { "": "src/" }

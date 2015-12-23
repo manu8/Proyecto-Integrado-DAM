@@ -35,7 +35,7 @@ $app->get('knowledge/list/{page}', function ($page) use ($app) {
             'categories' => $categories,
             'knowledges_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('knowledges-list')->value('page', 1);
 
 $app->get('knowledege/category/{page}', function (Request $request, $page) use ($app) {
@@ -75,7 +75,7 @@ $app->get('knowledege/category/{page}', function (Request $request, $page) use (
                 'category_id' => $id
             ));
         }
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledges-category-list')->value('page', 1);
 
@@ -97,7 +97,7 @@ $app->put('knowledge/create', function (Request $request) use ($app) {
             'knowledge' => $knowledge,
             'new_knowledge' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('knowledge-new');
 
 $app->get('knowledge/{id}/edit', function ($id) use ($app) {
@@ -115,7 +115,7 @@ $app->get('knowledge/{id}/edit', function ($id) use ($app) {
             'form_type' => $form_type,
             'knowledge' => $knowledge
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledge-edit');
 
@@ -133,7 +133,7 @@ $app->post('knowledge/{id}/update', function (Request $request, $id) use ($app) 
             'knowledge' => $knowledge,
             'update_knowledge' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledge-update');
 
@@ -144,7 +144,7 @@ $app->delete('knowledge/{id}/remove', function ($id) use ($app) {
         $ConocimientoProvider->removeConocimiento($knowledge);
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledge-remove');
 
@@ -178,7 +178,7 @@ $app->get('knowledge/{id}/categories/{page}', function ($id, $page) use ($app) {
             'pages' => $categoriesPages,
             'knowledge_categories_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledge-add-categories')->value('page', 1);
 
@@ -196,7 +196,7 @@ $app->get('knowledge/{id}/category/{category_id}/add', function ($id, $category_
         $em->flush();
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledge-add-category');
 
@@ -214,7 +214,7 @@ $app->delete('knowledge/{id}/category/{category_id}/remove', function ($id, $cat
         $em->flush();
 
         return new Response(200);
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('knowledge-remove-category');
 
@@ -254,7 +254,7 @@ $app->get('knowledge/{id}/students/{page}', function ($id, $page) use ($app) {
             'pages' => $studentsPages,
             'knowledge_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('add-knowledge-students')->value('page', 1);
 
@@ -310,7 +310,7 @@ $app->get('knowledge/{id}/students/study/{study_id}/{page}', function ($id, $stu
             'knowledges' => $knowledges,
             'knowledge_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('add-knowledge-students-study')->value('page', 1);
 
 $app->get('knowledge/{id}/students/knowledge/{knowledge_id}/{page}', function ($id, $knowledge_id, $page) use ($app) {
@@ -365,7 +365,7 @@ $app->get('knowledge/{id}/students/knowledge/{knowledge_id}/{page}', function ($
             'knowledges' => $knowledges,
             'knowledge_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 })->bind('add-knowledge-students-knowledge')->value('page', 1);
 
 $app->get('knowledge/{id}/students/company/{company_id}/{page}', function ($id, $company_id, $page) use ($app) {
@@ -420,6 +420,6 @@ $app->get('knowledge/{id}/students/company/{company_id}/{page}', function ($id, 
             'knowledges' => $knowledges,
             'knowledge_students_list' => true
         ));
-    } else return $app->redirect($app['url_generator']->generate('/login'));
+    } else return $app->redirect($app['url_generator']->generate('login'));
 
 })->bind('add-knowledge-students-company')->value('page', 1);

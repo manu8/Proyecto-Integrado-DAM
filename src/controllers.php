@@ -14,6 +14,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 //Request::setTrustedProxies(array('127.0.0.1'));
 Request::enableHttpMethodParameterOverride(); //Habilitación de métodos alternativos de HTTP (PUT, DELETE)
 
+//Rutas de administración de usuarios
+$app->mount('/user', new SimpleUser\UserServiceProvider());
+
 /*** Ruta principal ***/
 
 $app->get('/', function () use ($app) {

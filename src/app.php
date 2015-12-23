@@ -58,4 +58,7 @@ $app->register(new RememberMeServiceProvider());
 //Implementación del servidor de correo para verificación de usuario
 $app->register(new SwiftmailerServiceProvider());
 
+//Administración de usuarios
+$app->register(new SimpleUser\UserServiceProvider());
+
 return $app;

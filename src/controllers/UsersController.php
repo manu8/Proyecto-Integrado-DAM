@@ -7,6 +7,7 @@ use Lib\Providers\UserProvider;
 $app->get('user/login', function(Request $request) use ($app) {
     $UserProvider = new UserProvider($app);
     $user = $UserProvider->getCurrentUser();
+    var_dump($request->request->get('_username'), $request->request->get('_password'));
     //if user is not enabled
     if (!is_null($user) && !$user->isEnabled()) {
         return $app['twig']->render('forms/login.html.twig', array(

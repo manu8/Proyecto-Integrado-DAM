@@ -20,7 +20,7 @@ $('a.remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 window.location.replace('http://'+ document.domain + '/knowledge/lists')
@@ -45,7 +45,7 @@ $('a.category-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#categoryAdded').show();
@@ -71,7 +71,7 @@ $('a.student-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studentAdded').show();
@@ -99,7 +99,7 @@ $('a.category-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#categoryRemoved').show();
@@ -125,7 +125,7 @@ $('a.student-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studentRemoved').show();

@@ -63,7 +63,7 @@ $('a.study-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyAdded').show();
@@ -87,7 +87,7 @@ $('a.categorized-study-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyAdded').show();
@@ -113,7 +113,7 @@ $('a.knowledge-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeAdded').show();
@@ -137,7 +137,7 @@ $('a.categorized-knowledge-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeAdded').show();
@@ -163,7 +163,7 @@ $('a.company-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyAdded').show();
@@ -187,7 +187,7 @@ $('a.categorized-company-add-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().prepend('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().prepend('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyAdded').show();
@@ -215,7 +215,7 @@ $('a.student-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 window.location.replace('http://'+ document.domain + '/students/lists')
@@ -240,7 +240,7 @@ $('a.study-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#studyRemoved').show();
@@ -266,7 +266,7 @@ $('a.knowledge-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#knowledgeRemoved').show();
@@ -292,7 +292,7 @@ $('a.company-remove-link').click(function(event) {
             url: link.attr('href'),
             beforeSend: function() {
                 link.hide();
-                link.parent().append('<img id="loadImg" class="img-responsive" src="/assets/img/load.gif"/>');
+                link.parent().append('<img id="loadImg"  src="/assets/img/load.gif"/>');
             },
             success: function() {
                 $('#companyRemoved').show();

@@ -143,13 +143,13 @@
               <li class="arrow">
                 <a
                   {% if student_companies_list is defined %}
-                    href="{{ path('add_companies', { 'id' : student.Id, 'page' : number }) }}"
+                    href="{{ path('add-companies', { 'id' : student.Id, 'page' : number }) }}"
                   {% elseif student_categorized_companies_list is defined %}
-                    href="{{ path('add_categorized_companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    href="{{ path('add-categorized-companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                   {% elseif companies_list is defined %}
-                    href="{{ path('companies_list', { 'page' : number }) }}"
+                    href="{{ path('companies-list', { 'page' : number }) }}"
                   {% else %}
-                    href="{{ path('studies_category_list', { 'id' : category_id, 'page' : number }) }}"
+                    href="{{ path('studies-category-list', { 'id' : category_id, 'page' : number }) }}"
                   {% endif %}
                 >&laquo;</a>
               </li>
@@ -159,13 +159,13 @@
               <li>
                 <a
                   {% if student_companies_list is defined %}
-                    href="{{ path('add_companies', { 'id' : student.Id, 'page' : number }) }}"
+                    href="{{ path('add-companies', { 'id' : student.Id, 'page' : number }) }}"
                   {% elseif student_categorized_companies_list is defined %}
-                    href="{{ path('add_categorized_companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    href="{{ path('add-categorized-companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                   {% elseif companies_list is defined %}
-                    href="{{ path('companies_list', { 'page' : number }) }}"
+                    href="{{ path('companies-list', { 'page' : number }) }}"
                   {% else %}
-                    href="{{ path('companies_category_list', { 'id' : category_id, 'page' : number }) }}"
+                    href="{{ path('companies-category-list', { 'id' : category_id, 'page' : number }) }}"
                   {% endif %}
                 >{{ number }}</a>
               </li>
@@ -175,13 +175,13 @@
               <li class="arrow">
                 <a
                   {% if student_companies_list is defined %}
-                    href="{{ path('add_companies', { 'id' : student.Id, 'page' : number }) }}"
+                    href="{{ path('add-companies', { 'id' : student.Id, 'page' : number }) }}"
                   {% elseif student_categorized_companies_list is defined %}
-                    href="{{ path('add_categorized_companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
+                    href="{{ path('add-categorized-companies', { 'id' : student.Id, 'category_id' : category_id, 'page' : number }) }}"
                   {% elseif companies_list is defined %}
-                    href="{{ path('companies_list', { 'page' : number }) }}"
+                    href="{{ path('companies-list', { 'page' : number }) }}"
                   {% else %}
-                    href="{{ path('companies_category_list', { 'id' : category_id, 'page' : number }) }}"
+                    href="{{ path('companies-category-list', { 'id' : category_id, 'page' : number }) }}"
                   {% endif %}
                 >&raquo;</a>
               </li>
